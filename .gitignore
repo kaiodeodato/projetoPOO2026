@@ -1,0 +1,7 @@
+fabrica.exe
+*.exe
+*.o
+*.obj
+*.ilk
+*.pdb
+build/

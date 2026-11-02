@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Cada elemento fica numa unica linha. Posicoes X e Y positivas, dentro do campo. -->
+<fabrica>
+    <dimensoes x="30" y="20"/>
+    <horario abertura="8" encerramento="18"/>
+    <verde min="0" max="45"/>
+    <amarelo min="46" max="75"/>
+    <vermelho min="76" max="120"/>
+    <utilizadores>
+        <admin id="1" nome="Gestor"/>
+        <normal id="2" nome="Operador"/>
+        <visitante id="3" nome="Visita"/>
+    </utilizadores>
+    <sensores>
+        <luz id="1" marca="Philips" valor="80" probabilidade_avaria="0.01" x="4" y="6" limiar="30"/>
+        <humidade id="2" marca="Bosch" valor="40" probabilidade_avaria="0.02" x="10" y="8" limiar="70" raio="5"/>
+        <fumo id="3" marca="Siemens" valor="0" probabilidade_avaria="0.01" x="12" y="4" limiar="15"/>
+        <missel id="4" marca="Defesa" valor="0" probabilidade_avaria="0.005" x="2" y="2"/>
+    </sensores>
+    <motores>
+        <motor id="1" tipo="Esteira" marca="ABB" consumo_hora="2.5" temperatura_aviso="60" temperatura_paragem="90" probabilidade_avaria="0.03" x="8" y="10"/>
+        <motor id="2" tipo="Compressor" marca="WEG" consumo_hora="4.0" temperatura_aviso="55" temperatura_paragem="80" probabilidade_avaria="0.04" x="18" y="7"/>
+    </motores>
+</fabrica>

@@ -1,0 +1,14 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+BreakBeforeBraces: Allman
+IndentAccessModifiers: true
+AccessModifierOffset: -4
+ColumnLimit: 0
+NamespaceIndentation: None
+SortIncludes: false
+PointerAlignment: Left
+ReflowComments: false
+AlignTrailingComments: false
+SpaceBeforeParens: ControlStatements
