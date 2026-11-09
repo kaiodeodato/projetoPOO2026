@@ -222,10 +222,6 @@ void SensorMissel::DefinirValorSeguro()
     valor = 0.0;
 }
 
-// ---------------------------------------------------------------------------
-// SensorTemperatura
-// ---------------------------------------------------------------------------
-
 SensorTemperatura::SensorTemperatura(int id, const string& marca, double valor,
                                      double probabilidadeAvaria, int posX, int posY, double limiar)
     : Sensor(id, marca, valor, probabilidadeAvaria, posX, posY), limiar(limiar)
@@ -278,10 +274,6 @@ void SensorTemperatura::DefinirValorSeguro()
         valor = 0.0;
     }
 }
-
-// ---------------------------------------------------------------------------
-// SensorFogo
-// ---------------------------------------------------------------------------
 
 SensorFogo::SensorFogo(int id, const string& marca, double valor,
                        double probabilidadeAvaria, int posX, int posY, double limiar)

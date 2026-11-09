@@ -2,18 +2,14 @@
 
 using namespace std;
 
-// ---------------------------------------------------------------------------
-// MotorCombustao
-// ---------------------------------------------------------------------------
-
 MotorCombustao::MotorCombustao(int id, const string& marca, double consumoHora,
                                double probabilidadeAvaria, int posX, int posY,
                                const IntervaloTemperatura& v,
                                const IntervaloTemperatura& a,
                                const IntervaloTemperatura& vm)
     : Motor(id, "MCOMBUSTAO", marca, consumoHora,
-            a.minimo,   // temperatura_aviso  = inicio do AMARELO
-            vm.minimo,  // temperatura_paragem = inicio do VERMELHO
+            a.minimo,
+            vm.minimo,
             probabilidadeAvaria, posX, posY),
       verde(v), amarelo(a), vermelho(vm)
 {
@@ -31,10 +27,6 @@ string MotorCombustao::GetTipo() const
 IntervaloTemperatura MotorCombustao::GetIntervaloVerde() const   { return verde; }
 IntervaloTemperatura MotorCombustao::GetIntervaloAmarelo() const { return amarelo; }
 IntervaloTemperatura MotorCombustao::GetIntervaloVermelho() const{ return vermelho; }
-
-// ---------------------------------------------------------------------------
-// MotorEletrico
-// ---------------------------------------------------------------------------
 
 MotorEletrico::MotorEletrico(int id, const string& marca, double consumoHora,
                              double probabilidadeAvaria, int posX, int posY,
@@ -60,10 +52,6 @@ string MotorEletrico::GetTipo() const
 IntervaloTemperatura MotorEletrico::GetIntervaloVerde() const    { return verde; }
 IntervaloTemperatura MotorEletrico::GetIntervaloAmarelo() const  { return amarelo; }
 IntervaloTemperatura MotorEletrico::GetIntervaloVermelho() const { return vermelho; }
-
-// ---------------------------------------------------------------------------
-// MotorInducao
-// ---------------------------------------------------------------------------
 
 MotorInducao::MotorInducao(int id, const string& marca, double consumoHora,
                            double probabilidadeAvaria, int posX, int posY,

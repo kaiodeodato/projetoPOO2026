@@ -27,10 +27,6 @@ using namespace std;
  * Cada passo representa 10 minutos simulados.
  */
 
-// ---------------------------------------------------------------------------
-// Terminal em modo raw (Linux/macOS) — sem eco, sem buffer de linha
-// ---------------------------------------------------------------------------
-
 #ifndef _WIN32
 static struct termios terminalOriginal;
 
@@ -52,10 +48,6 @@ static void restaurarTerminal()
     tcsetattr(STDIN_FILENO, TCSANOW, &terminalOriginal);
 }
 #endif
-
-// ---------------------------------------------------------------------------
-// Utilitarios de terminal
-// ---------------------------------------------------------------------------
 
 /** @brief Retorna true se houver uma tecla disponivel sem bloquear. */
 static bool teclaPronta()
@@ -92,10 +84,6 @@ static void pausar(int ms)
     usleep(ms * 1000);
 #endif
 }
-
-// ---------------------------------------------------------------------------
-// Menu interativo
-// ---------------------------------------------------------------------------
 
 /**
  * @brief Le uma linha do stdin, restaurando o terminal em modo normal primeiro.
@@ -150,7 +138,6 @@ static void executarMenu(Fabrica& fabrica)
         return;
     }
 
-    // Opcoes de dois digitos
     if (linha == "10")
     {
         cout << "Tipo de motor: ";
@@ -457,10 +444,6 @@ static void executarMenu(Fabrica& fabrica)
     }
 }
 
-// ---------------------------------------------------------------------------
-// main
-// ---------------------------------------------------------------------------
-
 int main()
 {
     srand((unsigned int)time(NULL));
@@ -485,7 +468,7 @@ int main()
     fabrica.Listar(cout);
 
     int minutoPasso  = 0;
-    int horaSimulada = 8;   // hora de abertura definida no XML
+    int horaSimulada = 8;
 
     bool correr = true;
 
@@ -505,16 +488,13 @@ int main()
             }
         }
 
-        // Passo de simulacao (10 min, 2 graus aquecimento, 1.5 arrefecimento)
         fabrica.PassoSimulacao(minutoPasso, horaSimulada, 10, 2.0, 1.5);
 
-        // Verificar avisos de sensores
         {
             list<Motor*> desligados;
             fabrica.VerificarAvisosSensores(desligados);
         }
 
-        // Avancar tempo simulado
         minutoPasso += 10;
         if (minutoPasso >= 1440)
         {
