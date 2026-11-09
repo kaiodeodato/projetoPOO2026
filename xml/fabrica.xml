@@ -1,24 +1,85 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Cada elemento fica numa unica linha. Posicoes X e Y positivas, dentro do campo. -->
-<fabrica>
-    <dimensoes x="30" y="20"/>
-    <horario abertura="8" encerramento="18"/>
-    <verde min="0" max="45"/>
-    <amarelo min="46" max="75"/>
-    <vermelho min="76" max="120"/>
-    <utilizadores>
-        <admin id="1" nome="Gestor"/>
-        <normal id="2" nome="Operador"/>
-        <visitante id="3" nome="Visita"/>
-    </utilizadores>
-    <sensores>
-        <luz id="1" marca="Philips" valor="80" probabilidade_avaria="0.01" x="4" y="6" limiar="30"/>
-        <humidade id="2" marca="Bosch" valor="40" probabilidade_avaria="0.02" x="10" y="8" limiar="70" raio="5"/>
-        <fumo id="3" marca="Siemens" valor="0" probabilidade_avaria="0.01" x="12" y="4" limiar="15"/>
-        <missel id="4" marca="Defesa" valor="0" probabilidade_avaria="0.005" x="2" y="2"/>
-    </sensores>
-    <motores>
-        <motor id="1" tipo="Esteira" marca="ABB" consumo_hora="2.5" temperatura_aviso="60" temperatura_paragem="90" probabilidade_avaria="0.03" x="8" y="10"/>
-        <motor id="2" tipo="Compressor" marca="WEG" consumo_hora="4.0" temperatura_aviso="55" temperatura_paragem="80" probabilidade_avaria="0.04" x="18" y="7"/>
-    </motores>
-</fabrica>
+<DADOS>
+	<DEFINICOES>
+			<NOME_EMPRESA>Empresa-da-Minha-Terra</NOME_EMPRESA>
+			<HORA_INICIO>8</HORA_INICIO>
+			<HORA_FECHO>16</HORA_FECHO>
+			<VIZINHANCA_AVISO>10</VIZINHANCA_AVISO>
+			<DIMENSAO_FABRICA>50,80</DIMENSAO_FABRICA>
+			<MELETRICO>
+				<VERDE>0,80</VERDE>
+				<AMARELO>81,100</AMARELO>
+				<VERMELHO>101,500</VERMELHO>
+				<PROB_AVARIA>1</PROB_AVARIA>
+			</MELETRICO>
+			<MCOMBUSTAO>
+				<VERDE>0,80</VERDE>
+				<AMARELO>81,100</AMARELO>
+				<VERMELHO>101,250</VERMELHO>
+				<PROB_AVARIA>10</PROB_AVARIA>
+			</MCOMBUSTAO>
+			<MINDUCAO>
+				<VERDE>0,50</VERDE>
+				<AMARELO>51,70</AMARELO>
+				<VERMELHO>71,100</VERMELHO>
+				<PROB_AVARIA>1</PROB_AVARIA>
+			</MINDUCAO>
+		</DEFINICOES>
+		<MOTORES>
+			<MCOMBUSTAO>
+				<ID>100</ID>
+				<MARCA>Roy</MARCA>
+				<CONSUMO_HORA>5</CONSUMO_HORA>
+				<POSICAO>10,20</POSICAO>
+			</MCOMBUSTAO>
+			<MCOMBUSTAO>
+				<ID>101</ID>
+				<MARCA>HIRTH-SOLO</MARCA>
+				<CONSUMO_HORA>3</CONSUMO_HORA>
+				<POSICAO>0,10</POSICAO>
+			</MCOMBUSTAO>
+			<MCOMBUSTAO>
+				<ID>102</ID>
+				<MARCA>F200</MARCA>
+				<CONSUMO_HORA>4</CONSUMO_HORA>
+				<POSICAO>15,22</POSICAO>
+			</MCOMBUSTAO>
+			<MELETRICO>
+				<ID>103</ID>
+				<MARCA>EFACEC</MARCA>
+				<CONSUMO_HORA>1250</CONSUMO_HORA>
+				<POSICAO>10,18</POSICAO>
+			</MELETRICO>
+		</MOTORES>
+		<SENSORES>
+			<STEMPERATURA>
+				<ID>200</ID>
+				<MARCA>M1</MARCA>
+				<VALOR_AVISO>50</VALOR_AVISO>
+				<POSICAO>12,40</POSICAO>
+				<PROB_AVARIA>1</PROB_AVARIA>
+			</STEMPERATURA>
+			<STEMPERATURA>
+				<ID>201</ID>
+				<MARCA>M1</MARCA>
+				<VALOR_AVISO>50</VALOR_AVISO>
+				<POSICAO>12,10</POSICAO>
+				<PROB_AVARIA>1</PROB_AVARIA>
+			</STEMPERATURA>
+			<SFOGO>
+				<ID>200</ID>
+				<MARCA>M1</MARCA>
+				<VALOR_AVISO>1</VALOR_AVISO>
+				<POSICAO>8,25</POSICAO>
+				<PROB_1>5</PROB_1>
+				<PROB_AVARIA>5</PROB_AVARIA>
+			</SFOGO>
+			<SMISSEL>
+				<ID>300</ID>
+				<MARCA>Molotof-Expresso</MARCA>
+				<VALOR_AVISO>1</VALOR_AVISO>
+				<POSICAO>49,79</POSICAO>
+				<PROB_1>3</PROB_1>
+				<PROB_AVARIA>10</PROB_AVARIA>
+			</SMISSEL>
+		</SENSORES>
+</DADOS>

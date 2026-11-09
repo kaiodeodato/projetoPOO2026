@@ -221,3 +221,104 @@ void SensorMissel::DefinirValorSeguro()
 {
     valor = 0.0;
 }
+
+SensorTemperatura::SensorTemperatura(int id, const string& marca, double valor,
+                                     double probabilidadeAvaria, int posX, int posY, double limiar)
+    : Sensor(id, marca, valor, probabilidadeAvaria, posX, posY), limiar(limiar)
+{
+}
+
+SensorTemperatura::~SensorTemperatura()
+{
+}
+
+double SensorTemperatura::GetLimiar() const
+{
+    return limiar;
+}
+
+string SensorTemperatura::GetTipo() const
+{
+    return "STEMPERATURA";
+}
+
+bool SensorTemperatura::EmAviso() const
+{
+    return valor >= limiar;
+}
+
+void SensorTemperatura::Actualizar(bool motoresEmMarcha, int, int, int, double)
+{
+    if (motoresEmMarcha && valor < limiar + 10.0)
+    {
+        valor = valor + 0.5;
+    }
+    else if (!motoresEmMarcha && valor > 0.0)
+    {
+        valor = valor - 0.3;
+        if (valor < 0.0)
+        {
+            valor = 0.0;
+        }
+    }
+}
+
+void SensorTemperatura::DefinirValorSeguro()
+{
+    if (limiar > 1.0)
+    {
+        valor = limiar - 1.0;
+    }
+    else
+    {
+        valor = 0.0;
+    }
+}
+
+SensorFogo::SensorFogo(int id, const string& marca, double valor,
+                       double probabilidadeAvaria, int posX, int posY, double limiar)
+    : Sensor(id, marca, valor, probabilidadeAvaria, posX, posY), limiar(limiar)
+{
+}
+
+SensorFogo::~SensorFogo()
+{
+}
+
+double SensorFogo::GetLimiar() const
+{
+    return limiar;
+}
+
+string SensorFogo::GetTipo() const
+{
+    return "SFOGO";
+}
+
+bool SensorFogo::EmAviso() const
+{
+    return valor >= limiar;
+}
+
+void SensorFogo::Actualizar(bool motoresEmMarcha, int, int, int, double fracaoHora)
+{
+    if (valor >= limiar || EstaAvariado())
+    {
+        return;
+    }
+
+    if (motoresEmMarcha)
+    {
+        double sorteio = (rand() % 10000) / 10000.0;
+        double limite  = GetProbabilidadeAvaria() * fracaoHora;
+        if (sorteio < limite)
+        {
+            valor = limiar;
+        }
+    }
+}
+
+void SensorFogo::DefinirValorSeguro()
+{
+    valor = 0.0;
+}
