@@ -751,7 +751,7 @@ bool Fabrica::posicaoValida(int posX, int posY, int limiteX, int limiteY) const
         return false;
     }
 
-    if (posX <= 0 || posY <= 0)
+    if (posX < 0 || posY < 0)
     {
         return false;
     }
@@ -1140,7 +1140,7 @@ bool Fabrica::lerPosicao(const list<string>& bloco, int& posX, int& posY) const
 
     posX = (int)a;
     posY = (int)b;
-    return posX > 0 && posY > 0;
+    return posX >= 0 && posY >= 0;
 }
 
 /**
