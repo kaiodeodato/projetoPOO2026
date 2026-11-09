@@ -5,3 +5,4 @@ fabrica.exe
 *.ilk
 *.pdb
 build/
+docs/
