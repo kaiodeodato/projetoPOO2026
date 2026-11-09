@@ -134,6 +134,77 @@ bool Fabrica::Add(Motor* m)
     return true;
 }
 
+bool Fabrica::Add(Sensor* s)
+{
+    if (s == NULL || !podeAdicionar())
+    {
+        return false;
+    }
+
+    if (s->GetId() <= 0 || s->GetMarca().empty())
+    {
+        return false;
+    }
+
+    if (!posicaoValida(s->GetX(), s->GetY(), campoX, campoY))
+    {
+        return false;
+    }
+
+    if (idSensorExiste(sensores, s->GetId()))
+    {
+        return false;
+    }
+
+    sensores.push_back(s);
+    return true;
+}
+
+bool Fabrica::RemoverUtilizador(int id)
+{
+    if (!podeRemover())
+    {
+        return false;
+    }
+
+    for (list<User*>::iterator it = utilizadores.begin(); it != utilizadores.end(); ++it)
+    {
+        if ((*it)->GetId() == id)
+        {
+            // Nao remover o utilizador actual
+            if (*it == utilizadorAtual)
+            {
+                return false;
+            }
+            delete *it;
+            utilizadores.erase(it);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Fabrica::RemoverMotor(int id)
+{
+    if (!podeRemover())
+    {
+        return false;
+    }
+
+    for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
+    {
+        if ((*it)->GetId() == id)
+        {
+            delete *it;
+            motores.erase(it);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void Fabrica::Listar(ostream& f) const
 {
     if (!podeListar())
@@ -588,6 +659,16 @@ bool Fabrica::podeAdicionar() const
     }
 
     return utilizadorAtual->PodeAdicionar();
+}
+
+bool Fabrica::podeRemover() const
+{
+    if (utilizadorAtual == NULL)
+    {
+        return false;
+    }
+
+    return utilizadorAtual->PodeRemover();
 }
 
 bool Fabrica::podeListar() const

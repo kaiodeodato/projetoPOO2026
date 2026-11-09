@@ -57,6 +57,7 @@ class Fabrica
         IntervaloTemperatura vermelho;
 
         bool podeAdicionar() const;
+        bool podeRemover() const;
         bool podeListar() const;
         bool podeRun() const;
         bool podeManutencao() const;
@@ -128,6 +129,27 @@ class Fabrica
         bool Load(const string& ficheiro);
         bool Add(User* ut);
         bool Add(Motor* m);
+        /**
+        * @brief Adiciona um sensor a fabrica.
+        * @param s Ponteiro para o sensor. A fabrica fica dona do ponteiro se devolver true.
+        * @return true se adicionado; false se NULL, sem permissao, posicao invalida ou ID duplicado.
+        */
+        bool Add(Sensor* s);
+
+        /**
+        * @brief Remove um utilizador pelo ID. Apenas o ADMIN pode remover.
+        * @param id Identificador do utilizador a remover.
+        * @return true se removido, false se sem permissao ou nao encontrado.
+        */
+        bool RemoverUtilizador(int id);
+
+        /**
+        * @brief Remove um motor pelo ID. Apenas o ADMIN pode remover.
+        * @param id Identificador do motor a remover.
+        * @return true se removido, false se sem permissao ou nao encontrado.
+        */
+        bool RemoverMotor(int id);
+
         void Listar(ostream& f = cout) const;
         void Desligar(int id_motor);
         ESTADO_MOTOR Get_Estado(int id_motor) const;
@@ -146,30 +168,45 @@ class Fabrica
         int GetCampoY() const;
 
         /**
-        * @brief Coloca um motor em START (se tiver permissao e o motor existir).
+        * @brief Coloca um motor em START, se o utilizador tiver permissao RUN.
+        *
+        * Nao faz nada se o motor nao existir ou o utilizador nao puder usar RUN.
         * @param id_motor Identificador do motor.
         */
         void Arrancar(int id_motor);
 
         /**
-        * @brief Executa um passo de simulacao: aquece/arrefece motores, avanca START para RUN.
+        * @brief Executa um passo de simulacao.
+        *
+        * Por cada motor em START passa a RUN se a fabrica estiver aberta.
+        * Motores em RUN aquecem, acumulam tempo de trabalho e podem avariar.
+        * Motores em STOP arrefecem.
+        * O gestor e avisado quando um motor entra em AMARELO ou VERMELHO.
+        * Os sensores sao actualizados com o estado dos motores e a hora.
+        *
         * @param minutoAtual Minuto do dia simulado (0-1439).
-        * @param horaAtual Hora simulada (0-23).
-        * @param minutosPasso Minutos simulados neste passo.
-        * @param grausPasso Graus de aquecimento por passo em RUN.
-        * @param arrefPasso Graus de arrefecimento por passo em STOP.
+        * @param horaAtual   Hora simulada (0-23).
+        * @param minutosPasso Duracao do passo em minutos simulados (default 10).
+        * @param grausPasso   Aquecimento por passo em RUN (default 2.0).
+        * @param arrefPasso   Arrefecimento por passo em STOP (default 1.5).
         */
         void PassoSimulacao(int minutoAtual, int horaAtual,
                             int minutosPasso = 10, double grausPasso = 2.0, double arrefPasso = 1.5);
 
         /**
-        * @brief Verifica todos os sensores e dispara os avisos correspondentes.
-        * @param desligados Lista preenchida com motores desligados neste passo.
+        * @brief Verifica todos os sensores e activa os avisos quando disparam pela primeira vez.
+        *
+        * Chama Aviso_Humidade, Aviso_Fumo, Aviso_Luz ou Aviso_Missel consoante o tipo.
+        * So activa o aviso no primeiro passo em que o sensor entra em aviso (Disparou()).
+        *
+        * @param desligados Lista preenchida com todos os motores desligados neste passo.
         */
         void VerificarAvisosSensores(list<Motor*>& desligados);
 
         /**
-        * @brief Reinicia o consumo do dia de todos os motores (virar do dia).
+        * @brief Reinicia o consumo diario de todos os motores.
+        *
+        * Deve ser chamado no virar do dia simulado.
         */
         void ReiniciarConsumoDia();
 };
