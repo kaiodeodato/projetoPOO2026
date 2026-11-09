@@ -1,6 +1,8 @@
 #include "Fabrica.h"
 
 #include <cstddef>
+#include <cstdlib>
+#include <cmath>
 #include <fstream>
 #include <sstream>
 
@@ -261,9 +263,27 @@ bool Fabrica::Manutencao()
         return false;
     }
 
-    // Fase seguinte: por cada motor, escolher uma temperatura aleatoria
-    // dentro do intervalo VERDE carregado do XML.
-    return false;
+    // Repor motores: temperatura aleatória dentro do intervalo VERDE e reparar avaria
+    for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
+    {
+        Motor* m = *it;
+        double amplitude = verde.maximo - verde.minimo;
+        double novaTemp = verde.minimo;
+        if (amplitude > 0.0)
+        {
+            novaTemp = verde.minimo + (rand() % 10001) / 10000.0 * amplitude;
+        }
+        m->SetTemperaturaAtual(novaTemp);
+        m->Reparar();
+    }
+
+    // Repor sensores: valor seguro e avaria limpa
+    for (list<Sensor*>::iterator it = sensores.begin(); it != sensores.end(); ++it)
+    {
+        (*it)->Repor();
+    }
+
+    return true;
 }
 
 list<string>* Fabrica::Ranking_Dos_Fracos() const
@@ -315,50 +335,157 @@ void Fabrica::Relatorio(string fich_xml) const
         return;
     }
 
-    // Fase seguinte: gravar o XML com o estado e o consumo do dia de cada motor.
+    ofstream saida(fich_xml.c_str());
+    if (!saida.is_open())
+    {
+        return;
+    }
+
+    saida << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
+    saida << "<relatorio>" << endl;
+    saida << "  <fabrica campo_x=\"" << campoX << "\" campo_y=\"" << campoY << "\""
+          << " abertura=\"" << horaAbertura << "\" encerramento=\"" << horaEncerramento << "\"/>" << endl;
+
+    saida << "  <motores>" << endl;
+    for (list<Motor*>::const_iterator it = motores.begin(); it != motores.end(); ++it)
+    {
+        Motor* m = *it;
+        saida << "    <motor id=\"" << m->GetId() << "\""
+              << " tipo=\"" << m->GetTipo() << "\""
+              << " marca=\"" << m->GetMarca() << "\""
+              << " estado=\"" << textoEstado(m->GetEstado()) << "\""
+              << " temperatura=\"" << m->GetTemperaturaAtual() << "\""
+              << " classe=\"" << textoClasse(m->GetClasseTemperatura()) << "\""
+              << " consumo_dia=\"" << m->GetConsumoDia() << "\""
+              << " tempo_trabalho=\"" << m->GetTempoTrabalho() << "\""
+              << " avarias=\"" << m->GetTotalAvarias() << "\"/>" << endl;
+    }
+    saida << "  </motores>" << endl;
+
+    saida << "  <sensores>" << endl;
+    for (list<Sensor*>::const_iterator it = sensores.begin(); it != sensores.end(); ++it)
+    {
+        Sensor* s = *it;
+        saida << "    <sensor id=\"" << s->GetId() << "\""
+              << " tipo=\"" << s->GetTipo() << "\""
+              << " marca=\"" << s->GetMarca() << "\""
+              << " valor=\"" << s->GetValor() << "\""
+              << " aviso=\"" << (s->EmAviso() ? "sim" : "nao") << "\""
+              << " avarias=\"" << s->GetTotalAvarias() << "\"/>" << endl;
+    }
+    saida << "  </sensores>" << endl;
+
+    saida << "</relatorio>" << endl;
+    saida.close();
 }
 
 int Fabrica::Aviso_Humidade(list<Motor*>& lm)
 {
     lm.clear();
 
-    // Fase seguinte: desligar os motores dentro do raio de cada sensor
-    // de humidade em aviso, avisar o gestor e devolver a contagem.
-    return 0;
+    for (list<Sensor*>::iterator its = sensores.begin(); its != sensores.end(); ++its)
+    {
+        Sensor* s = *its;
+        if (s->GetTipo() != "HUMIDADE" || !s->EmAviso())
+        {
+            continue;
+        }
+
+        int raio = s->GetRaioVizinhanca();
+
+        for (list<Motor*>::iterator itm = motores.begin(); itm != motores.end(); ++itm)
+        {
+            Motor* m = *itm;
+            int dx = m->GetX() - s->GetX();
+            int dy = m->GetY() - s->GetY();
+            double dist = sqrt((double)(dx * dx + dy * dy));
+
+            if (dist <= raio && m->GetEstado() != STOP && m->GetEstado() != AVARIADO)
+            {
+                m->STOP();
+                lm.push_back(m);
+            }
+        }
+    }
+
+    // Avisar o gestor
+    if (!lm.empty())
+    {
+        cout << "[AVISO GESTOR] Sensor de HUMIDADE em aviso! " << lm.size() << " motor(es) desligado(s)." << endl;
+    }
+
+    return (int)lm.size();
 }
 
 int Fabrica::Aviso_Fumo(list<Motor*>& lm, string fich_video)
 {
     lm.clear();
 
-    if (fich_video.empty())
+    for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
     {
-        return 0;
+        Motor* m = *it;
+        if (m->GetEstado() != STOP && m->GetEstado() != AVARIADO)
+        {
+            m->STOP();
+            lm.push_back(m);
+        }
     }
 
-    // Fase seguinte: desligar todos os motores e mostrar o video das saidas.
-    return 0;
+    cout << "[AVISO GESTOR] Sensor de FUMO em aviso! Todos os motores desligados." << endl;
+
+    if (!fich_video.empty())
+    {
+        string cmd = "start \"\" \"" + fich_video + "\"";
+        system(cmd.c_str());
+    }
+
+    return (int)lm.size();
 }
 
 int Fabrica::Aviso_Luz(string fich_video)
 {
-    if (fich_video.empty())
+    cout << "[AVISO] Luminosidade baixa — bom regresso a casa!" << endl;
+
+    if (!fich_video.empty())
     {
-        return 0;
+        string cmd = "start \"\" \"" + fich_video + "\"";
+        system(cmd.c_str());
     }
 
-    // Fase seguinte: mostrar o video de regresso a casa.
-    return 0;
+    return 1;
 }
 
 void Fabrica::Aviso_Missel(string fvideo, string festado)
 {
-    if (fvideo.empty() || festado.empty())
+    cout << "[ALERTA CRITICO] Missel detetado! A desligar a fabrica!" << endl;
+
+    // Desligar todos os motores
+    for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
     {
-        return;
+        Motor* m = *it;
+        if (m->GetEstado() != AVARIADO)
+        {
+            m->STOP();
+        }
     }
 
-    // Fase seguinte: mostrar os abrigos, gravar o estado e desligar a fabrica.
+    // Gravar estado atual
+    if (!festado.empty())
+    {
+        ofstream saida(festado.c_str());
+        if (saida.is_open())
+        {
+            Listar(saida);
+            saida.close();
+        }
+    }
+
+    // Mostrar video dos abrigos
+    if (!fvideo.empty())
+    {
+        string cmd = "start \"\" \"" + fvideo + "\"";
+        system(cmd.c_str());
+    }
 }
 
 void Fabrica::Listagem_HTML(string fich_html) const
@@ -368,7 +495,79 @@ void Fabrica::Listagem_HTML(string fich_html) const
         return;
     }
 
-    // Fase seguinte: gravar um HTML com o estado actual, para abrir no browser.
+    ofstream saida(fich_html.c_str());
+    if (!saida.is_open())
+    {
+        return;
+    }
+
+    saida << "<!DOCTYPE html>" << endl;
+    saida << "<html lang=\"pt\">" << endl;
+    saida << "<head><meta charset=\"UTF-8\"><title>Estado da Fabrica</title>" << endl;
+    saida << "<style>" << endl;
+    saida << "body{font-family:Arial,sans-serif;margin:20px;background:#f4f4f4;}" << endl;
+    saida << "h1{color:#333;}h2{color:#555;}" << endl;
+    saida << "table{border-collapse:collapse;width:100%;margin-bottom:24px;}" << endl;
+    saida << "th{background:#4a90d9;color:#fff;padding:8px;}td{padding:7px;border:1px solid #ccc;}" << endl;
+    saida << "tr:nth-child(even){background:#e9f0fb;}" << endl;
+    saida << ".VERDE{background:#c8f7c5;}.AMARELO{background:#fff3b0;}.VERMELHO{background:#ffb3b3;}" << endl;
+    saida << ".STOP{color:#888;}.RUN{color:#27ae60;font-weight:bold;}.AVARIADO{color:#e74c3c;font-weight:bold;}" << endl;
+    saida << "</style></head>" << endl;
+    saida << "<body>" << endl;
+    saida << "<h1>Estado da Fabrica</h1>" << endl;
+    saida << "<p>Campo: " << campoX << " x " << campoY
+          << " &nbsp;|&nbsp; Horario: " << horaAbertura << "h - " << horaEncerramento << "h</p>" << endl;
+
+    saida << "<h2>Motores</h2>" << endl;
+    saida << "<table>" << endl;
+    saida << "<tr><th>ID</th><th>Tipo</th><th>Marca</th><th>Posicao</th><th>Estado</th>"
+          << "<th>Temperatura</th><th>Classe</th><th>Consumo/h</th><th>Consumo dia</th>"
+          << "<th>Tempo trabalho (min)</th><th>Avarias</th></tr>" << endl;
+
+    for (list<Motor*>::const_iterator it = motores.begin(); it != motores.end(); ++it)
+    {
+        Motor* m = *it;
+        string classe = textoClasse(m->GetClasseTemperatura());
+        string estado = textoEstado(m->GetEstado());
+        saida << "<tr class=\"" << classe << "\">"
+              << "<td>" << m->GetId() << "</td>"
+              << "<td>" << m->GetTipo() << "</td>"
+              << "<td>" << m->GetMarca() << "</td>"
+              << "<td>(" << m->GetX() << ", " << m->GetY() << ")</td>"
+              << "<td class=\"" << estado << "\">" << estado << "</td>"
+              << "<td>" << m->GetTemperaturaAtual() << "</td>"
+              << "<td>" << classe << "</td>"
+              << "<td>" << m->GetConsumoHora() << "</td>"
+              << "<td>" << m->GetConsumoDia() << "</td>"
+              << "<td>" << m->GetTempoTrabalho() << "</td>"
+              << "<td>" << m->GetTotalAvarias() << "</td>"
+              << "</tr>" << endl;
+    }
+    saida << "</table>" << endl;
+
+    saida << "<h2>Sensores</h2>" << endl;
+    saida << "<table>" << endl;
+    saida << "<tr><th>ID</th><th>Tipo</th><th>Marca</th><th>Posicao</th><th>Valor</th><th>Estado</th><th>Avarias</th></tr>" << endl;
+
+    for (list<Sensor*>::const_iterator it = sensores.begin(); it != sensores.end(); ++it)
+    {
+        Sensor* s = *it;
+        string aviso = s->EmAviso() ? "AVISO" : "Normal";
+        string cor = s->EmAviso() ? " style=\"background:#ffb3b3;\"" : "";
+        saida << "<tr" << cor << ">"
+              << "<td>" << s->GetId() << "</td>"
+              << "<td>" << s->GetTipo() << "</td>"
+              << "<td>" << s->GetMarca() << "</td>"
+              << "<td>(" << s->GetX() << ", " << s->GetY() << ")</td>"
+              << "<td>" << s->GetValor() << "</td>"
+              << "<td>" << aviso << "</td>"
+              << "<td>" << s->GetTotalAvarias() << "</td>"
+              << "</tr>" << endl;
+    }
+    saida << "</table>" << endl;
+
+    saida << "</body></html>" << endl;
+    saida.close();
 }
 
 int Fabrica::GetCampoX() const
@@ -1260,6 +1459,152 @@ void Fabrica::inserirMarca(list<MarcaAvarias>& ranking, const string& marca, int
     }
 
     ranking.push_back(entrada);
+}
+
+void Fabrica::Arrancar(int id_motor)
+{
+    if (!podeRun())
+    {
+        return;
+    }
+
+    Motor* motor = procurarMotor(id_motor);
+    if (motor == NULL)
+    {
+        return;
+    }
+
+    motor->START();
+    cout << "Motor " << id_motor << " em START." << endl;
+}
+
+void Fabrica::PassoSimulacao(int minutoAtual, int horaAtual, int minutosPasso, double grausPasso, double arrefPasso)
+{
+    bool algumEmRun = false;
+    for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
+    {
+        if ((*it)->GetEstado() == RUN)
+        {
+            algumEmRun = true;
+            break;
+        }
+    }
+
+    double fracaoHora = minutosPasso / 60.0;
+
+    for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
+    {
+        Motor* m = *it;
+
+        // START -> RUN se a fabrica esta aberta
+        if (m->GetEstado() == START)
+        {
+            if (horaAtual >= horaAbertura && horaAtual < horaEncerramento)
+            {
+                m->RUN();
+            }
+        }
+
+        if (m->GetEstado() == RUN)
+        {
+            m->Aquecer(grausPasso);
+            m->RegistarTrabalho(minutosPasso);
+
+            // Verificar temperatura do motor
+            CLASSE_TEMPERATURA classe = m->ESTOU_QUENTE();
+            if (classe == AMARELO)
+            {
+                cout << "[AVISO GESTOR] Motor " << m->GetId()
+                     << " (" << m->GetTipo() << ") esta a aquecer (AMARELO)." << endl;
+            }
+            else if (classe == VERMELHO)
+            {
+                cout << "[AVISO GESTOR] Motor " << m->GetId()
+                     << " (" << m->GetTipo() << ") PARADO por sobreaquecimento (VERMELHO)." << endl;
+            }
+
+            // Probabilidade de avaria espontanea
+            double sorteio = (rand() % 10000) / 10000.0;
+            if (sorteio < m->GetProbabilidadeAvaria() * fracaoHora)
+            {
+                if (m->Avariar())
+                {
+                    cout << "[AVISO GESTOR] Motor " << m->GetId()
+                         << " (" << m->GetTipo() << ") AVARIOU." << endl;
+                }
+            }
+        }
+        else if (m->GetEstado() == STOP)
+        {
+            m->Arrefecer(arrefPasso);
+        }
+    }
+
+    // Actualizar sensores
+    for (list<Sensor*>::iterator it = sensores.begin(); it != sensores.end(); ++it)
+    {
+        (*it)->Actualizar(algumEmRun, horaAtual, horaAbertura, horaEncerramento, fracaoHora);
+
+        // Probabilidade de avaria do sensor
+        double sorteio = (rand() % 10000) / 10000.0;
+        if (sorteio < (*it)->GetProbabilidadeAvaria() * fracaoHora && !(*it)->EstaAvariado())
+        {
+            (*it)->RegistarAvaria();
+            cout << "[AVISO] Sensor " << (*it)->GetId()
+                 << " (" << (*it)->GetTipo() << ") avariou." << endl;
+        }
+    }
+
+    (void)minutoAtual;
+}
+
+void Fabrica::VerificarAvisosSensores(list<Motor*>& desligados)
+{
+    for (list<Sensor*>::iterator it = sensores.begin(); it != sensores.end(); ++it)
+    {
+        Sensor* s = *it;
+        if (!s->Disparou())
+        {
+            continue;
+        }
+
+        string tipo = s->GetTipo();
+
+        if (tipo == "HUMIDADE")
+        {
+            list<Motor*> lm;
+            Aviso_Humidade(lm);
+            for (list<Motor*>::iterator im = lm.begin(); im != lm.end(); ++im)
+            {
+                desligados.push_back(*im);
+            }
+        }
+        else if (tipo == "FUMO")
+        {
+            list<Motor*> lm;
+            Aviso_Fumo(lm, "");
+            for (list<Motor*>::iterator im = lm.begin(); im != lm.end(); ++im)
+            {
+                desligados.push_back(*im);
+            }
+        }
+        else if (tipo == "LUZ")
+        {
+            Aviso_Luz("");
+        }
+        else if (tipo == "MISSEL")
+        {
+            Aviso_Missel("", "Estado.txt");
+        }
+    }
+}
+
+void Fabrica::ReiniciarConsumoDia()
+{
+    for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
+    {
+        (*it)->ReiniciarConsumoDia();
+    }
 }
 
 void Fabrica::inserirPorTrabalho(list<Motor*>& destino, Motor* motor) const

@@ -144,6 +144,34 @@ class Fabrica
 
         int GetCampoX() const;
         int GetCampoY() const;
+
+        /**
+        * @brief Coloca um motor em START (se tiver permissao e o motor existir).
+        * @param id_motor Identificador do motor.
+        */
+        void Arrancar(int id_motor);
+
+        /**
+        * @brief Executa um passo de simulacao: aquece/arrefece motores, avanca START para RUN.
+        * @param minutoAtual Minuto do dia simulado (0-1439).
+        * @param horaAtual Hora simulada (0-23).
+        * @param minutosPasso Minutos simulados neste passo.
+        * @param grausPasso Graus de aquecimento por passo em RUN.
+        * @param arrefPasso Graus de arrefecimento por passo em STOP.
+        */
+        void PassoSimulacao(int minutoAtual, int horaAtual,
+                            int minutosPasso = 10, double grausPasso = 2.0, double arrefPasso = 1.5);
+
+        /**
+        * @brief Verifica todos os sensores e dispara os avisos correspondentes.
+        * @param desligados Lista preenchida com motores desligados neste passo.
+        */
+        void VerificarAvisosSensores(list<Motor*>& desligados);
+
+        /**
+        * @brief Reinicia o consumo do dia de todos os motores (virar do dia).
+        */
+        void ReiniciarConsumoDia();
 };
 
 #endif
