@@ -3,6 +3,7 @@
 
 #include "Motor.h"
 #include "Sensor.h"
+#include "TiposMotor.h"
 #include "Tipos.h"
 #include "User.h"
 
@@ -44,6 +45,14 @@ class Fabrica
             int avarias;
         };
 
+        struct DefinicoesTipoMotor
+        {
+            IntervaloTemperatura verde;
+            IntervaloTemperatura amarelo;
+            IntervaloTemperatura vermelho;
+            double probAvaria;
+        };
+
         User* utilizadorAtual;
         list<User*> utilizadores;
         list<Motor*> motores;
@@ -52,9 +61,14 @@ class Fabrica
         int campoY;
         int horaAbertura;
         int horaEncerramento;
+        int vizinhancaAviso;
+        string nomeFabrica;
         IntervaloTemperatura verde;
         IntervaloTemperatura amarelo;
         IntervaloTemperatura vermelho;
+        DefinicoesTipoMotor defCombustao;
+        DefinicoesTipoMotor defEletrico;
+        DefinicoesTipoMotor defInducao;
 
         bool podeAdicionar() const;
         bool podeRemover() const;
@@ -81,36 +95,45 @@ class Fabrica
         void moverSensores(list<Sensor*>& origem);
         void libertarCargaParcial(list<User*>& users, list<Motor*>& mots, list<Sensor*>& sens);
 
+        // --- Utilitarios de leitura ---
         bool lerLinhas(const string& ficheiro, list<string>& linhas) const;
         string limparLinha(const string& linha) const;
-        bool linhaDoTipo(const string& linha, const string& tag) const;
-        bool linhaIgnorada(const string& linha) const;
-        bool linhaEstrutural(const string& linha) const;
-        string lerAtributo(const string& linha, const string& atributo) const;
-        bool atributoInteiro(const string& linha, const string& atributo, int& destino) const;
-        bool atributoReal(const string& linha, const string& atributo, double& destino) const;
-        bool lerLocalizacao(const string& linha, int& id, string& marca,
-                            double& probabilidade, int& posX, int& posY) const;
+        string tagAbertura(const string& linha) const;
+        bool eTagFecho(const string& linha, const string& tag) const;
+        string valorEntreTag(const string& linha, const string& tag) const;
+        bool lerInteiroDaTag(const list<string>& bloco, const string& tag, int& dest) const;
+        bool lerRealDaTag(const list<string>& bloco, const string& tag, double& dest) const;
+        string lerTextoDaTag(const list<string>& bloco, const string& tag) const;
+        bool lerPar(const string& texto, double& a, double& b) const;
+        bool lerIntervaloBloco(const list<string>& bloco, const string& tag,
+                               IntervaloTemperatura& intervalo) const;
+        bool lerPosicao(const list<string>& bloco, int& posX, int& posY) const;
 
-        bool lerDimensoes(const string& linha, int& novoX, int& novoY) const;
-        bool lerHorario(const string& linha, int& abertura, int& encerramento) const;
-        bool lerIntervalo(const string& linha, IntervaloTemperatura& intervalo) const;
-        bool lerEstrutura(const list<string>& linhas, int& novoX, int& novoY,
-                          int& novaAbertura, int& novoEncerramento,
-                          IntervaloTemperatura& novoVerde, IntervaloTemperatura& novoAmarelo,
-                          IntervaloTemperatura& novoVermelho) const;
-        bool lerConteudo(const list<string>& linhas, int limiteX, int limiteY,
-                         list<User*>& novosUsers, list<Motor*>& novosMotores,
-                         list<Sensor*>& novosSensores) const;
+        // --- Extrair blocos do ficheiro ---
+        bool extrairBloco(const list<string>& linhas, const string& tag,
+                          list<string>& bloco) const;
+        bool extrairTodosOsBlocos(const list<string>& linhas, const string& tag,
+                                  list< list<string> >& blocos) const;
 
-        User* criarUtilizador(const string& linha) const;
-        Sensor* criarSensor(const string& linha) const;
-        Motor* criarMotor(const string& linha) const;
-        bool registarUtilizadorXml(const string& linha, list<User*>& destino) const;
-        bool registarSensorXml(const string& linha, int limiteX, int limiteY,
-                               list<Sensor*>& destino) const;
-        bool registarMotorXml(const string& linha, int limiteX, int limiteY,
-                              list<Motor*>& destino) const;
+        // --- Parsers de seccoes ---
+        bool lerDefinicoes(const list<string>& bloco,
+                           int& novoX, int& novoY,
+                           int& novaAbertura, int& novoEncerramento,
+                           int& novaVizinhanca, string& novoNome,
+                           DefinicoesTipoMotor& combDef,
+                           DefinicoesTipoMotor& eletDef,
+                           DefinicoesTipoMotor& indDef) const;
+        bool lerTipoMotorBloco(const list<string>& bloco,
+                               DefinicoesTipoMotor& def) const;
+
+        // --- Criadores de entidades ---
+        Motor*  criarMotorDoBloco(const list<string>& bloco, const string& tipo,
+                                  const DefinicoesTipoMotor& def) const;
+        Sensor* criarSensorDoBloco(const list<string>& bloco, const string& tipo) const;
+        bool lerMotores(const list<string>& blocoMotores,
+                        int limX, int limY, list<Motor*>& dest) const;
+        bool lerSensores(const list<string>& blocoSensores,
+                         int limX, int limY, list<Sensor*>& dest) const;
 
         string textoEstado(ESTADO_MOTOR estado) const;
         string textoClasse(CLASSE_TEMPERATURA classe) const;

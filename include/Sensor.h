@@ -214,4 +214,52 @@ class SensorMissel : public Sensor
         virtual void DefinirValorSeguro();
 };
 
+/**
+ * @brief Sensor de temperatura ambiente.
+ *
+ * Dispara quando o valor atinge o limiar.
+ * Sobe gradualmente enquanto houver motores em RUN.
+ */
+class SensorTemperatura : public Sensor
+{
+    private:
+        double limiar;
+
+    public:
+        SensorTemperatura(int id, const string& marca, double valor, double probabilidadeAvaria,
+                          int posX, int posY, double limiar);
+        virtual ~SensorTemperatura();
+
+        double GetLimiar() const;
+        virtual string GetTipo() const;
+        virtual bool EmAviso() const;
+        virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura,
+                                int horaEncerramento, double fracaoHora);
+        virtual void DefinirValorSeguro();
+};
+
+/**
+ * @brief Sensor de fogo/chama.
+ *
+ * Dispara quando o valor e pelo menos 1.
+ * Comportamento semelhante ao sensor de fumo mas associado a chama directa.
+ */
+class SensorFogo : public Sensor
+{
+    private:
+        double limiar;
+
+    public:
+        SensorFogo(int id, const string& marca, double valor, double probabilidadeAvaria,
+                   int posX, int posY, double limiar);
+        virtual ~SensorFogo();
+
+        double GetLimiar() const;
+        virtual string GetTipo() const;
+        virtual bool EmAviso() const;
+        virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura,
+                                int horaEncerramento, double fracaoHora);
+        virtual void DefinirValorSeguro();
+};
+
 #endif
