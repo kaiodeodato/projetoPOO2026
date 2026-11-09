@@ -95,7 +95,6 @@ class Fabrica
         void moverSensores(list<Sensor*>& origem);
         void libertarCargaParcial(list<User*>& users, list<Motor*>& mots, list<Sensor*>& sens);
 
-        // --- Utilitarios de leitura ---
         bool lerLinhas(const string& ficheiro, list<string>& linhas) const;
         string limparLinha(const string& linha) const;
         string tagAbertura(const string& linha) const;
@@ -109,13 +108,11 @@ class Fabrica
                                IntervaloTemperatura& intervalo) const;
         bool lerPosicao(const list<string>& bloco, int& posX, int& posY) const;
 
-        // --- Extrair blocos do ficheiro ---
         bool extrairBloco(const list<string>& linhas, const string& tag,
                           list<string>& bloco) const;
         bool extrairTodosOsBlocos(const list<string>& linhas, const string& tag,
                                   list< list<string> >& blocos) const;
 
-        // --- Parsers de seccoes ---
         bool lerDefinicoes(const list<string>& bloco,
                            int& novoX, int& novoY,
                            int& novaAbertura, int& novoEncerramento,
@@ -126,7 +123,6 @@ class Fabrica
         bool lerTipoMotorBloco(const list<string>& bloco,
                                DefinicoesTipoMotor& def) const;
 
-        // --- Criadores de entidades ---
         Motor*  criarMotorDoBloco(const list<string>& bloco, const string& tipo,
                                   const DefinicoesTipoMotor& def) const;
         Sensor* criarSensorDoBloco(const list<string>& bloco, const string& tipo) const;
