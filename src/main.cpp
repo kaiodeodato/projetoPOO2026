@@ -128,6 +128,7 @@ static void executarMenu(Fabrica& fabrica)
     cout << "12. Ranking motores mais trabalhadores"  << endl;
     cout << "13. Gerar relatorio XML"                 << endl;
     cout << "14. Gerar listagem HTML"                 << endl;
+    cout << "15. Mudar utilizador atual"              << endl;
     cout << "S.  Sair do menu"                        << endl;
     cout << "======================================" << endl;
     cout << "Opcao: ";
@@ -205,6 +206,36 @@ static void executarMenu(Fabrica& fabrica)
         {
             fabrica.Listagem_HTML(fich);
             cout << "Listagem HTML gravada em " << fich << "." << endl;
+        }
+        return;
+    }
+    if (linha == "15")
+    {
+        cout << "Tipo do novo utilizador (admin/normal/visitante): ";
+        string tipo = lerLinha();
+        cout << "ID: ";
+        string sId = lerLinha();
+        cout << "Nome: ";
+        string nome = lerLinha();
+
+        if (!tipo.empty() && !sId.empty() && !nome.empty())
+        {
+            int id = atoi(sId.c_str());
+            User* novo = NULL;
+
+            if (tipo == "admin")           { novo = new Admin(id, nome); }
+            else if (tipo == "normal")     { novo = new Normal(id, nome); }
+            else if (tipo == "visitante")  { novo = new Visitante(id, nome); }
+
+            if (novo != NULL)
+            {
+                fabrica.SetUtilizadorAtual(novo);
+                cout << "Utilizador atual alterado para " << nome << " [" << tipo << "]." << endl;
+            }
+            else
+            {
+                cout << "Tipo invalido." << endl;
+            }
         }
         return;
     }

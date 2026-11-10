@@ -1,5 +1,7 @@
 #include "Motor.h"
 
+#include <iostream>
+
 using namespace std;
 
 Motor::Motor(int id, const string& tipo, const string& marca, double consumoHora,
@@ -55,6 +57,11 @@ void Motor::START()
 
 void Motor::RESTART()
 {
+    if (estado == AVARIADO)
+    {
+        return;
+    }
+
     if (estaEmPerigo())
     {
         estado = ::STOP;
@@ -76,8 +83,15 @@ CLASSE_TEMPERATURA Motor::ESTOU_QUENTE()
 {
     CLASSE_TEMPERATURA classe = GetClasseTemperatura();
 
-    if (classe == VERMELHO)
+    if (classe == AMARELO)
     {
+        cout << "[AVISO GESTOR] Motor " << GetId() << " (" << GetMarca() << ") esta em AMARELO ("
+             << temperaturaAtual << " graus)." << endl;
+    }
+    else if (classe == VERMELHO)
+    {
+        cout << "[AVISO GESTOR] Motor " << GetId() << " (" << GetMarca() << ") esta em VERMELHO ("
+             << temperaturaAtual << " graus) - a parar!" << endl;
         estado = ::STOP;
     }
 
@@ -206,4 +220,28 @@ void Motor::RegistarTrabalho(int minutos)
 void Motor::ReiniciarConsumoDia()
 {
     consumoDia = 0.0;
+}
+
+IntervaloTemperatura Motor::GetIntervaloVerde() const
+{
+    IntervaloTemperatura iv;
+    iv.minimo = 0.0;
+    iv.maximo = 0.0;
+    return iv;
+}
+
+IntervaloTemperatura Motor::GetIntervaloAmarelo() const
+{
+    IntervaloTemperatura iv;
+    iv.minimo = 0.0;
+    iv.maximo = 0.0;
+    return iv;
+}
+
+IntervaloTemperatura Motor::GetIntervaloVermelho() const
+{
+    IntervaloTemperatura iv;
+    iv.minimo = 0.0;
+    iv.maximo = 0.0;
+    return iv;
 }

@@ -72,6 +72,24 @@ class Motor : public Dispositivo
 
         ESTADO_MOTOR GetEstado() const;
         string GetTipo() const;
+
+        /**
+        * @brief Devolve o intervalo VERDE do tipo deste motor.
+        *
+        * As subclasses devem reimplementar este metodo para devolver
+        * o intervalo correto do seu tipo. A base devolve {0,0}.
+        */
+        virtual IntervaloTemperatura GetIntervaloVerde() const;
+
+        /**
+        * @brief Devolve o intervalo AMARELO do tipo deste motor.
+        */
+        virtual IntervaloTemperatura GetIntervaloAmarelo() const;
+
+        /**
+        * @brief Devolve o intervalo VERMELHO do tipo deste motor.
+        */
+        virtual IntervaloTemperatura GetIntervaloVermelho() const;
         double GetConsumoHora() const;
         double GetConsumoDia() const;
         double GetTemperaturaAviso() const;
