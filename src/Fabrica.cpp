@@ -1245,6 +1245,7 @@ bool Fabrica::lerTipoMotorBloco(const list<string>& bloco, DefinicoesTipoMotor& 
     if (!lerIntervaloBloco(bloco, "AMARELO",  def.amarelo))  { return false; }
     if (!lerIntervaloBloco(bloco, "VERMELHO", def.vermelho)) { return false; }
     lerRealDaTag(bloco, "PROB_AVARIA", def.probAvaria);
+    def.probAvaria = def.probAvaria / 100.0; // o XML guarda percentagem; o resto do codigo usa fracao [0, 1]
     return true;
 }
 
@@ -1324,11 +1325,18 @@ Sensor* Fabrica::criarSensorDoBloco(const list<string>& bloco, const string& tip
     string marca = lerTextoDaTag(bloco, "MARCA");
     if (!lerInteiroDaTag(bloco, "ID", id) || marca.empty()) { return NULL; }
     lerRealDaTag(bloco, "PROB_AVARIA", prob);
+    prob = prob / 100.0; // o XML guarda percentagem; o resto do codigo usa fracao [0, 1]
     lerRealDaTag(bloco, "VALOR_ATUAL", valor);
     if (!lerPosicao(bloco, posX, posY))                     { return NULL; }
 
     double limiar = 0.0;
     lerRealDaTag(bloco, "VALOR_AVISO", limiar);
+
+    // PROB_1: probabilidade (em %) por hora de o evento ocorrer. Distinta de PROB_AVARIA.
+    // Se faltar no XML assume-se 1% por hora.
+    double probEvento = 1.0;
+    lerRealDaTag(bloco, "PROB_1", probEvento);
+    probEvento = probEvento / 100.0;
 
     if (tipo == "SHUMIDADE")
     {
@@ -1341,11 +1349,11 @@ Sensor* Fabrica::criarSensorDoBloco(const list<string>& bloco, const string& tip
     }
     if (tipo == "SFUMO")
     {
-        return new SensorFumo(id, marca, valor, prob, posX, posY, limiar);
+        return new SensorFumo(id, marca, valor, prob, posX, posY, limiar, probEvento);
     }
     if (tipo == "SMISSEL" || tipo == "SMISSIL")
     {
-        return new SensorMissel(id, marca, valor, prob, posX, posY);
+        return new SensorMissel(id, marca, valor, prob, posX, posY, probEvento);
     }
     if (tipo == "STEMPERATURA")
     {
@@ -1353,7 +1361,7 @@ Sensor* Fabrica::criarSensorDoBloco(const list<string>& bloco, const string& tip
     }
     if (tipo == "SFOGO")
     {
-        return new SensorFogo(id, marca, valor, prob, posX, posY, limiar);
+        return new SensorFogo(id, marca, valor, prob, posX, posY, limiar, probEvento);
     }
 
     return NULL;

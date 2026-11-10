@@ -165,24 +165,29 @@ class SensorHumidade : public Sensor
  * @brief Sensor de fumo.
  *
  * Dispara quando o valor atinge o limiar.
- * Com motores em RUN o fumo acumula.
+ * Com motores em RUN ha, em cada passo, uma hipotese (proporcional a
+ * probabilidade do evento e a fracao de hora) de a leitura atingir o limiar.
  */
 class SensorFumo : public Sensor
 {
     private:
         double limiar; ///< A partir deste valor ha aviso.
+        double probEvento; ///< Probabilidade por hora de haver fumo, como fracao entre 0 e 1.
 
     public:
         /**
         * @brief Cria um sensor de fumo.
         * @param limiar Valor a partir do qual ha aviso.
+        * @param probEvento Probabilidade por hora de haver fumo, como fracao entre 0 e 1 (por omissao 0.01 = 1%).
         */
         SensorFumo(int id, const string& marca, double valor, double probabilidadeAvaria,
-                   int posX, int posY, double limiar);
+                   int posX, int posY, double limiar, double probEvento = 0.01);
         virtual ~SensorFumo();
 
         /** @brief Devolve o limiar de fumo. */
         double GetLimiar() const;
+        /** @brief Devolve a probabilidade por hora de haver fumo (fracao entre 0 e 1). */
+        double GetProbabilidadeEvento() const;
         virtual string GetTipo() const;
         virtual bool EmAviso() const;
         virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura,
@@ -194,19 +199,26 @@ class SensorFumo : public Sensor
  * @brief Sensor de missel.
  *
  * Dispara quando o valor e pelo menos 1.
- * Em cada passo ha uma hipotese, proporcional a probabilidade e a fracao de hora,
- * de a leitura passar a 1.
+ * Em cada passo ha uma hipotese, proporcional a probabilidade do evento e a fracao
+ * de hora, de a leitura passar a 1. A probabilidade do evento e distinta da
+ * probabilidade de avaria do sensor.
  */
 class SensorMissel : public Sensor
 {
+    private:
+        double probEvento; ///< Probabilidade por hora de aparecer um missel, como fracao entre 0 e 1.
+
     public:
         /**
         * @brief Cria um sensor de missel.
+        * @param probEvento Probabilidade por hora de aparecer um missel, como fracao entre 0 e 1 (por omissao 0.01).
         */
         SensorMissel(int id, const string& marca, double valor, double probabilidadeAvaria,
-                     int posX, int posY);
+                     int posX, int posY, double probEvento = 0.01);
         virtual ~SensorMissel();
 
+        /** @brief Devolve a probabilidade por hora de aparecer um missel (fracao entre 0 e 1). */
+        double GetProbabilidadeEvento() const;
         virtual string GetTipo() const;
         virtual bool EmAviso() const;
         virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura,
@@ -248,13 +260,17 @@ class SensorFogo : public Sensor
 {
     private:
         double limiar;
+        double probEvento; ///< Probabilidade por hora de haver fogo, como fracao entre 0 e 1.
 
     public:
+        /** @param probEvento Probabilidade por hora de haver fogo, como fracao entre 0 e 1 (por omissao 0.01). */
         SensorFogo(int id, const string& marca, double valor, double probabilidadeAvaria,
-                   int posX, int posY, double limiar);
+                   int posX, int posY, double limiar, double probEvento = 0.01);
         virtual ~SensorFogo();
 
         double GetLimiar() const;
+        /** @brief Devolve a probabilidade por hora de haver fogo (fracao entre 0 e 1). */
+        double GetProbabilidadeEvento() const;
         virtual string GetTipo() const;
         virtual bool EmAviso() const;
         virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura,
