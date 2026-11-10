@@ -64,6 +64,11 @@ bool Fabrica::Load(const string& ficheiro)
         return false;
     }
 
+    if (eFormatoAtributos(linhas))
+    {
+        return carregarFormatoAtributos(linhas);
+    }
+
     list<string> blocoDefinicoes;
     if (!extrairBloco(linhas, "DEFINICOES", blocoDefinicoes))
     {
@@ -1406,7 +1411,12 @@ bool Fabrica::lerSensores(const list<string>& blocoSensores,
             Sensor* s = criarSensorDoBloco(*it, tipo);
             if (s == NULL)                                                          { return false; }
             if (!posicaoValida(s->GetX(), s->GetY(), limX, limY))                   { delete s; return false; }
-            if (idSensorExiste(dest, s->GetId()) || idSensorExiste(sensores, s->GetId())) { delete s; return false; }
+            if (idSensorExiste(dest, s->GetId()) || idSensorExiste(sensores, s->GetId()))
+            {
+                cerr << "[AVISO] Sensor com ID repetido (" << s->GetId() << ") ignorado." << endl;
+                delete s;
+                continue;
+            }
             dest.push_back(s);
         }
     }
@@ -1695,4 +1705,358 @@ void Fabrica::inserirPorTrabalho(list<Motor*>& destino, Motor* motor) const
     }
 
     destino.push_back(motor);
+}
+
+bool Fabrica::eFormatoAtributos(const list<string>& linhas) const
+{
+    for (list<string>::const_iterator it = linhas.begin(); it != linhas.end(); ++it)
+    {
+        if (*it == "<FABRICA>")
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Fabrica::atributoTexto(const string& linha, const string& nome, string& valor) const
+{
+    string chave = nome + "=\"";
+    size_t pos = linha.find(chave);
+
+    // O nome tem de comecar depois de um espaco, para "x" nao coincidir com o fim de outro atributo.
+    while (pos != string::npos)
+    {
+        if (pos > 0 && (linha[pos - 1] == ' ' || linha[pos - 1] == '\t'))
+        {
+            break;
+        }
+        pos = linha.find(chave, pos + 1);
+    }
+
+    if (pos == string::npos)
+    {
+        return false;
+    }
+
+    size_t inicio = pos + chave.size();
+    size_t fim = linha.find('"', inicio);
+    if (fim == string::npos)
+    {
+        return false;
+    }
+
+    valor = linha.substr(inicio, fim - inicio);
+    return true;
+}
+
+bool Fabrica::atributoInteiro(const string& linha, const string& nome, int& valor) const
+{
+    string texto;
+    if (!atributoTexto(linha, nome, texto))
+    {
+        return false;
+    }
+
+    stringstream ss(texto);
+    int v = 0;
+    if (!(ss >> v))
+    {
+        return false;
+    }
+
+    valor = v;
+    return true;
+}
+
+bool Fabrica::atributoReal(const string& linha, const string& nome, double& valor) const
+{
+    string texto;
+    if (!atributoTexto(linha, nome, texto))
+    {
+        return false;
+    }
+
+    stringstream ss(texto);
+    double v = 0.0;
+    if (!(ss >> v))
+    {
+        return false;
+    }
+
+    valor = v;
+    return true;
+}
+
+Motor* Fabrica::criarMotorDeAtributos(const string& linha, DefinicoesTipoMotor& def) const
+{
+    string tipo;
+    string marca;
+    int    id      = 0;
+    int    posX    = 0;
+    int    posY    = 0;
+    double consumo = 0.0;
+    double prob    = 0.0;
+    double aviso   = 0.0;
+    double paragem = 0.0;
+
+    if (!atributoTexto(linha, "tipo", tipo) || !atributoTexto(linha, "marca", marca) || marca.empty())
+    {
+        return NULL;
+    }
+
+    if (!atributoInteiro(linha, "id", id) ||
+        !atributoInteiro(linha, "x", posX) ||
+        !atributoInteiro(linha, "y", posY))
+    {
+        return NULL;
+    }
+
+    if (!atributoReal(linha, "consumo", consumo) ||
+        !atributoReal(linha, "tempAviso", aviso) ||
+        !atributoReal(linha, "tempParagem", paragem))
+    {
+        return NULL;
+    }
+
+    atributoReal(linha, "probAvaria", prob);
+    prob = prob / 100.0; // o XML guarda percentagem; os construtores recebem fracao [0, 1]
+
+    if (id <= 0 || consumo < 0.0 || aviso >= paragem)
+    {
+        return NULL;
+    }
+
+    // Este formato nao traz intervalos: derivam-se de tempAviso e tempParagem.
+    def.verde.minimo    = 0.0;
+    def.verde.maximo    = aviso > 1.0 ? aviso - 1.0 : 0.0;
+    def.amarelo.minimo  = aviso;
+    def.amarelo.maximo  = paragem - 1.0;
+    def.vermelho.minimo = paragem;
+    def.vermelho.maximo = paragem + (paragem - aviso);
+    def.probAvaria      = prob;
+
+    if (tipo == "COMBUSTAO" || tipo == "MCOMBUSTAO")
+    {
+        return new MotorCombustao(id, marca, consumo, prob, posX, posY,
+                                  def.verde, def.amarelo, def.vermelho);
+    }
+    if (tipo == "ELETRICO" || tipo == "MELETRICO")
+    {
+        return new MotorEletrico(id, marca, consumo, prob, posX, posY,
+                                 def.verde, def.amarelo, def.vermelho);
+    }
+    if (tipo == "INDUCAO" || tipo == "MINDUCAO")
+    {
+        return new MotorInducao(id, marca, consumo, prob, posX, posY,
+                                def.verde, def.amarelo, def.vermelho);
+    }
+
+    return NULL;
+}
+
+Sensor* Fabrica::criarSensorDeAtributos(const string& linha) const
+{
+    string tipo;
+    string marca;
+    int    id     = 0;
+    int    posX   = 0;
+    int    posY   = 0;
+    int    raio   = 5;
+    double valor  = 0.0;
+    double limiar = 0.0;
+    double prob   = 0.0;
+
+    if (!atributoTexto(linha, "tipo", tipo) || !atributoTexto(linha, "marca", marca) || marca.empty())
+    {
+        return NULL;
+    }
+
+    if (!atributoInteiro(linha, "id", id) ||
+        !atributoInteiro(linha, "x", posX) ||
+        !atributoInteiro(linha, "y", posY))
+    {
+        return NULL;
+    }
+
+    atributoReal(linha, "valor", valor);
+    atributoReal(linha, "limiar", limiar);
+    atributoReal(linha, "probAvaria", prob);
+    prob = prob / 100.0; // o XML guarda percentagem; os construtores recebem fracao [0, 1]
+    atributoInteiro(linha, "raio", raio);
+
+    if (id <= 0)
+    {
+        return NULL;
+    }
+
+    if (tipo == "LUZ" || tipo == "SLUZ")
+    {
+        return new SensorLuz(id, marca, valor, prob, posX, posY, limiar);
+    }
+    if (tipo == "HUMIDADE" || tipo == "SHUMIDADE")
+    {
+        return new SensorHumidade(id, marca, valor, prob, posX, posY, limiar, raio);
+    }
+    if (tipo == "FUMO" || tipo == "SFUMO")
+    {
+        return new SensorFumo(id, marca, valor, prob, posX, posY, limiar);
+    }
+    if (tipo == "MISSEL" || tipo == "SMISSEL" || tipo == "SMISSIL")
+    {
+        return new SensorMissel(id, marca, valor, prob, posX, posY);
+    }
+    if (tipo == "TEMPERATURA" || tipo == "STEMPERATURA")
+    {
+        return new SensorTemperatura(id, marca, valor, prob, posX, posY, limiar);
+    }
+    if (tipo == "FOGO" || tipo == "SFOGO")
+    {
+        return new SensorFogo(id, marca, valor, prob, posX, posY, limiar);
+    }
+
+    return NULL;
+}
+
+bool Fabrica::carregarFormatoAtributos(const list<string>& linhas)
+{
+    list<string> blocoDefinicoes;
+    if (!extrairBloco(linhas, "DEFINICOES", blocoDefinicoes))
+    {
+        return false;
+    }
+
+    int novaAbertura     = 0;
+    int novoEncerramento = 0;
+    int novaVizinhanca   = 0;
+
+    if (!lerInteiroDaTag(blocoDefinicoes, "HORA_INICIO", novaAbertura) ||
+        !lerInteiroDaTag(blocoDefinicoes, "HORA_FECHO", novoEncerramento))
+    {
+        return false;
+    }
+
+    if (!horaValida(novaAbertura) || novoEncerramento < 0 || novoEncerramento > 24 ||
+        novaAbertura >= novoEncerramento)
+    {
+        return false;
+    }
+
+    lerInteiroDaTag(blocoDefinicoes, "VIZINHANCA_AVISO", novaVizinhanca);
+
+    string dimTexto = lerTextoDaTag(blocoDefinicoes, "DIMENSAO");
+    if (dimTexto.empty())
+    {
+        dimTexto = lerTextoDaTag(blocoDefinicoes, "DIMENSAO_FABRICA");
+    }
+
+    double dx = 0.0;
+    double dy = 0.0;
+    if (!lerPar(dimTexto, dx, dy))
+    {
+        return false;
+    }
+
+    int novoX = (int)dx;
+    int novoY = (int)dy;
+    if (novoX <= 0 || novoY <= 0)
+    {
+        return false;
+    }
+
+    string novoNome = lerTextoDaTag(blocoDefinicoes, "NOME_EMPRESA");
+
+    // Tudo e criado em listas locais e so passa para a fabrica no fim.
+    list<Motor*>  novosMotores;
+    list<Sensor*> novosSensores;
+    DefinicoesTipoMotor novoComb = defCombustao;
+    DefinicoesTipoMotor novoElet = defEletrico;
+    DefinicoesTipoMotor novoInd  = defInducao;
+    bool temComb = false;
+    bool temElet = false;
+    bool temInd  = false;
+    bool ok      = true;
+
+    for (list<string>::const_iterator it = linhas.begin(); it != linhas.end() && ok; ++it)
+    {
+        const string& linha = *it;
+
+        if (linha.compare(0, 7, "<MOTOR ") == 0)
+        {
+            DefinicoesTipoMotor def;
+            Motor* m = criarMotorDeAtributos(linha, def);
+            if (m == NULL)
+            {
+                ok = false;
+                break;
+            }
+
+            if (!posicaoValida(m->GetX(), m->GetY(), novoX, novoY) ||
+                idMotorExiste(novosMotores, m->GetId()))
+            {
+                delete m;
+                ok = false;
+                break;
+            }
+
+            novosMotores.push_back(m);
+
+            string tipoMotor = m->GetTipo();
+            if (tipoMotor == "MCOMBUSTAO")      { novoComb = def; temComb = true; }
+            else if (tipoMotor == "MELETRICO")  { novoElet = def; temElet = true; }
+            else if (tipoMotor == "MINDUCAO")   { novoInd  = def; temInd  = true; }
+        }
+        else if (linha.compare(0, 8, "<SENSOR ") == 0)
+        {
+            Sensor* s = criarSensorDeAtributos(linha);
+            if (s == NULL)
+            {
+                ok = false;
+                break;
+            }
+
+            if (!posicaoValida(s->GetX(), s->GetY(), novoX, novoY))
+            {
+                delete s;
+                ok = false;
+                break;
+            }
+
+            if (idSensorExiste(novosSensores, s->GetId()))
+            {
+                cerr << "[AVISO] Sensor com ID repetido (" << s->GetId() << ") ignorado." << endl;
+                delete s;
+                continue;
+            }
+
+            novosSensores.push_back(s);
+        }
+    }
+
+    if (!ok)
+    {
+        apagarMotores(novosMotores);
+        apagarSensores(novosSensores);
+        return false;
+    }
+
+    campoX           = novoX;
+    campoY           = novoY;
+    horaAbertura     = novaAbertura;
+    horaEncerramento = novoEncerramento;
+    vizinhancaAviso  = novaVizinhanca;
+    nomeFabrica      = novoNome;
+
+    if (temComb) { defCombustao = novoComb; }
+    if (temElet) { defEletrico  = novoElet; }
+    if (temInd)  { defInducao   = novoInd; }
+
+    if (temComb)      { verde = novoComb.verde; amarelo = novoComb.amarelo; vermelho = novoComb.vermelho; }
+    else if (temElet) { verde = novoElet.verde; amarelo = novoElet.amarelo; vermelho = novoElet.vermelho; }
+    else if (temInd)  { verde = novoInd.verde;  amarelo = novoInd.amarelo;  vermelho = novoInd.vermelho; }
+
+    moverMotores(novosMotores);
+    moverSensores(novosSensores);
+    return true;
 }

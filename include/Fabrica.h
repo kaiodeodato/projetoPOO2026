@@ -19,8 +19,12 @@ using namespace std;
  * @brief Gestao da fabrica: campo, dispositivos, acessos e configuracao XML.
  *
  * A fabrica e um campo de campoX por campoY. Cada motor e cada sensor
- * ocupa uma posicao (X, Y). So entram valores positivos, e apenas
- * dentro do campo (1..campoX e 1..campoY).
+ * ocupa uma posicao (X, Y). Sao aceites coordenadas nao negativas,
+ * dentro do campo (0..campoX e 0..campoY).
+ *
+ * O ficheiro XML pode ter dois formatos (detetados no Load):
+ * - elementos aninhados (raiz DADOS, ex.: xml/gerado.xml);
+ * - atributos por linha (raiz FABRICA, ex.: xml/fabrica.xml).
  *
  * Posse de memoria:
  * - A fabrica e dona de todos os ponteiros que guarda.
@@ -130,6 +134,35 @@ class Fabrica
                         int limX, int limY, list<Motor*>& dest) const;
         bool lerSensores(const list<string>& blocoSensores,
                          int limX, int limY, list<Sensor*>& dest) const;
+
+        /** @brief Indica se o ficheiro e do formato com atributos (raiz FABRICA). */
+        bool eFormatoAtributos(const list<string>& linhas) const;
+
+        /**
+        * @brief Carrega o formato com atributos (ex.: xml/fabrica.xml).
+        *
+        * Cada motor e sensor ocupa uma linha: <MOTOR id="100" x="0" .../>.
+        * A carga e atomica: se algo falhar, a fabrica fica inalterada e tudo
+        * o que foi criado e libertado.
+        */
+        bool carregarFormatoAtributos(const list<string>& linhas);
+
+        /** @brief Le o valor de nome="valor" numa linha. Devolve false se nao existir. */
+        bool atributoTexto(const string& linha, const string& nome, string& valor) const;
+        /** @brief Como atributoTexto, convertendo para inteiro. */
+        bool atributoInteiro(const string& linha, const string& nome, int& valor) const;
+        /** @brief Como atributoTexto, convertendo para real. */
+        bool atributoReal(const string& linha, const string& nome, double& valor) const;
+
+        /**
+        * @brief Cria um motor a partir de uma linha <MOTOR .../>.
+        * @param def Recebe os intervalos de temperatura derivados de tempAviso e tempParagem.
+        * @return Motor novo ou NULL se a linha for invalida.
+        */
+        Motor* criarMotorDeAtributos(const string& linha, DefinicoesTipoMotor& def) const;
+
+        /** @brief Cria um sensor a partir de uma linha <SENSOR .../>. NULL se invalida. */
+        Sensor* criarSensorDeAtributos(const string& linha) const;
 
         string textoEstado(ESTADO_MOTOR estado) const;
         string textoClasse(CLASSE_TEMPERATURA classe) const;
