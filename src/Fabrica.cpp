@@ -93,6 +93,13 @@ bool Fabrica::Load(const string& ficheiro)
         return false;
     }
 
+    // lerMotores e lerSensores precisam destes valores, por isso sao aplicados ja.
+    // Se a carga falhar, restaurarDefinicoes volta ao estado anterior.
+    const int vizinhancaAnterior = vizinhancaAviso;
+    const DefinicoesTipoMotor combAnterior = defCombustao;
+    const DefinicoesTipoMotor eletAnterior = defEletrico;
+    const DefinicoesTipoMotor indAnterior  = defInducao;
+
     vizinhancaAviso = novaVizinhanca;
 
     defCombustao = novoComb;
@@ -105,8 +112,8 @@ bool Fabrica::Load(const string& ficheiro)
     {
         if (!lerMotores(blocoMotores, novoX, novoY, novosMotores))
         {
-            libertarCargaParcial(utilizadores, novosMotores, sensores);
-            vizinhancaAviso = 0;
+            apagarMotores(novosMotores);
+            restaurarDefinicoes(vizinhancaAnterior, combAnterior, eletAnterior, indAnterior);
             return false;
         }
     }
@@ -118,7 +125,8 @@ bool Fabrica::Load(const string& ficheiro)
         if (!lerSensores(blocoSensores, novoX, novoY, novosSensores))
         {
             apagarMotores(novosMotores);
-            vizinhancaAviso = 0;
+            apagarSensores(novosSensores);
+            restaurarDefinicoes(vizinhancaAnterior, combAnterior, eletAnterior, indAnterior);
             return false;
         }
     }
@@ -939,11 +947,13 @@ void Fabrica::moverSensores(list<Sensor*>& origem)
     origem.clear();
 }
 
-void Fabrica::libertarCargaParcial(list<User*>& users, list<Motor*>& mots, list<Sensor*>& sens)
+void Fabrica::restaurarDefinicoes(int vizinhanca, const DefinicoesTipoMotor& comb,
+                                  const DefinicoesTipoMotor& elet, const DefinicoesTipoMotor& ind)
 {
-    apagarUtilizadores(users);
-    apagarMotores(mots);
-    apagarSensores(sens);
+    vizinhancaAviso = vizinhanca;
+    defCombustao    = comb;
+    defEletrico     = elet;
+    defInducao      = ind;
 }
 
 bool Fabrica::lerLinhas(const string& ficheiro, list<string>& linhas) const
