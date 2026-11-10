@@ -45,7 +45,7 @@ int Dispositivo::GetTotalAvarias() const
 
 bool Dispositivo::SetPosicao(int posX, int posY)
 {
-    if (posX <= 0 || posY <= 0)
+    if (posX < 0 || posY < 0)
     {
         return false;
     }

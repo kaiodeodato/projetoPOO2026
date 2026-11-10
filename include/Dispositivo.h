@@ -11,7 +11,7 @@ using namespace std;
  *
  * Tanto o sensor como o motor tem identificador, marca,
  * probabilidade de avaria e uma posicao no campo da fabrica.
- * A posicao so e aceite quando X e Y sao positivos.
+ * A posicao so e aceite quando X e Y sao nao-negativos (>= 0).
  */
 class Dispositivo
 {
@@ -19,8 +19,8 @@ class Dispositivo
         int id; ///< Identificador unico dentro do seu grupo (motor ou sensor).
         string marca; ///< Fabricante do dispositivo.
         double probabilidadeAvaria; ///< Probabilidade de avaria por hora, entre 0 e 1.
-        int x; ///< Coordenada X no campo. Zero significa posicao invalida.
-        int y; ///< Coordenada Y no campo. Zero significa posicao invalida.
+        int x; ///< Coordenada X no campo. Valores negativos sao invalidos.
+        int y; ///< Coordenada Y no campo. Valores negativos sao invalidos.
         int totalAvarias; ///< Numero de avarias registadas.
         bool avariado; ///< true enquanto a ultima avaria nao foi reparada.
 
@@ -37,8 +37,8 @@ class Dispositivo
         * @param id Identificador. Deve ser positivo para entrar na fabrica.
         * @param marca Fabricante.
         * @param probabilidadeAvaria Probabilidade por hora. Valores fora de [0, 1] sao limitados.
-        * @param posX Coordenada X. So e guardada se for positiva.
-        * @param posY Coordenada Y. So e guardada se for positiva.
+        * @param posX Coordenada X. So e guardada se for nao-negativa.
+        * @param posY Coordenada Y. So e guardada se for nao-negativa.
         */
         Dispositivo(int id, const string& marca, double probabilidadeAvaria, int posX, int posY);
 
@@ -71,9 +71,9 @@ class Dispositivo
 
         /**
         * @brief Altera a posicao.
-        * @param posX Coordenada X. Tem de ser positiva.
-        * @param posY Coordenada Y. Tem de ser positiva.
-        * @return false se X ou Y nao forem positivos. Nesse caso a posicao nao muda.
+        * @param posX Coordenada X. Tem de ser nao-negativa.
+        * @param posY Coordenada Y. Tem de ser nao-negativa.
+        * @return false se X ou Y forem negativos. Nesse caso a posicao nao muda.
         */
         bool SetPosicao(int posX, int posY);
 

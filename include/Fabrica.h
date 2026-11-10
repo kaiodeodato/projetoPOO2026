@@ -228,6 +228,15 @@ class Fabrica
         * Deve ser chamado no virar do dia simulado.
         */
         void ReiniciarConsumoDia();
+
+        /**
+        * @brief Troca o utilizador actual por um novo.
+        *
+        * O utilizador anterior e apagado se nao estiver na lista de utilizadores.
+        * A fabrica fica dona do novo ponteiro.
+        * @param novo Novo utilizador. NULL e ignorado.
+        */
+        void SetUtilizadorAtual(User* novo);
 };
 
 #endif

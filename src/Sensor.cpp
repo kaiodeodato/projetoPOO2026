@@ -239,7 +239,7 @@ double SensorTemperatura::GetLimiar() const
 
 string SensorTemperatura::GetTipo() const
 {
-    return "STEMPERATURA";
+    return "TEMPERATURA";
 }
 
 bool SensorTemperatura::EmAviso() const
@@ -292,7 +292,7 @@ double SensorFogo::GetLimiar() const
 
 string SensorFogo::GetTipo() const
 {
-    return "SFOGO";
+    return "FOGO";
 }
 
 bool SensorFogo::EmAviso() const

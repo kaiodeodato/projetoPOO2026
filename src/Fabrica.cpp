@@ -1,5 +1,6 @@
 #include "Fabrica.h"
 
+#include <cctype>
 #include <cstddef>
 #include <cstdlib>
 #include <cmath>
@@ -361,6 +362,11 @@ list<Motor*>* Fabrica::Listar_Tipo(string Tipo, ostream& f) const
         return NULL;
     }
 
+    for (size_t i = 0; i < Tipo.size(); ++i)
+    {
+        Tipo[i] = (char)toupper((unsigned char)Tipo[i]);
+    }
+
     list<Motor*>* resultado = new list<Motor*>();
 
     for (list<Motor*>::const_iterator it = motores.begin(); it != motores.end(); ++it)
@@ -371,6 +377,11 @@ list<Motor*>* Fabrica::Listar_Tipo(string Tipo, ostream& f) const
             resultado->push_back(m);
             f << m->GetId() << " " << m->GetMarca() << " " << textoEstado(m->GetEstado()) << endl;
         }
+    }
+
+    if (resultado->empty())
+    {
+        f << "Nenhum motor do tipo \"" << Tipo << "\". Tipos disponiveis: MCOMBUSTAO, MELETRICO, MINDUCAO" << endl;
     }
 
     return resultado;
@@ -386,11 +397,12 @@ bool Fabrica::Manutencao()
     for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
     {
         Motor* m = *it;
-        double amplitude = verde.maximo - verde.minimo;
-        double novaTemp = verde.minimo;
+        IntervaloTemperatura ivVerde = m->GetIntervaloVerde();
+        double amplitude = ivVerde.maximo - ivVerde.minimo;
+        double novaTemp = ivVerde.minimo;
         if (amplitude > 0.0)
         {
-            novaTemp = verde.minimo + (rand() % 10001) / 10000.0 * amplitude;
+            novaTemp = ivVerde.minimo + (rand() % 10001) / 10000.0 * amplitude;
         }
         m->SetTemperaturaAtual(novaTemp);
         m->Reparar();
@@ -518,7 +530,13 @@ int Fabrica::Aviso_Humidade(list<Motor*>& lm)
             int dy = m->GetY() - s->GetY();
             double dist = sqrt((double)(dx * dx + dy * dy));
 
-            if (dist <= raio && m->GetEstado() != STOP && m->GetEstado() != AVARIADO)
+            bool jaNaLista = false;
+            for (list<Motor*>::iterator ild = lm.begin(); ild != lm.end(); ++ild)
+            {
+                if (*ild == m) { jaNaLista = true; break; }
+            }
+
+            if (dist <= raio && m->GetEstado() != STOP && m->GetEstado() != AVARIADO && !jaNaLista)
             {
                 m->STOP();
                 lm.push_back(m);
@@ -583,6 +601,11 @@ void Fabrica::Aviso_Missel(string fvideo, string festado)
         {
             m->STOP();
         }
+    }
+
+    for (list<Sensor*>::iterator it = sensores.begin(); it != sensores.end(); ++it)
+    {
+        (*it)->Repor();
     }
 
     if (!festado.empty())
@@ -1504,24 +1527,19 @@ void Fabrica::PassoSimulacao(int minutoAtual, int horaAtual, int minutosPasso, d
             {
                 m->RUN();
             }
+            else
+            {
+                cout << "[AVISO] Motor " << m->GetId()
+                     << " (" << m->GetMarca() << ") aguarda abertura da fabrica (hora actual: "
+                     << horaAtual << "h)." << endl;
+            }
         }
 
         if (m->GetEstado() == RUN)
         {
             m->Aquecer(grausPasso);
             m->RegistarTrabalho(minutosPasso);
-
-            CLASSE_TEMPERATURA classe = m->ESTOU_QUENTE();
-            if (classe == AMARELO)
-            {
-                cout << "[AVISO GESTOR] Motor " << m->GetId()
-                     << " (" << m->GetTipo() << ") esta a aquecer (AMARELO)." << endl;
-            }
-            else if (classe == VERMELHO)
-            {
-                cout << "[AVISO GESTOR] Motor " << m->GetId()
-                     << " (" << m->GetTipo() << ") PARADO por sobreaquecimento (VERMELHO)." << endl;
-            }
+            m->ESTOU_QUENTE();
 
             double sorteio = (rand() % 10000) / 10000.0;
             if (sorteio < m->GetProbabilidadeAvaria() * fracaoHora)
@@ -1529,7 +1547,7 @@ void Fabrica::PassoSimulacao(int minutoAtual, int horaAtual, int minutosPasso, d
                 if (m->Avariar())
                 {
                     cout << "[AVISO GESTOR] Motor " << m->GetId()
-                         << " (" << m->GetTipo() << ") AVARIOU." << endl;
+                         << " (" << m->GetMarca() << ") AVARIOU." << endl;
                 }
             }
         }
@@ -1593,6 +1611,36 @@ void Fabrica::VerificarAvisosSensores(list<Motor*>& desligados)
         {
             Aviso_Missel("", "Estado.txt");
         }
+        else if (tipo == "TEMPERATURA")
+        {
+            cout << "[AVISO SENSOR] Temperatura critica detetada pelo sensor " << s->GetId() << "." << endl;
+            for (list<Motor*>::iterator im = motores.begin(); im != motores.end(); ++im)
+            {
+                Motor* m = *im;
+                if (m->GetEstado() != AVARIADO && m->GetEstado() != ::STOP)
+                {
+                    m->STOP();
+                    desligados.push_back(m);
+                }
+            }
+        }
+        else if (tipo == "FOGO")
+        {
+            cout << "[ALERTA CRITICO] Fogo detetado pelo sensor " << s->GetId() << "! A parar todos os motores!" << endl;
+            for (list<Motor*>::iterator im = motores.begin(); im != motores.end(); ++im)
+            {
+                Motor* m = *im;
+                if (m->GetEstado() != AVARIADO)
+                {
+                    m->STOP();
+                    desligados.push_back(m);
+                }
+            }
+            for (list<Sensor*>::iterator is = sensores.begin(); is != sensores.end(); ++is)
+            {
+                (*is)->Repor();
+            }
+        }
     }
 }
 
@@ -1602,6 +1650,31 @@ void Fabrica::ReiniciarConsumoDia()
     {
         (*it)->ReiniciarConsumoDia();
     }
+}
+
+void Fabrica::SetUtilizadorAtual(User* novo)
+{
+    if (novo == NULL)
+    {
+        return;
+    }
+
+    bool estaNaLista = false;
+    for (list<User*>::iterator it = utilizadores.begin(); it != utilizadores.end(); ++it)
+    {
+        if (*it == utilizadorAtual)
+        {
+            estaNaLista = true;
+            break;
+        }
+    }
+
+    if (!estaNaLista && utilizadorAtual != NULL)
+    {
+        delete utilizadorAtual;
+    }
+
+    utilizadorAtual = novo;
 }
 
 void Fabrica::inserirPorTrabalho(list<Motor*>& destino, Motor* motor) const
