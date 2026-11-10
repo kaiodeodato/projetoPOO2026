@@ -107,8 +107,9 @@ bool SensorHumidade::EmAviso() const
 }
 
 SensorFumo::SensorFumo(int id, const string& marca, double valor, double probabilidadeAvaria,
-                       int posX, int posY, double limiar)
-    : Sensor(id, marca, valor, probabilidadeAvaria, posX, posY), limiar(limiar)
+                       int posX, int posY, double limiar, double probEvento)
+    : Sensor(id, marca, valor, probabilidadeAvaria, posX, posY), limiar(limiar),
+      probEvento(limitarProbabilidade(probEvento))
 {
 }
 
@@ -119,6 +120,11 @@ SensorFumo::~SensorFumo()
 double SensorFumo::GetLimiar() const
 {
     return limiar;
+}
+
+double SensorFumo::GetProbabilidadeEvento() const
+{
+    return probEvento;
 }
 
 string SensorFumo::GetTipo() const
@@ -132,13 +138,19 @@ bool SensorFumo::EmAviso() const
 }
 
 SensorMissel::SensorMissel(int id, const string& marca, double valor, double probabilidadeAvaria,
-                           int posX, int posY)
-    : Sensor(id, marca, valor, probabilidadeAvaria, posX, posY)
+                           int posX, int posY, double probEvento)
+    : Sensor(id, marca, valor, probabilidadeAvaria, posX, posY),
+      probEvento(limitarProbabilidade(probEvento))
 {
 }
 
 SensorMissel::~SensorMissel()
 {
+}
+
+double SensorMissel::GetProbabilidadeEvento() const
+{
+    return probEvento;
 }
 
 string SensorMissel::GetTipo() const
@@ -171,9 +183,20 @@ void SensorLuz::DefinirValorSeguro()
 
 void SensorHumidade::Actualizar(bool motoresEmMarcha, int, int, int, double)
 {
-    if (motoresEmMarcha && valor < 100.0)
+    if (motoresEmMarcha)
     {
-        valor = valor + 2.0;
+        if (valor < 100.0)
+        {
+            valor = valor + 0.5;
+        }
+    }
+    else if (valor > 0.0)
+    {
+        valor = valor - 0.3;
+        if (valor < 0.0)
+        {
+            valor = 0.0;
+        }
     }
 }
 
@@ -189,11 +212,22 @@ void SensorHumidade::DefinirValorSeguro()
     }
 }
 
-void SensorFumo::Actualizar(bool motoresEmMarcha, int, int, int, double)
+void SensorFumo::Actualizar(bool motoresEmMarcha, int, int, int, double fracaoHora)
 {
-    if (motoresEmMarcha && valor < limiar + 5.0)
+    // O fumo e um evento aleatorio (probEvento por hora), so possivel com motores em marcha.
+    if (valor >= limiar || EstaAvariado())
     {
-        valor = valor + 0.8;
+        return;
+    }
+
+    if (motoresEmMarcha)
+    {
+        double sorteio = (rand() % 10000) / 10000.0;
+        double limite  = probEvento * fracaoHora;
+        if (sorteio < limite)
+        {
+            valor = limiar;
+        }
     }
 }
 
@@ -210,7 +244,7 @@ void SensorMissel::Actualizar(bool, int, int, int, double fracaoHora)
     }
 
     double sorteio = (rand() % 10000) / 10000.0;
-    double limite = GetProbabilidadeAvaria() * fracaoHora;
+    double limite = probEvento * fracaoHora;
     if (sorteio < limite)
     {
         valor = 1.0;
@@ -276,8 +310,10 @@ void SensorTemperatura::DefinirValorSeguro()
 }
 
 SensorFogo::SensorFogo(int id, const string& marca, double valor,
-                       double probabilidadeAvaria, int posX, int posY, double limiar)
-    : Sensor(id, marca, valor, probabilidadeAvaria, posX, posY), limiar(limiar)
+                       double probabilidadeAvaria, int posX, int posY, double limiar,
+                       double probEvento)
+    : Sensor(id, marca, valor, probabilidadeAvaria, posX, posY), limiar(limiar),
+      probEvento(limitarProbabilidade(probEvento))
 {
 }
 
@@ -288,6 +324,11 @@ SensorFogo::~SensorFogo()
 double SensorFogo::GetLimiar() const
 {
     return limiar;
+}
+
+double SensorFogo::GetProbabilidadeEvento() const
+{
+    return probEvento;
 }
 
 string SensorFogo::GetTipo() const
@@ -310,7 +351,7 @@ void SensorFogo::Actualizar(bool motoresEmMarcha, int, int, int, double fracaoHo
     if (motoresEmMarcha)
     {
         double sorteio = (rand() % 10000) / 10000.0;
-        double limite  = GetProbabilidadeAvaria() * fracaoHora;
+        double limite  = probEvento * fracaoHora;
         if (sorteio < limite)
         {
             valor = limiar;

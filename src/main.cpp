@@ -398,14 +398,22 @@ static void executarMenu(Fabrica& fabrica)
                 {
                     cout << "Limiar: ";
                     string sLim = lerLinha();
-                    if (!sLim.empty())
+                    cout << "Prob fumo [0-1]: ";
+                    string sEvento = lerLinha();
+                    if (!sLim.empty() && !sEvento.empty())
                     {
-                        s = new SensorFumo(id, marca, val, prob, px, py, atof(sLim.c_str()));
+                        s = new SensorFumo(id, marca, val, prob, px, py,
+                                           atof(sLim.c_str()), atof(sEvento.c_str()));
                     }
                 }
                 else if (tipo == "missel")
                 {
-                    s = new SensorMissel(id, marca, val, prob, px, py);
+                    cout << "Prob missel [0-1]: ";
+                    string sEvento = lerLinha();
+                    if (!sEvento.empty())
+                    {
+                        s = new SensorMissel(id, marca, val, prob, px, py, atof(sEvento.c_str()));
+                    }
                 }
 
                 if (s != NULL)
