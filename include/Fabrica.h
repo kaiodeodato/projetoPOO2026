@@ -93,7 +93,13 @@ class Fabrica
         void moverUtilizadores(list<User*>& origem);
         void moverMotores(list<Motor*>& origem);
         void moverSensores(list<Sensor*>& origem);
-        void libertarCargaParcial(list<User*>& users, list<Motor*>& mots, list<Sensor*>& sens);
+        /**
+        * @brief Repoe as definicoes alteradas por uma carga que falhou.
+        *
+        * So mexe nas definicoes. Nunca apaga utilizadores nem dispositivos da fabrica.
+        */
+        void restaurarDefinicoes(int vizinhanca, const DefinicoesTipoMotor& comb,
+                                 const DefinicoesTipoMotor& elet, const DefinicoesTipoMotor& ind);
 
         bool lerLinhas(const string& ficheiro, list<string>& linhas) const;
         string limparLinha(const string& linha) const;
