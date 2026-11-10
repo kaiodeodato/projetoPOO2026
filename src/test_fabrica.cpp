@@ -27,9 +27,6 @@ static void check(const string& nome, bool cond)
     }
 }
 
-// -------------------------------------------------------------------------
-// T1 - Carregamento do XML
-// -------------------------------------------------------------------------
 static void teste_carga()
 {
     cout << "\n--- T1: Carregamento XML ---" << endl;
@@ -41,9 +38,6 @@ static void teste_carga()
     check("T1.3 Campo carregado (Y=80)", f.GetCampoY() == 80);
 }
 
-// -------------------------------------------------------------------------
-// T2 - Nomes dos tipos de sensor
-// -------------------------------------------------------------------------
 static void teste_tipos_sensor()
 {
     cout << "\n--- T2: Tipos de sensor ---" << endl;
@@ -62,9 +56,6 @@ static void teste_tipos_sensor()
     check("T2.6 SensorLuz::GetTipo == LUZ",                 sl.GetTipo() == "LUZ");
 }
 
-// -------------------------------------------------------------------------
-// T3 - Estado do motor: transicoes e AVARIADO
-// -------------------------------------------------------------------------
 static void teste_estados_motor()
 {
     cout << "\n--- T3: Estados do motor ---" << endl;
@@ -84,28 +75,21 @@ static void teste_estados_motor()
     m.STOP();
     check("T3.4 Apos STOP -> STOP", m.GetEstado() == STOP);
 
-    // Forcar avaria
     m.Avariar();
     check("T3.5 Apos Avariar -> AVARIADO", m.GetEstado() == AVARIADO);
 
-    // RESTART nao deve sair de AVARIADO sem reparacao (Fix 3)
     m.RESTART();
     check("T3.6 RESTART em AVARIADO nao muda estado", m.GetEstado() == AVARIADO);
 
-    // START tambem nao deve sair de AVARIADO
     m.START();
     check("T3.7 START em AVARIADO nao muda estado", m.GetEstado() == AVARIADO);
 
-    // Reparar e depois RESTART deve funcionar
     m.Reparar();
     check("T3.8 Apos Reparar -> STOP", m.GetEstado() == STOP);
     m.RESTART();
     check("T3.9 Apos RESTART reparado -> START", m.GetEstado() == START);
 }
 
-// -------------------------------------------------------------------------
-// T4 - ESTOU_QUENTE: classes de temperatura (Fix 2)
-// -------------------------------------------------------------------------
 static void teste_estou_quente()
 {
     cout << "\n--- T4: ESTOU_QUENTE ---" << endl;
@@ -128,9 +112,6 @@ static void teste_estou_quente()
     check("T4.6 Motor vai para STOP em VERMELHO", m.GetEstado() == STOP);
 }
 
-// -------------------------------------------------------------------------
-// T5 - Intervalos de temperatura por tipo de motor (Fix 4)
-// -------------------------------------------------------------------------
 static void teste_intervalos_motor()
 {
     cout << "\n--- T5: Intervalos de temperatura por tipo ---" << endl;
@@ -161,9 +142,6 @@ static void teste_intervalos_motor()
     check("T5.6 Inducao verde max=50", vmi.maximo == 50.0);
 }
 
-// -------------------------------------------------------------------------
-// T6 - Listar_Tipo case-insensitive (Fix 7)
-// -------------------------------------------------------------------------
 static void teste_listar_tipo()
 {
     cout << "\n--- T6: Listar_Tipo case-insensitive ---" << endl;
@@ -187,9 +165,6 @@ static void teste_listar_tipo()
     if (none)  delete none;
 }
 
-// -------------------------------------------------------------------------
-// T7 - Permissoes: visitante nao pode remover motor (Fix 12)
-// -------------------------------------------------------------------------
 static void teste_permissoes()
 {
     cout << "\n--- T7: Permissoes por tipo de utilizador ---" << endl;
@@ -197,30 +172,22 @@ static void teste_permissoes()
     Fabrica f(u);
     f.Load("xml/fabrica.xml");
 
-    // Admin pode arrancar
     f.Arrancar(100);
     check("T7.1 Admin pode arrancar motor", f.Get_Estado(100) == START);
 
-    // Mudar para visitante
     f.SetUtilizadorAtual(new Visitante(2, "Visita"));
 
-    // Visitante nao pode remover
     bool removeu = f.RemoverMotor(100);
     check("T7.2 Visitante nao pode remover motor", !removeu);
 
-    // Visitante nao pode arrancar
     f.Arrancar(101);
     check("T7.3 Visitante nao pode arrancar motor", f.Get_Estado(101) == STOP);
 
-    // Mudar para normal
     f.SetUtilizadorAtual(new Normal(3, "Normal"));
     f.Arrancar(101);
     check("T7.4 Normal pode arrancar motor", f.Get_Estado(101) == START);
 }
 
-// -------------------------------------------------------------------------
-// T8 - Aviso_Humidade sem duplicados (Fix 6)
-// -------------------------------------------------------------------------
 static void teste_humidade_duplicados()
 {
     cout << "\n--- T8: Aviso_Humidade sem duplicados ---" << endl;
@@ -228,15 +195,12 @@ static void teste_humidade_duplicados()
     Fabrica f(u);
     f.Load("xml/fabrica.xml");
 
-    // Arrancar todos os motores
     f.Arrancar(100); f.Arrancar(101); f.Arrancar(102); f.Arrancar(103);
 
-    // Chamar Aviso_Humidade duas vezes seguidas
     list<Motor*> lm1, lm2;
     f.Aviso_Humidade(lm1);
     f.Aviso_Humidade(lm2);
 
-    // Verificar que nenhuma lista tem duplicados
     bool sem_dup1 = true;
     for (list<Motor*>::iterator a = lm1.begin(); a != lm1.end(); ++a)
     {
@@ -255,9 +219,6 @@ static void teste_humidade_duplicados()
     check("T8.2 Segunda chamada sem duplicados na lm", sem_dup2);
 }
 
-// -------------------------------------------------------------------------
-// T9 - Aviso_Missel repoe sensores (Fix 10)
-// -------------------------------------------------------------------------
 static void teste_missel_repoe_sensores()
 {
     cout << "\n--- T9: Aviso_Missel repoe sensores ---" << endl;
@@ -265,41 +226,30 @@ static void teste_missel_repoe_sensores()
     Fabrica f(u);
     f.Load("xml/fabrica.xml");
 
-    // Arrancar motores para que a simulacao tenha algo a parar
     f.Arrancar(100); f.Arrancar(101);
 
-    // Chamar Aviso_Missel
     f.Aviso_Missel("", "");
 
-    // Todos os motores devem estar STOP ou AVARIADO (nao RUN/START)
     bool motorsStopped = (f.Get_Estado(100) == STOP || f.Get_Estado(100) == AVARIADO)
                       && (f.Get_Estado(101) == STOP || f.Get_Estado(101) == AVARIADO);
     check("T9.1 Motores parados apos Aviso_Missel", motorsStopped);
 }
 
-// -------------------------------------------------------------------------
-// T10 - VerificarAvisosSensores despacha TEMPERATURA e FOGO (Fix 9+)
-// -------------------------------------------------------------------------
 static void teste_verificar_avisos_temperatura_fogo()
 {
     cout << "\n--- T10: VerificarAvisosSensores para TEMPERATURA e FOGO ---" << endl;
 
-    // Sensor de temperatura que dispara imediatamente (valor >= limiar)
-    SensorTemperatura st(200, "M1", 60.0, 0.0, 12, 40, 50.0); // valor=60 > limiar=50
+    SensorTemperatura st(200, "M1", 60.0, 0.0, 12, 40, 50.0);
     check("T10.1 SensorTemperatura em aviso quando valor>=limiar", st.EmAviso());
     check("T10.2 SensorTemperatura::Disparou na primeira chamada", st.Disparou());
     check("T10.3 SensorTemperatura::Disparou false na segunda (ja foi processado)", !st.Disparou());
 
-    // Sensor de fogo que dispara imediatamente
-    SensorFogo sf(202, "M1", 1.0, 0.0, 8, 25, 1.0); // valor=1.0 >= limiar=1.0
+    SensorFogo sf(202, "M1", 1.0, 0.0, 8, 25, 1.0);
     check("T10.4 SensorFogo em aviso quando valor>=limiar", sf.EmAviso());
     check("T10.5 SensorFogo::Disparou na primeira chamada", sf.Disparou());
     check("T10.6 Apos Repor, SensorFogo nao esta em aviso", (sf.Repor(), !sf.EmAviso()));
 }
 
-// -------------------------------------------------------------------------
-// T11 - Manutencao repoe temperatura no intervalo verde do tipo (Fix 4)
-// -------------------------------------------------------------------------
 static void teste_manutencao_temperatura()
 {
     cout << "\n--- T11: Manutencao repoe temperatura no verde do tipo ---" << endl;
@@ -307,18 +257,13 @@ static void teste_manutencao_temperatura()
     Fabrica f(u);
     f.Load("xml/fabrica.xml");
 
-    // Verificar estado do motor 100 (acessivel)
     ESTADO_MOTOR est = f.Get_Estado(100);
     check("T11.1 Motor 100 acessivel (nao retorna estado invalido)", est == STOP || est == START || est == RUN || est == AVARIADO);
 
-    // Fazer manutencao (como Admin, deve funcionar)
     bool ok = f.Manutencao();
     check("T11.2 Admin pode fazer manutencao", ok);
 }
 
-// -------------------------------------------------------------------------
-// T12 - Posicao nao-negativa (Fix 1): X=0 e Y=0 sao validos
-// -------------------------------------------------------------------------
 static void teste_posicao_nao_negativa()
 {
     cout << "\n--- T12: Posicao nao-negativa ---" << endl;
@@ -333,12 +278,9 @@ static void teste_posicao_nao_negativa()
     check("T12.4 Motor com Y=-1 rejeitado (Y fica 0)", m3.GetY() == 0);
 }
 
-// -------------------------------------------------------------------------
-// Main
-// -------------------------------------------------------------------------
 int main()
 {
-    srand(42); // seed fixo para resultados reprodutiveis
+    srand(42);
 
     cout << "======================================" << endl;
     cout << "   SUITE DE TESTES - Fabrica POO      " << endl;
