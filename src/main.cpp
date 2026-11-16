@@ -1,487 +1,416 @@
+/**
+ * @file main.cpp
+ * @brief Arranque da fabrica, pergunta do relatorio XML e menu da tecla M.
+ */
+
 #include "Fabrica.h"
-#include "Sensor.h"
 #include "User.h"
 
+#include <conio.h>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
-#include <string>
-
-#ifdef _WIN32
-#include <conio.h>
 #include <windows.h>
-#else
-#include <termios.h>
-#include <unistd.h>
-#include <sys/select.h>
-#endif
 
 using namespace std;
 
-/**
- * @file main.cpp
- * @brief Simulador continuo da Gestao de Fabrica.
- *
- * Pressionar 'M' (ou 'm') pausa o simulador e abre o menu interativo.
- * Pressionar 'Q' (ou 'q') termina o simulador.
- * Cada passo representa 10 minutos simulados.
- */
-
-#ifndef _WIN32
-static struct termios terminalOriginal;
-
-/** @brief Ativa modo raw: sem eco e sem buffer de linha. */
-static void ativarModoRaw()
+/** @brief Descarta o resto da linha depois de uma leitura falhada. */
+static void limparEntrada()
 {
-    struct termios raw;
-    tcgetattr(STDIN_FILENO, &terminalOriginal);
-    raw = terminalOriginal;
-    raw.c_lflag &= ~((tcflag_t)(ICANON | ECHO));
-    raw.c_cc[VMIN]  = 0;
-    raw.c_cc[VTIME] = 0;
-    tcsetattr(STDIN_FILENO, TCSANOW, &raw);
-}
-
-/** @brief Restaura o terminal ao estado original. */
-static void restaurarTerminal()
-{
-    tcsetattr(STDIN_FILENO, TCSANOW, &terminalOriginal);
-}
-#endif
-
-/** @brief Retorna true se houver uma tecla disponivel sem bloquear. */
-static bool teclaPronta()
-{
-#ifdef _WIN32
-    return _kbhit() != 0;
-#else
-    struct timeval tv = {0, 0};
-    fd_set fds;
-    FD_ZERO(&fds);
-    FD_SET(STDIN_FILENO, &fds);
-    return select(STDIN_FILENO + 1, &fds, NULL, NULL, &tv) > 0;
-#endif
-}
-
-/** @brief Le uma tecla sem eco. Assume teclaPronta() == true. */
-static char lerTecla()
-{
-#ifdef _WIN32
-    return (char)_getch();
-#else
-    char c = '\0';
-    read(STDIN_FILENO, &c, 1);
-    return c;
-#endif
-}
-
-/** @brief Suspende a execucao por ms milissegundos. */
-static void pausar(int ms)
-{
-#ifdef _WIN32
-    Sleep(ms);
-#else
-    usleep(ms * 1000);
-#endif
+    cin.clear();
+    cin.ignore(10000, '\n');
 }
 
 /**
- * @brief Le uma linha do stdin, restaurando o terminal em modo normal primeiro.
- *
- * No Linux o modo raw e desativado para que getline funcione normalmente,
- * e reativado a seguir.
+ * @brief Pede um inteiro ao operador.
+ * @param pedido Texto mostrado antes da leitura.
+ * @param destino Fica com o valor lido.
+ * @return false se a leitura falhar.
  */
-static string lerLinha()
+static bool lerInteiro(const string& pedido, int& destino)
 {
-#ifndef _WIN32
-    restaurarTerminal();
-#endif
-    string linha;
-    getline(cin, linha);
-#ifndef _WIN32
-    ativarModoRaw();
-#endif
-    return linha;
+    cout << pedido;
+    if (!(cin >> destino))
+    {
+        limparEntrada();
+        cout << "Valor invalido." << endl;
+        return false;
+    }
+
+    limparEntrada();
+    return true;
 }
 
 /**
- * @brief Exibe o menu e executa a opcao escolhida pelo utilizador.
- * @param fabrica Referencia para a fabrica activa.
+ * @brief Pede um numero real ao operador.
+ * @param pedido Texto mostrado antes da leitura.
+ * @param destino Fica com o valor lido.
+ * @return false se a leitura falhar.
  */
-static void executarMenu(Fabrica& fabrica)
+static bool lerReal(const string& pedido, double& destino)
 {
-    cout << endl;
-    cout << "======================================" << endl;
-    cout << "          MENU DA FABRICA             " << endl;
-    cout << "======================================" << endl;
-    cout << "1.  Listar estado da fabrica"           << endl;
-    cout << "2.  Arrancar motor (START)"              << endl;
-    cout << "3.  Parar motor (STOP)"                  << endl;
-    cout << "4.  Manutencao geral"                    << endl;
-    cout << "5.  Adicionar utilizador"                << endl;
-    cout << "6.  Adicionar motor"                     << endl;
-    cout << "7.  Adicionar sensor"                    << endl;
-    cout << "8.  Remover utilizador (so ADMIN)"       << endl;
-    cout << "9.  Remover motor (so ADMIN)"             << endl;
-    cout << "10. Listar motores por tipo"             << endl;
-    cout << "11. Ranking marcas menos fiaveis"        << endl;
-    cout << "12. Ranking motores mais trabalhadores"  << endl;
-    cout << "13. Gerar relatorio XML"                 << endl;
-    cout << "14. Gerar listagem HTML"                 << endl;
-    cout << "15. Mudar utilizador atual"              << endl;
-    cout << "S.  Sair do menu"                        << endl;
-    cout << "======================================" << endl;
-    cout << "Opcao: ";
+    cout << pedido;
+    if (!(cin >> destino))
+    {
+        limparEntrada();
+        cout << "Valor invalido." << endl;
+        return false;
+    }
 
-    string linha = lerLinha();
-    if (linha.empty())
+    limparEntrada();
+    return true;
+}
+
+/**
+ * @brief Pede uma linha de texto ao operador.
+ * @param pedido Texto mostrado antes da leitura.
+ * @param destino Fica com a linha, sem o Enter.
+ * @return false se a linha vier vazia.
+ */
+static bool lerTexto(const string& pedido, string& destino)
+{
+    cout << pedido;
+    getline(cin, destino);
+    return !destino.empty();
+}
+
+/**
+ * @brief Escreve a hora simulada com dois digitos nos minutos.
+ * @param fabrica Fabrica cuja hora se mostra.
+ */
+static void mostrarHora(const Fabrica& fabrica)
+{
+    cout << "Hora simulada " << fabrica.GetHoraSimulada() << ":";
+    if (fabrica.GetMinutoSimulado() < 10)
+    {
+        cout << "0";
+    }
+    cout << fabrica.GetMinutoSimulado() << endl;
+}
+
+/**
+ * @brief Pergunta os dados e tenta adicionar um utilizador.
+ * @param fabrica Fabrica que recebe o utilizador se o Add tiver sucesso.
+ */
+static void adicionarUtilizador(Fabrica& fabrica)
+{
+    int id = 0;
+    int perfil = 0;
+    string nome;
+    if (!lerInteiro("ID do utilizador: ", id) || !lerTexto("Nome: ", nome))
     {
         return;
     }
 
-    if (linha == "10")
+    cout << "Perfil: 1 ADMIN, 2 NORMAL, 3 VISITANTE: ";
+    if (!(cin >> perfil))
     {
-        cout << "Tipo de motor: ";
-        string tipo = lerLinha();
-        list<Motor*>* lista = fabrica.Listar_Tipo(tipo, cout);
-        if (lista != NULL)
+        limparEntrada();
+        cout << "Valor invalido." << endl;
+        return;
+    }
+    limparEntrada();
+
+    User* utilizador = NULL;
+    if (perfil == 1)
+    {
+        utilizador = new Admin(id, nome);
+    }
+    else if (perfil == 2)
+    {
+        utilizador = new Normal(id, nome);
+    }
+    else if (perfil == 3)
+    {
+        utilizador = new Visitante(id, nome);
+    }
+    else
+    {
+        cout << "Perfil desconhecido." << endl;
+        return;
+    }
+
+    if (!fabrica.Add(utilizador))
+    {
+        delete utilizador;
+        cout << "Nao foi possivel adicionar o utilizador." << endl;
+        return;
+    }
+
+    cout << "Utilizador adicionado." << endl;
+}
+
+/**
+ * @brief Pergunta os dados e tenta criar um motor de um tipo do XML.
+ * @param fabrica Fabrica que recebe o motor.
+ */
+static void adicionarMotor(Fabrica& fabrica)
+{
+    int id = 0;
+    int x = 0;
+    int y = 0;
+    double consumo = 0.0;
+    string tipo;
+    string marca;
+    if (!lerInteiro("ID do motor: ", id) || !lerTexto("Tipo (MELETRICO, MCOMBUSTAO, MINDUCAO): ", tipo) || !lerTexto("Marca: ", marca))
+    {
+        return;
+    }
+
+    if (!lerReal("Consumo por hora: ", consumo) || !lerInteiro("X: ", x) || !lerInteiro("Y: ", y))
+    {
+        return;
+    }
+
+    if (!fabrica.CriarMotor(id, tipo, marca, consumo, x, y))
+    {
+        cout << "Nao foi possivel adicionar o motor." << endl;
+        return;
+    }
+
+    cout << "Motor adicionado." << endl;
+}
+
+/**
+ * @brief Pergunta o que remover e chama o metodo correspondente.
+ * @param fabrica Fabrica sobre a qual se remove.
+ */
+static void remover(Fabrica& fabrica)
+{
+    int opcao = 0;
+    int id = 0;
+    cout << "Remover: 1 utilizador, 2 motor, 3 sensor: ";
+    if (!(cin >> opcao))
+    {
+        limparEntrada();
+        cout << "Valor invalido." << endl;
+        return;
+    }
+    limparEntrada();
+
+    if (!lerInteiro("ID: ", id))
+    {
+        return;
+    }
+
+    bool ok = false;
+    if (opcao == 1)
+    {
+        ok = fabrica.RemoverUtilizador(id);
+    }
+    else if (opcao == 2)
+    {
+        ok = fabrica.RemoverMotor(id);
+    }
+    else if (opcao == 3)
+    {
+        string tipo;
+        if (!lerTexto("Tipo do sensor (STEMPERATURA, SFOGO, SMISSEL): ", tipo))
         {
-            if (lista->empty())
-            {
-                cout << "Nenhum motor do tipo \"" << tipo << "\"." << endl;
-            }
-            delete lista;
+            return;
         }
+        ok = fabrica.RemoverSensor(id, tipo);
+    }
+    else
+    {
+        cout << "Opcao desconhecida." << endl;
         return;
     }
-    if (linha == "11")
+
+    if (ok)
+    {
+        cout << "Removido." << endl;
+    }
+    else
+    {
+        cout << "Nao foi possivel remover." << endl;
+    }
+}
+
+/**
+ * @brief Mostra o menu e executa uma opcao. A simulacao fica parada entretanto.
+ * @param fabrica Fabrica em pausa.
+ * @return false quando o operador escolhe sair.
+ */
+static bool menu(Fabrica& fabrica)
+{
+    cout << endl << "=== Menu (simulacao em pausa) ===" << endl;
+    mostrarHora(fabrica);
+    cout << "1  Listar" << endl;
+    cout << "2  Ligar motor" << endl;
+    cout << "3  Desligar motor" << endl;
+    cout << "4  Manutencao" << endl;
+    cout << "5  Adicionar utilizador" << endl;
+    cout << "6  Adicionar motor" << endl;
+    cout << "7  Remover" << endl;
+    cout << "8  Estado de um motor" << endl;
+    cout << "9  Motores de um tipo" << endl;
+    cout << "10 Ranking das marcas que mais avariam" << endl;
+    cout << "11 Ranking dos motores que mais trabalharam" << endl;
+    cout << "12 Gerar relatorio XML agora" << endl;
+    cout << "13 Gravar listagem HTML" << endl;
+    cout << "0  Continuar a simulacao" << endl;
+    cout << "S  Sair" << endl;
+
+    string opcao;
+    if (!lerTexto("Opcao: ", opcao))
+    {
+        return true;
+    }
+
+    if (opcao == "S" || opcao == "s")
+    {
+        return false;
+    }
+
+    if (opcao == "0")
+    {
+        return true;
+    }
+
+    if (opcao == "1")
+    {
+        fabrica.Listar(cout);
+    }
+    else if (opcao == "2" || opcao == "3" || opcao == "8")
+    {
+        int id = 0;
+        if (!lerInteiro("ID do motor: ", id))
+        {
+            return true;
+        }
+
+        if (opcao == "2")
+        {
+            if (fabrica.Ligar(id))
+            {
+                cout << "Pedido de arranque registado." << endl;
+            }
+            else
+            {
+                cout << "Nao foi possivel ligar o motor." << endl;
+            }
+        }
+        else if (opcao == "3")
+        {
+            fabrica.Desligar(id);
+            cout << "Pedido de paragem registado." << endl;
+        }
+        else
+        {
+            cout << "Estado: ";
+            ESTADO_MOTOR estado = fabrica.Get_Estado(id);
+            if (estado == STOP)
+            {
+                cout << "STOP";
+            }
+            else if (estado == START)
+            {
+                cout << "START";
+            }
+            else if (estado == RUN)
+            {
+                cout << "RUN";
+            }
+            else
+            {
+                cout << "AVARIADO";
+            }
+            cout << endl;
+        }
+    }
+    else if (opcao == "4")
+    {
+        if (!fabrica.Manutencao())
+        {
+            cout << "Manutencao recusada." << endl;
+        }
+    }
+    else if (opcao == "5")
+    {
+        adicionarUtilizador(fabrica);
+    }
+    else if (opcao == "6")
+    {
+        adicionarMotor(fabrica);
+    }
+    else if (opcao == "7")
+    {
+        remover(fabrica);
+    }
+    else if (opcao == "9")
+    {
+        string tipo;
+        if (!lerTexto("Tipo: ", tipo))
+        {
+            return true;
+        }
+
+        list<Motor*>* lista = fabrica.Listar_Tipo(tipo, cout);
+        delete lista;
+    }
+    else if (opcao == "10")
     {
         list<string>* ranking = fabrica.Ranking_Dos_Fracos();
-        if (ranking != NULL)
+        if (ranking == NULL)
         {
-            cout << "Marcas (mais avarias -> mais fiaveis):" << endl;
-            int pos = 1;
+            cout << "Ranking indisponivel." << endl;
+        }
+        else
+        {
+            int lugar = 1;
             for (list<string>::iterator it = ranking->begin(); it != ranking->end(); ++it)
             {
-                cout << "  " << pos++ << ". " << *it << endl;
+                cout << lugar << ". " << *it << endl;
+                lugar = lugar + 1;
             }
             delete ranking;
         }
-        return;
     }
-    if (linha == "12")
+    else if (opcao == "11")
     {
         list<Motor*>* ranking = fabrica.Ranking_Dos_Mais_Trabalhadores();
-        if (ranking != NULL)
+        if (ranking == NULL)
         {
-            cout << "Motores (mais trabalharam):" << endl;
-            int pos = 1;
+            cout << "Ranking indisponivel." << endl;
+        }
+        else
+        {
+            int lugar = 1;
             for (list<Motor*>::iterator it = ranking->begin(); it != ranking->end(); ++it)
             {
-                Motor* m = *it;
-                cout << "  " << pos++ << ". ID " << m->GetId()
-                     << " " << m->GetTipo()
-                     << " (" << m->GetTempoTrabalho() << " min)" << endl;
+                cout << lugar << ". id " << (*it)->GetId() << " " << (*it)->GetMarca();
+                cout << " (" << (*it)->GetTempoTrabalho() << " min)" << endl;
+                lugar = lugar + 1;
             }
             delete ranking;
         }
-        return;
     }
-    if (linha == "13")
+    else if (opcao == "12")
     {
-        cout << "Ficheiro XML: ";
-        string fich = lerLinha();
-        if (!fich.empty())
-        {
-            fabrica.Relatorio(fich);
-            cout << "Relatorio gravado em " << fich << "." << endl;
-        }
-        return;
+        fabrica.Relatorio("xml/relatorio.xml");
+        cout << "Relatorio gravado em xml/relatorio.xml" << endl;
     }
-    if (linha == "14")
+    else if (opcao == "13")
     {
-        cout << "Ficheiro HTML: ";
-        string fich = lerLinha();
-        if (!fich.empty())
-        {
-            fabrica.Listagem_HTML(fich);
-            cout << "Listagem HTML gravada em " << fich << "." << endl;
-        }
-        return;
+        fabrica.Listagem_HTML("xml/fabrica.html");
+        cout << "Listagem gravada em xml/fabrica.html" << endl;
     }
-    if (linha == "15")
+    else
     {
-        cout << "Tipo do novo utilizador (admin/normal/visitante): ";
-        string tipo = lerLinha();
-        cout << "ID: ";
-        string sId = lerLinha();
-        cout << "Nome: ";
-        string nome = lerLinha();
-
-        if (!tipo.empty() && !sId.empty() && !nome.empty())
-        {
-            int id = atoi(sId.c_str());
-            User* novo = NULL;
-
-            if (tipo == "admin")           { novo = new Admin(id, nome); }
-            else if (tipo == "normal")     { novo = new Normal(id, nome); }
-            else if (tipo == "visitante")  { novo = new Visitante(id, nome); }
-
-            if (novo != NULL)
-            {
-                fabrica.SetUtilizadorAtual(novo);
-                cout << "Utilizador atual alterado para " << nome << " [" << tipo << "]." << endl;
-            }
-            else
-            {
-                cout << "Tipo invalido." << endl;
-            }
-        }
-        return;
+        cout << "Opcao desconhecida." << endl;
     }
 
-    char opcao = linha[0];
-
-    switch (opcao)
-    {
-        case '1':
-        {
-            fabrica.Listar(cout);
-            break;
-        }
-        case '2':
-        {
-            cout << "ID do motor a arrancar: ";
-            string s = lerLinha();
-            if (!s.empty())
-            {
-                fabrica.Arrancar(atoi(s.c_str()));
-            }
-            break;
-        }
-        case '3':
-        {
-            cout << "ID do motor a parar: ";
-            string s = lerLinha();
-            if (!s.empty())
-            {
-                fabrica.Desligar(atoi(s.c_str()));
-                cout << "Motor parado." << endl;
-            }
-            break;
-        }
-        case '4':
-        {
-            if (fabrica.Manutencao())
-            {
-                cout << "Manutencao concluida." << endl;
-            }
-            else
-            {
-                cout << "Sem permissao para manutencao." << endl;
-            }
-            break;
-        }
-        case '5':
-        {
-            cout << "Tipo (admin/normal/visitante): ";
-            string tipo = lerLinha();
-            cout << "ID: ";
-            string sId = lerLinha();
-            cout << "Nome: ";
-            string nome = lerLinha();
-
-            if (!tipo.empty() && !sId.empty() && !nome.empty())
-            {
-                int id = atoi(sId.c_str());
-                User* novo = NULL;
-
-                if (tipo == "admin")       { novo = new Admin(id, nome); }
-                else if (tipo == "normal") { novo = new Normal(id, nome); }
-                else if (tipo == "visitante") { novo = new Visitante(id, nome); }
-
-                if (novo != NULL)
-                {
-                    if (fabrica.Add(novo))
-                    {
-                        cout << "Utilizador adicionado." << endl;
-                    }
-                    else
-                    {
-                        cout << "Nao foi possivel adicionar (sem permissao ou ID duplicado)." << endl;
-                        delete novo;
-                    }
-                }
-                else
-                {
-                    cout << "Tipo invalido." << endl;
-                }
-            }
-            break;
-        }
-        case '6':
-        {
-            cout << "ID: ";         string sId    = lerLinha();
-            cout << "Tipo: ";       string tipo   = lerLinha();
-            cout << "Marca: ";      string marca  = lerLinha();
-            cout << "Consumo/h: ";  string sCons  = lerLinha();
-            cout << "Temp aviso: "; string sAviso = lerLinha();
-            cout << "Temp paragem: "; string sPar = lerLinha();
-            cout << "Prob avaria [0-1]: "; string sProb = lerLinha();
-            cout << "X: ";          string sX     = lerLinha();
-            cout << "Y: ";          string sY     = lerLinha();
-
-            if (!sId.empty() && !tipo.empty() && !marca.empty() &&
-                !sCons.empty() && !sAviso.empty() && !sPar.empty() &&
-                !sProb.empty() && !sX.empty() && !sY.empty())
-            {
-                Motor* m = new Motor(atoi(sId.c_str()), tipo, marca,
-                                     atof(sCons.c_str()),
-                                     atof(sAviso.c_str()),
-                                     atof(sPar.c_str()),
-                                     atof(sProb.c_str()),
-                                     atoi(sX.c_str()),
-                                     atoi(sY.c_str()));
-                if (fabrica.Add(m))
-                {
-                    cout << "Motor adicionado." << endl;
-                }
-                else
-                {
-                    cout << "Nao foi possivel adicionar (sem permissao, posicao invalida ou ID duplicado)." << endl;
-                    delete m;
-                }
-            }
-            break;
-        }
-        case '7':
-        {
-            cout << "Tipo (luz/humidade/fumo/missel): ";
-            string tipo = lerLinha();
-            cout << "ID: ";         string sId   = lerLinha();
-            cout << "Marca: ";      string marca = lerLinha();
-            cout << "Valor: ";      string sVal  = lerLinha();
-            cout << "Prob avaria [0-1]: "; string sProb = lerLinha();
-            cout << "X: ";          string sX    = lerLinha();
-            cout << "Y: ";          string sY    = lerLinha();
-
-            if (!tipo.empty() && !sId.empty() && !marca.empty() &&
-                !sVal.empty() && !sProb.empty() && !sX.empty() && !sY.empty())
-            {
-                int    id    = atoi(sId.c_str());
-                double val   = atof(sVal.c_str());
-                double prob  = atof(sProb.c_str());
-                int    px    = atoi(sX.c_str());
-                int    py    = atoi(sY.c_str());
-                Sensor* s    = NULL;
-
-                if (tipo == "luz")
-                {
-                    cout << "Limiar: ";
-                    string sLim = lerLinha();
-                    if (!sLim.empty())
-                    {
-                        s = new SensorLuz(id, marca, val, prob, px, py, atof(sLim.c_str()));
-                    }
-                }
-                else if (tipo == "humidade")
-                {
-                    cout << "Limiar: ";  string sLim  = lerLinha();
-                    cout << "Raio: ";    string sRaio = lerLinha();
-                    if (!sLim.empty() && !sRaio.empty())
-                    {
-                        s = new SensorHumidade(id, marca, val, prob, px, py,
-                                               atof(sLim.c_str()), atoi(sRaio.c_str()));
-                    }
-                }
-                else if (tipo == "fumo")
-                {
-                    cout << "Limiar: ";
-                    string sLim = lerLinha();
-                    if (!sLim.empty())
-                    {
-                        s = new SensorFumo(id, marca, val, prob, px, py, atof(sLim.c_str()));
-                    }
-                }
-                else if (tipo == "missel")
-                {
-                    s = new SensorMissel(id, marca, val, prob, px, py);
-                }
-
-                if (s != NULL)
-                {
-                    if (fabrica.Add(s))
-                    {
-                        cout << "Sensor adicionado." << endl;
-                    }
-                    else
-                    {
-                        cout << "Nao foi possivel adicionar (sem permissao, posicao invalida ou ID duplicado)." << endl;
-                        delete s;
-                    }
-                }
-                else
-                {
-                    cout << "Tipo invalido." << endl;
-                }
-            }
-            break;
-        }
-        case '8':
-        {
-            cout << "ID do utilizador a remover: ";
-            string s = lerLinha();
-            if (!s.empty())
-            {
-                if (fabrica.RemoverUtilizador(atoi(s.c_str())))
-                {
-                    cout << "Utilizador removido." << endl;
-                }
-                else
-                {
-                    cout << "Nao foi possivel remover (sem permissao, nao encontrado ou utilizador actual)." << endl;
-                }
-            }
-            break;
-        }
-        case '9':
-        {
-            cout << "ID do motor a remover: ";
-            string s = lerLinha();
-            if (!s.empty())
-            {
-                if (fabrica.RemoverMotor(atoi(s.c_str())))
-                {
-                    cout << "Motor removido." << endl;
-                }
-                else
-                {
-                    cout << "Nao foi possivel remover (sem permissao ou nao encontrado)." << endl;
-                }
-            }
-            break;
-        }
-        case 's':
-        case 'S':
-        {
-            cout << "A voltar ao simulador..." << endl;
-            break;
-        }
-        default:
-        {
-            cout << "Opcao desconhecida." << endl;
-            break;
-        }
-    }
+    return true;
 }
 
+/**
+ * @brief Carrega a fabrica, pede o intervalo do XML e corre o simulador.
+ * @return 0 no fim normal, 1 se a configuracao ou o intervalo falharem.
+ */
 int main()
 {
-    srand((unsigned int)time(NULL));
-
-#ifndef _WIN32
-    ativarModoRaw();
-#endif
+    srand(static_cast<unsigned int>(time(NULL)));
 
     User* atual = new Admin(1, "Gestor");
     Fabrica fabrica(atual);
@@ -489,59 +418,78 @@ int main()
     if (!fabrica.Load("xml/fabrica.xml"))
     {
         cout << "Nao foi possivel carregar a configuracao." << endl;
-#ifndef _WIN32
-        restaurarTerminal();
-#endif
+        cout << "Prima Enter para sair." << endl;
+        cin.get();
         return 1;
     }
 
-    cout << "Fabrica carregada. Prima 'M' para o menu, 'Q' para sair." << endl;
-    fabrica.Listar(cout);
+    cout << fabrica.GetNomeEmpresa() << " carregada." << endl;
+    cout << "Cada segundo real avanca um minuto da fabrica." << endl;
+    cout << "De quantos em quantos segundos deve ser gerado o relatorio XML? ";
 
-    int minutoPasso  = 8 * 60;
-    int horaSimulada = 8;
+   // int minutoPasso  = 8 * 60;
+    //int horaSimulada = 8;
 
-    bool correr = true;
+    //bool correr = true;
 
-    while (correr)
+    //while (correr)
+    int intervalo = 0;
+    if (!(cin >> intervalo) || intervalo <= 0)
     {
-        if (teclaPronta())
+        limparEntrada();
+        cout << "O intervalo tem de ser um numero de segundos maior que zero." << endl;
+        cout << "Prima Enter para sair." << endl;
+        cin.get();
+        return 1;
+    }
+    limparEntrada();
+
+    fabrica.Relatorio("xml/relatorio.xml");
+    cout << "Relatorio inicial gravado em xml/relatorio.xml" << endl;
+    cout << "A simulacao esta a correr. Prima M para o menu." << endl;
+    cout << "O ficheiro xml/relatorio.xml e atualizado de " << intervalo << " em " << intervalo << " segundos." << endl;
+
+    int decorrido = 0;
+    bool aCorrer = true;
+    DWORD marca = GetTickCount();
+    while (aCorrer && fabrica.EstaActiva())
+    {
+        if (_kbhit())
         {
-            char tecla = lerTecla();
+            int tecla = _getch();
             if (tecla == 'M' || tecla == 'm')
             {
-                executarMenu(fabrica);
+                aCorrer = menu(fabrica);
+                marca = GetTickCount();
+                continue;
             }
-            else if (tecla == 'Q' || tecla == 'q')
+        }
+
+        DWORD agora = GetTickCount();
+        if (agora - marca >= 1000)
+        {
+            fabrica.AvancarMinuto();
+            mostrarHora(fabrica);
+            decorrido = decorrido + 1;
+            if (decorrido >= intervalo)
             {
-                correr = false;
-                break;
+                fabrica.Relatorio("xml/relatorio.xml");
+                cout << "Relatorio XML atualizado: xml/relatorio.xml" << endl;
+                decorrido = 0;
             }
+            marca = agora;
         }
 
-        fabrica.PassoSimulacao(minutoPasso, horaSimulada, 10, 2.0, 1.5);
-
-        {
-            list<Motor*> desligados;
-            fabrica.VerificarAvisosSensores(desligados);
-        }
-
-        minutoPasso += 10;
-        if (minutoPasso >= 1440)
-        {
-            minutoPasso = 0;
-            fabrica.ReiniciarConsumoDia();
-            cout << "[DIA NOVO] Consumo diario reiniciado." << endl;
-        }
-        horaSimulada = (minutoPasso / 60) % 24;
-
-        pausar(500);
+        Sleep(50);
     }
 
-    cout << "Simulador encerrado." << endl;
+    if (!fabrica.EstaActiva())
+    {
+        fabrica.Relatorio("xml/relatorio.xml");
+        cout << "A fabrica foi desligada. Ultimo relatorio em xml/relatorio.xml" << endl;
+    }
 
-#ifndef _WIN32
-    restaurarTerminal();
-#endif
+    cout << "Prima Enter para sair." << endl;
+    cin.get();
     return 0;
 }

@@ -1,3 +1,8 @@
+/**
+ * @file User.cpp
+ * @brief Implementacao dos utilizadores Admin, Normal e Visitante.
+ */
+
 #include "User.h"
 
 using namespace std;

@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.18.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Gestao de Fabrica: Código-Fonte de include/Sensor.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="codefolding.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Gestao de Fabrica<span id="projectnumber">&#160;2026/2027</span>
+   </div>
+   <div id="projectbrief">Programacao Orientada a Objetos, ESTGV</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Gerado por Doxygen 1.18.0 -->
+<script type="text/javascript">
+let searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', codefold.init);
+</script>
+<script type="application/json" id="doxygen-config">
+{
+  "relPath": "",
+  "generateTreeView": true,
+  "searchEngine": true,
+  "serverBasedSearch": false,
+  "disableIndex": false,
+  "dynamicMenus": true,
+  "fullSidebar": false
+}
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<div id="main-nav-mobile">
+<div class="sm sm-dox"><input id="main-menu-state" type="checkbox"/>
+<label class="main-menu-btn" for="main-menu-state">
+<span class="main-menu-btn-icon"></span> Toggle main menu visibility</label>
+<span id="searchBoxPos1"></span>
+</div>
+</div><!-- main-nav-mobile -->
+<div id="main-nav">
+  <ul class="sm sm-dox" id="main-menu">
+    <li id="searchBoxPos2">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Localizar" accesskey="S"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+    </li>
+  </ul>
+</div><!-- main-nav -->
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded',() => { initNavTree('_sensor_8h_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Carregando...</div>
+<div class="SRStatus" id="Searching">Procurando...</div>
+<div class="SRStatus" id="NoMatches">Nenhuma entrada encontrada</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Sensor.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="_sensor_8h.html">Ir para a documentação deste ficheiro.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef SENSOR_H</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define SENSOR_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="_dispositivo_8h.html">Dispositivo.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">using namespace </span>std;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span></div>
+<div class="foldopen" id="foldopen00026" data-start="{" data-end="};">
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="class_sensor.html">   26</a></span><span class="keyword">class </span><a class="code hl_function" href="class_sensor.html#a7d08f06484af5ca9cdcc804734ecfade">Sensor</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_dispositivo.html#a86f47a4bdf12d881f9261e01db2c408f">Dispositivo</a></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="class_sensor.html#a3ddc17aaf50c49001de243bcdcbfb2cb">   29</a></span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor.html#a3ddc17aaf50c49001de243bcdcbfb2cb">valor</a>; </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_sensor.html#ac03246f136e2d81d0301aa9fbfadbe5d">   30</a></span>        <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_sensor.html#ac03246f136e2d81d0301aa9fbfadbe5d">avisoAnterior</a>; </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="class_sensor.html#a9e49e56a135673582a0b0728790602f7">   31</a></span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor.html#a9e49e56a135673582a0b0728790602f7">probabilidadeUm</a>; </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="class_sensor.html#a52b5bea9a9f3dfcd2c8ea102c8e13c95">   38</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor.html#a52b5bea9a9f3dfcd2c8ea102c8e13c95">DefinirValorSeguro</a>() = 0;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <a class="code hl_function" href="class_sensor.html#a7d08f06484af5ca9cdcc804734ecfade">Sensor</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">marca</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor.html#a3ddc17aaf50c49001de243bcdcbfb2cb">valor</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">probabilidadeAvaria</a>, <span class="keywordtype">int</span> posX, <span class="keywordtype">int</span> posY);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_sensor.html#a7d08f06484af5ca9cdcc804734ecfade">~Sensor</a>();</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordtype">double</span> <a class="code hl_function" href="class_sensor.html#a3caebbaea224c8622bb24a5b7fa3119d">GetValor</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor.html#a13c65bb23f753b5831fccbd25e97d56d">SetValor</a>(<span class="keywordtype">double</span> novoValor);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="class_sensor.html#a10601717a7eae4a03a22f14ee8ff3315">   65</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_sensor.html#a10601717a7eae4a03a22f14ee8ff3315">GetTipo</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keyword">virtual</span> <span class="keywordtype">double</span> <a class="code hl_function" href="class_sensor.html#ae905377d12ef24d39c00a39657878bda">GetLimiar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordtype">double</span> <a class="code hl_function" href="class_sensor.html#a42bcb9147ab361b79faea1f2b20e2639">GetProbabilidadeUm</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor.html#aa9c99a886cdb802ba5220319cd4ae19a">SetProbabilidadeUm</a>(<span class="keywordtype">double</span> probabilidade);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="class_sensor.html#aadda4bdddab83e1e602b04a5a8a53eec">   83</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_sensor.html#aadda4bdddab83e1e602b04a5a8a53eec">EmAviso</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code hl_function" href="class_sensor.html#a4f1a6fdfe225c39c7f66ad89b77297cb">GetRaioVizinhanca</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="class_sensor.html#a129d3cca804f384775719750046540c1">Disparou</a>();</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor.html#a5d72a724705a4daeb799694cfdf36030">Actualizar</a>(<span class="keywordtype">bool</span> motoresEmMarcha, <span class="keywordtype">int</span> horaAtual, <span class="keywordtype">int</span> horaAbertura,</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                                <span class="keywordtype">int</span> horaEncerramento, <span class="keywordtype">double</span> fracaoHora);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor.html#a0d370247a832c14d9dcb90bfbb2df789">Repor</a>();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>};</div>
+</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span></div>
+<div class="foldopen" id="foldopen00121" data-start="{" data-end="};">
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="class_sensor_luz.html">  121</a></span><span class="keyword">class </span><a class="code hl_function" href="class_sensor_luz.html#ac914c47fc60d14580cfcedbe7e19aff7">SensorLuz</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_sensor.html#a7d08f06484af5ca9cdcc804734ecfade">Sensor</a></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>{</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="class_sensor_luz.html#a996f7e5ef2fd5059670eb299f9fe5345">  124</a></span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_luz.html#a996f7e5ef2fd5059670eb299f9fe5345">limiar</a>; </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <a class="code hl_function" href="class_sensor_luz.html#ac914c47fc60d14580cfcedbe7e19aff7">SensorLuz</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">marca</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor.html#a3ddc17aaf50c49001de243bcdcbfb2cb">valor</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">probabilidadeAvaria</a>,</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                  <span class="keywordtype">int</span> posX, <span class="keywordtype">int</span> posY, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_luz.html#a996f7e5ef2fd5059670eb299f9fe5345">limiar</a>);</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_sensor_luz.html#ac914c47fc60d14580cfcedbe7e19aff7">~SensorLuz</a>();</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <span class="keywordtype">double</span> <a class="code hl_function" href="class_sensor_luz.html#a49dacdc702680e31b8cff10e5561614c">GetLimiar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_sensor_luz.html#aac99d9c6ebeaf30f8987179b9110a17f">GetTipo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_sensor_luz.html#a167abb262f3d88c4e6ee318255c63522">EmAviso</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor_luz.html#a565619d94cb954346cd060bf8cf2b3e0">Actualizar</a>(<span class="keywordtype">bool</span> motoresEmMarcha, <span class="keywordtype">int</span> horaAtual, <span class="keywordtype">int</span> horaAbertura,</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                                <span class="keywordtype">int</span> horaEncerramento, <span class="keywordtype">double</span> fracaoHora);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor_luz.html#a2ce7aa26d4d3e8ba18cd78457713b59c">DefinirValorSeguro</a>();</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>};</div>
+</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span></div>
+<div class="foldopen" id="foldopen00167" data-start="{" data-end="};">
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="class_sensor_humidade.html">  167</a></span><span class="keyword">class </span><a class="code hl_function" href="class_sensor_humidade.html#a5f962b27c9b346e68d5ed5a11b3e9749">SensorHumidade</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_sensor.html#a7d08f06484af5ca9cdcc804734ecfade">Sensor</a></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>{</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno"><a class="line" href="class_sensor_humidade.html#a09e65ee00428a9feff1d5924dcd816ed">  170</a></span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_humidade.html#a09e65ee00428a9feff1d5924dcd816ed">limiar</a>; </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="class_sensor_humidade.html#a2501302ad3616929730c98c8a6e2cec4">  171</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="class_sensor_humidade.html#a2501302ad3616929730c98c8a6e2cec4">raioVizinhanca</a>; </div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        <a class="code hl_function" href="class_sensor_humidade.html#a5f962b27c9b346e68d5ed5a11b3e9749">SensorHumidade</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">marca</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor.html#a3ddc17aaf50c49001de243bcdcbfb2cb">valor</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">probabilidadeAvaria</a>,</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                       <span class="keywordtype">int</span> posX, <span class="keywordtype">int</span> posY, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_humidade.html#a09e65ee00428a9feff1d5924dcd816ed">limiar</a>, <span class="keywordtype">int</span> <a class="code hl_variable" href="class_sensor_humidade.html#a2501302ad3616929730c98c8a6e2cec4">raioVizinhanca</a>);</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_sensor_humidade.html#a5f962b27c9b346e68d5ed5a11b3e9749">~SensorHumidade</a>();</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <span class="keywordtype">double</span> <a class="code hl_function" href="class_sensor_humidade.html#a675f779bad9b1ae1442afc6841c80f01">GetLimiar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code hl_function" href="class_sensor_humidade.html#aa4b64c47ab4818af2e349de0a315b9f5">GetRaioVizinhanca</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_sensor_humidade.html#a6d5f17df5801339e42201d79a2cc5557">GetTipo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span></div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_sensor_humidade.html#a719fa5489372c3531e14c02f9e97ef6d">EmAviso</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor_humidade.html#aff1247aa066007e5d36ea48e37f9b8ca">Actualizar</a>(<span class="keywordtype">bool</span> motoresEmMarcha, <span class="keywordtype">int</span> horaAtual, <span class="keywordtype">int</span> horaAbertura,</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                                <span class="keywordtype">int</span> horaEncerramento, <span class="keywordtype">double</span> fracaoHora);</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor_humidade.html#a71a7990899fb89022b1584d91fdcd46e">DefinirValorSeguro</a>();</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>};</div>
+</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span></div>
+<div class="foldopen" id="foldopen00219" data-start="{" data-end="};">
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno"><a class="line" href="class_sensor_fumo.html">  219</a></span><span class="keyword">class </span><a class="code hl_function" href="class_sensor_fumo.html#a6c91057801c64cc424a46f4ab5b4ec3b">SensorFumo</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_sensor.html#a7d08f06484af5ca9cdcc804734ecfade">Sensor</a></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>{</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="class_sensor_fumo.html#a06c433cfcfbbe0daff8493fd01176db9">  222</a></span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_fumo.html#a06c433cfcfbbe0daff8493fd01176db9">limiar</a>; </div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <a class="code hl_function" href="class_sensor_fumo.html#a6c91057801c64cc424a46f4ab5b4ec3b">SensorFumo</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">marca</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor.html#a3ddc17aaf50c49001de243bcdcbfb2cb">valor</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">probabilidadeAvaria</a>,</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                   <span class="keywordtype">int</span> posX, <span class="keywordtype">int</span> posY, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_fumo.html#a06c433cfcfbbe0daff8493fd01176db9">limiar</a>);</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_sensor_fumo.html#a6c91057801c64cc424a46f4ab5b4ec3b">~SensorFumo</a>();</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="keywordtype">double</span> <a class="code hl_function" href="class_sensor_fumo.html#a4500323141abc3fd775ecdfe0e2205e4">GetLimiar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_sensor_fumo.html#ad60f7f473408bd1721b725bc7e614f71">GetTipo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span></div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_sensor_fumo.html#ad1d2b9a6a32bebb35c60be7df0cbb3d0">EmAviso</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor_fumo.html#aca850db29a27fce93042b167912e34da">Actualizar</a>(<span class="keywordtype">bool</span> motoresEmMarcha, <span class="keywordtype">int</span> horaAtual, <span class="keywordtype">int</span> horaAbertura,</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                                <span class="keywordtype">int</span> horaEncerramento, <span class="keywordtype">double</span> fracaoHora);</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor_fumo.html#a81a08ca8762f924a83d2432e1ad20b37">DefinirValorSeguro</a>();</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>};</div>
+</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span></div>
+<div class="foldopen" id="foldopen00265" data-start="{" data-end="};">
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno"><a class="line" href="class_sensor_missel.html">  265</a></span><span class="keyword">class </span><a class="code hl_function" href="class_sensor_missel.html#a83bbf6918d478386054ceaafe621c3a1">SensorMissel</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_sensor.html#a7d08f06484af5ca9cdcc804734ecfade">Sensor</a></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>{</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno"><a class="line" href="class_sensor_missel.html#a9d472e82f9f932c8144f8522b8f821f4">  268</a></span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_missel.html#a9d472e82f9f932c8144f8522b8f821f4">limiar</a>; </div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        <a class="code hl_function" href="class_sensor_missel.html#a83bbf6918d478386054ceaafe621c3a1">SensorMissel</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">marca</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor.html#a3ddc17aaf50c49001de243bcdcbfb2cb">valor</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">probabilidadeAvaria</a>,</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                     <span class="keywordtype">int</span> posX, <span class="keywordtype">int</span> posY, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_missel.html#a9d472e82f9f932c8144f8522b8f821f4">limiar</a>);</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span></div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_sensor_missel.html#a83bbf6918d478386054ceaafe621c3a1">~SensorMissel</a>();</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span></div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        <span class="keyword">virtual</span> <span class="keywordtype">double</span> <a class="code hl_function" href="class_sensor_missel.html#a7f514dd6060b037f5538bd323ed61034">GetLimiar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span></div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_sensor_missel.html#a6403be28cac4b6dbee7ed568f4ae5c6e">GetTipo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_sensor_missel.html#a4c194a68bba5a85fd524466e1a6c3ba0">EmAviso</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor_missel.html#a41d5cef3d4c3f93ef68abe994115dcfc">Actualizar</a>(<span class="keywordtype">bool</span> motoresEmMarcha, <span class="keywordtype">int</span> horaAtual, <span class="keywordtype">int</span> horaAbertura,</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>                                <span class="keywordtype">int</span> horaEncerramento, <span class="keywordtype">double</span> fracaoHora);</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span></div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor_missel.html#a7d5328b0185cdd5c19e349f1f987b46e">DefinirValorSeguro</a>();</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>};</div>
+</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span></div>
+<div class="foldopen" id="foldopen00309" data-start="{" data-end="};">
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno"><a class="line" href="class_sensor_temperatura.html">  309</a></span><span class="keyword">class </span><a class="code hl_function" href="class_sensor_temperatura.html#a7486cdaeb9ebb3723b6ef3880bcd3e91">SensorTemperatura</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_sensor.html#a7d08f06484af5ca9cdcc804734ecfade">Sensor</a></div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>{</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno"><a class="line" href="class_sensor_temperatura.html#a0b472bf2f472c48d8f558bc8014d0d47">  312</a></span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_temperatura.html#a0b472bf2f472c48d8f558bc8014d0d47">limiar</a>; </div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <a class="code hl_function" href="class_sensor_temperatura.html#a7486cdaeb9ebb3723b6ef3880bcd3e91">SensorTemperatura</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">marca</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor.html#a3ddc17aaf50c49001de243bcdcbfb2cb">valor</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">probabilidadeAvaria</a>,</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                          <span class="keywordtype">int</span> posX, <span class="keywordtype">int</span> posY, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_sensor_temperatura.html#a0b472bf2f472c48d8f558bc8014d0d47">limiar</a>);</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span></div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_sensor_temperatura.html#a7486cdaeb9ebb3723b6ef3880bcd3e91">~SensorTemperatura</a>();</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span></div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="keyword">virtual</span> <span class="keywordtype">double</span> <a class="code hl_function" href="class_sensor_temperatura.html#ad27cbf61a6c90898414463ff94970b86">GetLimiar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span></div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_sensor_temperatura.html#aad7f64f456a72b99b418b658dc8dca01">GetTipo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span></div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_sensor_temperatura.html#aff68e8678a529e478c5553ef3fc00732">EmAviso</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span></div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_sensor_temperatura.html#afe68c85b29fd29ad03bb16f4d1ef433c">DefinirValorSeguro</a>();</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>};</div>
+</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="a_dispositivo_8h_html"><div class="ttname"><a href="_dispositivo_8h.html">Dispositivo.h</a></div><div class="ttdoc">Base de sensores e motores.</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a86f47a4bdf12d881f9261e01db2c408f"><div class="ttname"><a href="class_dispositivo.html#a86f47a4bdf12d881f9261e01db2c408f">Dispositivo::Dispositivo</a></div><div class="ttdeci">Dispositivo(int id, const string &amp;marca, double probabilidadeAvaria, int posX, int posY)</div><div class="ttdoc">Cria um dispositivo.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:10</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a882d7b33b62e779008372e906f065cd5"><div class="ttname"><a href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">Dispositivo::marca</a></div><div class="ttdeci">string marca</div><div class="ttdoc">Fabricante do dispositivo.</div><div class="ttdef"><b>Definição</b> Dispositivo.h:27</div></div>
+<div class="ttc" id="aclass_dispositivo_html_ad171c331ecfed56478771459c7c42a52"><div class="ttname"><a href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">Dispositivo::probabilidadeAvaria</a></div><div class="ttdeci">double probabilidadeAvaria</div><div class="ttdoc">Probabilidade de avaria por hora, entre 0 e 1.</div><div class="ttdef"><b>Definição</b> Dispositivo.h:28</div></div>
+<div class="ttc" id="aclass_sensor_fumo_html_a06c433cfcfbbe0daff8493fd01176db9"><div class="ttname"><a href="class_sensor_fumo.html#a06c433cfcfbbe0daff8493fd01176db9">SensorFumo::limiar</a></div><div class="ttdeci">double limiar</div><div class="ttdoc">A partir deste valor ha aviso.</div><div class="ttdef"><b>Definição</b> Sensor.h:222</div></div>
+<div class="ttc" id="aclass_sensor_fumo_html_a4500323141abc3fd775ecdfe0e2205e4"><div class="ttname"><a href="class_sensor_fumo.html#a4500323141abc3fd775ecdfe0e2205e4">SensorFumo::GetLimiar</a></div><div class="ttdeci">double GetLimiar() const</div><div class="ttdoc">Devolve o limiar de fumo.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:151</div></div>
+<div class="ttc" id="aclass_sensor_fumo_html_a6c91057801c64cc424a46f4ab5b4ec3b"><div class="ttname"><a href="class_sensor_fumo.html#a6c91057801c64cc424a46f4ab5b4ec3b">SensorFumo::SensorFumo</a></div><div class="ttdeci">SensorFumo(int id, const string &amp;marca, double valor, double probabilidadeAvaria, int posX, int posY, double limiar)</div><div class="ttdoc">Cria um sensor de fumo.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:141</div></div>
+<div class="ttc" id="aclass_sensor_fumo_html_a81a08ca8762f924a83d2432e1ad20b37"><div class="ttname"><a href="class_sensor_fumo.html#a81a08ca8762f924a83d2432e1ad20b37">SensorFumo::DefinirValorSeguro</a></div><div class="ttdeci">virtual void DefinirValorSeguro()</div><div class="ttdoc">Repoe a leitura a zero.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:247</div></div>
+<div class="ttc" id="aclass_sensor_fumo_html_aca850db29a27fce93042b167912e34da"><div class="ttname"><a href="class_sensor_fumo.html#aca850db29a27fce93042b167912e34da">SensorFumo::Actualizar</a></div><div class="ttdeci">virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura, int horaEncerramento, double fracaoHora)</div><div class="ttdoc">Acumula fumo por hora e pode saltar ao limiar segundo PROB_1.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:229</div></div>
+<div class="ttc" id="aclass_sensor_fumo_html_ad1d2b9a6a32bebb35c60be7df0cbb3d0"><div class="ttname"><a href="class_sensor_fumo.html#ad1d2b9a6a32bebb35c60be7df0cbb3d0">SensorFumo::EmAviso</a></div><div class="ttdeci">virtual bool EmAviso() const</div><div class="ttdoc">Ha aviso quando a leitura atinge o limiar.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:161</div></div>
+<div class="ttc" id="aclass_sensor_fumo_html_ad60f7f473408bd1721b725bc7e614f71"><div class="ttname"><a href="class_sensor_fumo.html#ad60f7f473408bd1721b725bc7e614f71">SensorFumo::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const</div><div class="ttdoc">Devolve &quot;SFOGO&quot;.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:156</div></div>
+<div class="ttc" id="aclass_sensor_html_a0d370247a832c14d9dcb90bfbb2df789"><div class="ttname"><a href="class_sensor.html#a0d370247a832c14d9dcb90bfbb2df789">Sensor::Repor</a></div><div class="ttdeci">void Repor()</div><div class="ttdoc">Repoe o sensor: valor seguro e avaria limpa.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:75</div></div>
+<div class="ttc" id="aclass_sensor_html_a10601717a7eae4a03a22f14ee8ff3315"><div class="ttname"><a href="class_sensor.html#a10601717a7eae4a03a22f14ee8ff3315">Sensor::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const =0</div><div class="ttdoc">Nome do tipo, igual a etiqueta do XML quando o sensor vem do ficheiro.</div></div>
+<div class="ttc" id="aclass_sensor_html_a129d3cca804f384775719750046540c1"><div class="ttname"><a href="class_sensor.html#a129d3cca804f384775719750046540c1">Sensor::Disparou</a></div><div class="ttdeci">bool Disparou()</div><div class="ttdoc">Detecta a passagem de normal para aviso.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:63</div></div>
+<div class="ttc" id="aclass_sensor_html_a13c65bb23f753b5831fccbd25e97d56d"><div class="ttname"><a href="class_sensor.html#a13c65bb23f753b5831fccbd25e97d56d">Sensor::SetValor</a></div><div class="ttdeci">void SetValor(double novoValor)</div><div class="ttdoc">Substitui a leitura.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:26</div></div>
+<div class="ttc" id="aclass_sensor_html_a3caebbaea224c8622bb24a5b7fa3119d"><div class="ttname"><a href="class_sensor.html#a3caebbaea224c8622bb24a5b7fa3119d">Sensor::GetValor</a></div><div class="ttdeci">double GetValor() const</div><div class="ttdoc">Devolve a leitura actual.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:21</div></div>
+<div class="ttc" id="aclass_sensor_html_a3ddc17aaf50c49001de243bcdcbfb2cb"><div class="ttname"><a href="class_sensor.html#a3ddc17aaf50c49001de243bcdcbfb2cb">Sensor::valor</a></div><div class="ttdeci">double valor</div><div class="ttdoc">Leitura actual do sensor.</div><div class="ttdef"><b>Definição</b> Sensor.h:29</div></div>
+<div class="ttc" id="aclass_sensor_html_a42bcb9147ab361b79faea1f2b20e2639"><div class="ttname"><a href="class_sensor.html#a42bcb9147ab361b79faea1f2b20e2639">Sensor::GetProbabilidadeUm</a></div><div class="ttdeci">double GetProbabilidadeUm() const</div><div class="ttdoc">Probabilidade do evento, ja em fracao entre 0 e 1.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:41</div></div>
+<div class="ttc" id="aclass_sensor_html_a4f1a6fdfe225c39c7f66ad89b77297cb"><div class="ttname"><a href="class_sensor.html#a4f1a6fdfe225c39c7f66ad89b77297cb">Sensor::GetRaioVizinhanca</a></div><div class="ttdeci">virtual int GetRaioVizinhanca() const</div><div class="ttdoc">Raio de vizinhanca, em celulas do campo.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:31</div></div>
+<div class="ttc" id="aclass_sensor_html_a52b5bea9a9f3dfcd2c8ea102c8e13c95"><div class="ttname"><a href="class_sensor.html#a52b5bea9a9f3dfcd2c8ea102c8e13c95">Sensor::DefinirValorSeguro</a></div><div class="ttdeci">virtual void DefinirValorSeguro()=0</div><div class="ttdoc">Poe a leitura num valor que nao dispara aviso.</div></div>
+<div class="ttc" id="aclass_sensor_html_a5d72a724705a4daeb799694cfdf36030"><div class="ttname"><a href="class_sensor.html#a5d72a724705a4daeb799694cfdf36030">Sensor::Actualizar</a></div><div class="ttdeci">virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura, int horaEncerramento, double fracaoHora)</div><div class="ttdoc">Actualiza a leitura com o horario e com o funcionamento dos motores.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:71</div></div>
+<div class="ttc" id="aclass_sensor_html_a7d08f06484af5ca9cdcc804734ecfade"><div class="ttname"><a href="class_sensor.html#a7d08f06484af5ca9cdcc804734ecfade">Sensor::Sensor</a></div><div class="ttdeci">Sensor(int id, const string &amp;marca, double valor, double probabilidadeAvaria, int posX, int posY)</div><div class="ttdoc">Cria um sensor na posicao indicada.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:12</div></div>
+<div class="ttc" id="aclass_sensor_html_a9e49e56a135673582a0b0728790602f7"><div class="ttname"><a href="class_sensor.html#a9e49e56a135673582a0b0728790602f7">Sensor::probabilidadeUm</a></div><div class="ttdeci">double probabilidadeUm</div><div class="ttdoc">Probabilidade do evento (PROB_1). Zero se o tipo nao a usa.</div><div class="ttdef"><b>Definição</b> Sensor.h:31</div></div>
+<div class="ttc" id="aclass_sensor_html_aa9c99a886cdb802ba5220319cd4ae19a"><div class="ttname"><a href="class_sensor.html#aa9c99a886cdb802ba5220319cd4ae19a">Sensor::SetProbabilidadeUm</a></div><div class="ttdeci">void SetProbabilidadeUm(double probabilidade)</div><div class="ttdoc">Guarda PROB_1. Valores iguais ou superiores a 1 sao percentagens.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:46</div></div>
+<div class="ttc" id="aclass_sensor_html_aadda4bdddab83e1e602b04a5a8a53eec"><div class="ttname"><a href="class_sensor.html#aadda4bdddab83e1e602b04a5a8a53eec">Sensor::EmAviso</a></div><div class="ttdeci">virtual bool EmAviso() const =0</div><div class="ttdoc">Indica se a leitura actual e um aviso.</div></div>
+<div class="ttc" id="aclass_sensor_html_ac03246f136e2d81d0301aa9fbfadbe5d"><div class="ttname"><a href="class_sensor.html#ac03246f136e2d81d0301aa9fbfadbe5d">Sensor::avisoAnterior</a></div><div class="ttdeci">bool avisoAnterior</div><div class="ttdoc">true se no passo anterior o sensor ja estava em aviso.</div><div class="ttdef"><b>Definição</b> Sensor.h:30</div></div>
+<div class="ttc" id="aclass_sensor_html_ae905377d12ef24d39c00a39657878bda"><div class="ttname"><a href="class_sensor.html#ae905377d12ef24d39c00a39657878bda">Sensor::GetLimiar</a></div><div class="ttdeci">virtual double GetLimiar() const</div><div class="ttdoc">Limiar de aviso. Zero se o tipo nao o define.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:36</div></div>
+<div class="ttc" id="aclass_sensor_humidade_html_a09e65ee00428a9feff1d5924dcd816ed"><div class="ttname"><a href="class_sensor_humidade.html#a09e65ee00428a9feff1d5924dcd816ed">SensorHumidade::limiar</a></div><div class="ttdeci">double limiar</div><div class="ttdoc">A partir deste valor ha aviso.</div><div class="ttdef"><b>Definição</b> Sensor.h:170</div></div>
+<div class="ttc" id="aclass_sensor_humidade_html_a2501302ad3616929730c98c8a6e2cec4"><div class="ttname"><a href="class_sensor_humidade.html#a2501302ad3616929730c98c8a6e2cec4">SensorHumidade::raioVizinhanca</a></div><div class="ttdeci">int raioVizinhanca</div><div class="ttdoc">Raio positivo da vizinhanca, em celulas.</div><div class="ttdef"><b>Definição</b> Sensor.h:171</div></div>
+<div class="ttc" id="aclass_sensor_humidade_html_a5f962b27c9b346e68d5ed5a11b3e9749"><div class="ttname"><a href="class_sensor_humidade.html#a5f962b27c9b346e68d5ed5a11b3e9749">SensorHumidade::SensorHumidade</a></div><div class="ttdeci">SensorHumidade(int id, const string &amp;marca, double valor, double probabilidadeAvaria, int posX, int posY, double limiar, int raioVizinhanca)</div><div class="ttdoc">Cria um sensor de humidade.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:107</div></div>
+<div class="ttc" id="aclass_sensor_humidade_html_a675f779bad9b1ae1442afc6841c80f01"><div class="ttname"><a href="class_sensor_humidade.html#a675f779bad9b1ae1442afc6841c80f01">SensorHumidade::GetLimiar</a></div><div class="ttdeci">double GetLimiar() const</div><div class="ttdoc">Devolve o limiar de humidade.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:121</div></div>
+<div class="ttc" id="aclass_sensor_humidade_html_a6d5f17df5801339e42201d79a2cc5557"><div class="ttname"><a href="class_sensor_humidade.html#a6d5f17df5801339e42201d79a2cc5557">SensorHumidade::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const</div><div class="ttdoc">Devolve &quot;HUMIDADE&quot;.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:131</div></div>
+<div class="ttc" id="aclass_sensor_humidade_html_a719fa5489372c3531e14c02f9e97ef6d"><div class="ttname"><a href="class_sensor_humidade.html#a719fa5489372c3531e14c02f9e97ef6d">SensorHumidade::EmAviso</a></div><div class="ttdeci">virtual bool EmAviso() const</div><div class="ttdoc">Ha aviso quando a leitura atinge o limiar.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:136</div></div>
+<div class="ttc" id="aclass_sensor_humidade_html_a71a7990899fb89022b1584d91fdcd46e"><div class="ttname"><a href="class_sensor_humidade.html#a71a7990899fb89022b1584d91fdcd46e">SensorHumidade::DefinirValorSeguro</a></div><div class="ttdeci">virtual void DefinirValorSeguro()</div><div class="ttdoc">Repoe uma leitura abaixo do limiar.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:217</div></div>
+<div class="ttc" id="aclass_sensor_humidade_html_aa4b64c47ab4818af2e349de0a315b9f5"><div class="ttname"><a href="class_sensor_humidade.html#aa4b64c47ab4818af2e349de0a315b9f5">SensorHumidade::GetRaioVizinhanca</a></div><div class="ttdeci">virtual int GetRaioVizinhanca() const</div><div class="ttdoc">Devolve o raio em que os motores sao desligados.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:126</div></div>
+<div class="ttc" id="aclass_sensor_humidade_html_aff1247aa066007e5d36ea48e37f9b8ca"><div class="ttname"><a href="class_sensor_humidade.html#aff1247aa066007e5d36ea48e37f9b8ca">SensorHumidade::Actualizar</a></div><div class="ttdeci">virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura, int horaEncerramento, double fracaoHora)</div><div class="ttdoc">Sobe a humidade, por hora, enquanto houver motores em RUN.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:209</div></div>
+<div class="ttc" id="aclass_sensor_luz_html_a167abb262f3d88c4e6ee318255c63522"><div class="ttname"><a href="class_sensor_luz.html#a167abb262f3d88c4e6ee318255c63522">SensorLuz::EmAviso</a></div><div class="ttdeci">virtual bool EmAviso() const</div><div class="ttdoc">Ha aviso quando a leitura desce abaixo do limiar.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:102</div></div>
+<div class="ttc" id="aclass_sensor_luz_html_a2ce7aa26d4d3e8ba18cd78457713b59c"><div class="ttname"><a href="class_sensor_luz.html#a2ce7aa26d4d3e8ba18cd78457713b59c">SensorLuz::DefinirValorSeguro</a></div><div class="ttdeci">virtual void DefinirValorSeguro()</div><div class="ttdoc">Repoe uma leitura acima do limiar.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:204</div></div>
+<div class="ttc" id="aclass_sensor_luz_html_a49dacdc702680e31b8cff10e5561614c"><div class="ttname"><a href="class_sensor_luz.html#a49dacdc702680e31b8cff10e5561614c">SensorLuz::GetLimiar</a></div><div class="ttdeci">double GetLimiar() const</div><div class="ttdoc">Devolve o limiar de luminosidade.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:92</div></div>
+<div class="ttc" id="aclass_sensor_luz_html_a565619d94cb954346cd060bf8cf2b3e0"><div class="ttname"><a href="class_sensor_luz.html#a565619d94cb954346cd060bf8cf2b3e0">SensorLuz::Actualizar</a></div><div class="ttdeci">virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura, int horaEncerramento, double fracaoHora)</div><div class="ttdoc">Escurece na ultima hora e recupera na abertura.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:191</div></div>
+<div class="ttc" id="aclass_sensor_luz_html_a996f7e5ef2fd5059670eb299f9fe5345"><div class="ttname"><a href="class_sensor_luz.html#a996f7e5ef2fd5059670eb299f9fe5345">SensorLuz::limiar</a></div><div class="ttdeci">double limiar</div><div class="ttdoc">Abaixo deste valor ha aviso.</div><div class="ttdef"><b>Definição</b> Sensor.h:124</div></div>
+<div class="ttc" id="aclass_sensor_luz_html_aac99d9c6ebeaf30f8987179b9110a17f"><div class="ttname"><a href="class_sensor_luz.html#aac99d9c6ebeaf30f8987179b9110a17f">SensorLuz::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const</div><div class="ttdoc">Devolve &quot;LUZ&quot;.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:97</div></div>
+<div class="ttc" id="aclass_sensor_luz_html_ac914c47fc60d14580cfcedbe7e19aff7"><div class="ttname"><a href="class_sensor_luz.html#ac914c47fc60d14580cfcedbe7e19aff7">SensorLuz::SensorLuz</a></div><div class="ttdeci">SensorLuz(int id, const string &amp;marca, double valor, double probabilidadeAvaria, int posX, int posY, double limiar)</div><div class="ttdoc">Cria um sensor de luz.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:82</div></div>
+<div class="ttc" id="aclass_sensor_missel_html_a41d5cef3d4c3f93ef68abe994115dcfc"><div class="ttname"><a href="class_sensor_missel.html#a41d5cef3d4c3f93ef68abe994115dcfc">SensorMissel::Actualizar</a></div><div class="ttdeci">virtual void Actualizar(bool motoresEmMarcha, int horaAtual, int horaAbertura, int horaEncerramento, double fracaoHora)</div><div class="ttdoc">Pode levar a leitura ao limiar, com probabilidade PROB_1 por hora.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:252</div></div>
+<div class="ttc" id="aclass_sensor_missel_html_a4c194a68bba5a85fd524466e1a6c3ba0"><div class="ttname"><a href="class_sensor_missel.html#a4c194a68bba5a85fd524466e1a6c3ba0">SensorMissel::EmAviso</a></div><div class="ttdeci">virtual bool EmAviso() const</div><div class="ttdoc">Ha aviso quando a leitura atinge o limiar.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:186</div></div>
+<div class="ttc" id="aclass_sensor_missel_html_a6403be28cac4b6dbee7ed568f4ae5c6e"><div class="ttname"><a href="class_sensor_missel.html#a6403be28cac4b6dbee7ed568f4ae5c6e">SensorMissel::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const</div><div class="ttdoc">Devolve &quot;SMISSEL&quot;.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:181</div></div>
+<div class="ttc" id="aclass_sensor_missel_html_a7d5328b0185cdd5c19e349f1f987b46e"><div class="ttname"><a href="class_sensor_missel.html#a7d5328b0185cdd5c19e349f1f987b46e">SensorMissel::DefinirValorSeguro</a></div><div class="ttdeci">virtual void DefinirValorSeguro()</div><div class="ttdoc">Repoe a leitura a zero.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:267</div></div>
+<div class="ttc" id="aclass_sensor_missel_html_a7f514dd6060b037f5538bd323ed61034"><div class="ttname"><a href="class_sensor_missel.html#a7f514dd6060b037f5538bd323ed61034">SensorMissel::GetLimiar</a></div><div class="ttdeci">virtual double GetLimiar() const</div><div class="ttdoc">Devolve o VALOR_AVISO.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:176</div></div>
+<div class="ttc" id="aclass_sensor_missel_html_a83bbf6918d478386054ceaafe621c3a1"><div class="ttname"><a href="class_sensor_missel.html#a83bbf6918d478386054ceaafe621c3a1">SensorMissel::SensorMissel</a></div><div class="ttdeci">SensorMissel(int id, const string &amp;marca, double valor, double probabilidadeAvaria, int posX, int posY, double limiar)</div><div class="ttdoc">Cria um sensor de missel.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:166</div></div>
+<div class="ttc" id="aclass_sensor_missel_html_a9d472e82f9f932c8144f8522b8f821f4"><div class="ttname"><a href="class_sensor_missel.html#a9d472e82f9f932c8144f8522b8f821f4">SensorMissel::limiar</a></div><div class="ttdeci">double limiar</div><div class="ttdoc">VALOR_AVISO. A leitura chega aqui quando o evento ocorre.</div><div class="ttdef"><b>Definição</b> Sensor.h:268</div></div>
+<div class="ttc" id="aclass_sensor_temperatura_html_a0b472bf2f472c48d8f558bc8014d0d47"><div class="ttname"><a href="class_sensor_temperatura.html#a0b472bf2f472c48d8f558bc8014d0d47">SensorTemperatura::limiar</a></div><div class="ttdeci">double limiar</div><div class="ttdoc">VALOR_AVISO. A partir deste valor ha aviso.</div><div class="ttdef"><b>Definição</b> Sensor.h:312</div></div>
+<div class="ttc" id="aclass_sensor_temperatura_html_a7486cdaeb9ebb3723b6ef3880bcd3e91"><div class="ttname"><a href="class_sensor_temperatura.html#a7486cdaeb9ebb3723b6ef3880bcd3e91">SensorTemperatura::SensorTemperatura</a></div><div class="ttdeci">SensorTemperatura(int id, const string &amp;marca, double valor, double probabilidadeAvaria, int posX, int posY, double limiar)</div><div class="ttdoc">Cria um sensor de temperatura.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:272</div></div>
+<div class="ttc" id="aclass_sensor_temperatura_html_aad7f64f456a72b99b418b658dc8dca01"><div class="ttname"><a href="class_sensor_temperatura.html#aad7f64f456a72b99b418b658dc8dca01">SensorTemperatura::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const</div><div class="ttdoc">Devolve &quot;STEMPERATURA&quot;.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:287</div></div>
+<div class="ttc" id="aclass_sensor_temperatura_html_ad27cbf61a6c90898414463ff94970b86"><div class="ttname"><a href="class_sensor_temperatura.html#ad27cbf61a6c90898414463ff94970b86">SensorTemperatura::GetLimiar</a></div><div class="ttdeci">virtual double GetLimiar() const</div><div class="ttdoc">Devolve o VALOR_AVISO.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:282</div></div>
+<div class="ttc" id="aclass_sensor_temperatura_html_afe68c85b29fd29ad03bb16f4d1ef433c"><div class="ttname"><a href="class_sensor_temperatura.html#afe68c85b29fd29ad03bb16f4d1ef433c">SensorTemperatura::DefinirValorSeguro</a></div><div class="ttdeci">virtual void DefinirValorSeguro()</div><div class="ttdoc">Repoe a leitura a zero.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:297</div></div>
+<div class="ttc" id="aclass_sensor_temperatura_html_aff68e8678a529e478c5553ef3fc00732"><div class="ttname"><a href="class_sensor_temperatura.html#aff68e8678a529e478c5553ef3fc00732">SensorTemperatura::EmAviso</a></div><div class="ttdeci">virtual bool EmAviso() const</div><div class="ttdoc">Ha aviso quando a leitura atinge o limiar.</div><div class="ttdef"><b>Definição</b> Sensor.cpp:292</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>include</b></li><li class="navelem"><a href="_sensor_8h.html">Sensor.h</a></li>
+    <li class="footer">Gerado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.18.0 </li>
+  </ul>
+</div>
+</body>
+</html>

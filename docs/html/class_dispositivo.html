@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.18.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Gestao de Fabrica: Referência à classe Dispositivo</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="codefolding.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Gestao de Fabrica<span id="projectnumber">&#160;2026/2027</span>
+   </div>
+   <div id="projectbrief">Programacao Orientada a Objetos, ESTGV</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Gerado por Doxygen 1.18.0 -->
+<script type="text/javascript">
+let searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', codefold.init);
+</script>
+<script type="application/json" id="doxygen-config">
+{
+  "relPath": "",
+  "generateTreeView": true,
+  "searchEngine": true,
+  "serverBasedSearch": false,
+  "disableIndex": false,
+  "dynamicMenus": true,
+  "fullSidebar": false
+}
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<div id="main-nav-mobile">
+<div class="sm sm-dox"><input id="main-menu-state" type="checkbox"/>
+<label class="main-menu-btn" for="main-menu-state">
+<span class="main-menu-btn-icon"></span> Toggle main menu visibility</label>
+<span id="searchBoxPos1"></span>
+</div>
+</div><!-- main-nav-mobile -->
+<div id="main-nav">
+  <ul class="sm sm-dox" id="main-menu">
+    <li id="searchBoxPos2">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Localizar" accesskey="S"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+    </li>
+  </ul>
+</div><!-- main-nav -->
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded',() => { initNavTree('class_dispositivo.html','','class_dispositivo-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Carregando...</div>
+<div class="SRStatus" id="Searching">Procurando...</div>
+<div class="SRStatus" id="NoMatches">Nenhuma entrada encontrada</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referência à classe Dispositivo</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Base de sensores e motores.  
+ <a href="#details">Mais...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_dispositivo_8h_source.html">Dispositivo.h</a>&gt;</code></p>
+<div class="dynheader">
+Diagrama de heranças da classe Dispositivo</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_dispositivo.png" usemap="#Dispositivo_map" alt=""/>
+  <map id="Dispositivo_map" name="Dispositivo_map">
+<area href="class_motor.html" title="Motor generico. Os tipos concretos reimplementam o comando e o aquecimento." alt="Motor" shape="rect" coords="0,56,123,80"/>
+<area href="class_sensor.html" title="Classe base dos sensores." alt="Sensor" shape="rect" coords="266,56,389,80"/>
+<area href="class_motor_combustao.html" title="Motor de combustao. Aquece mais depressa do que a base." alt="MotorCombustao" shape="rect" coords="133,112,256,136"/>
+<area href="class_motor_eletrico.html" title="Motor eletrico. Aquece mais devagar do que a base." alt="MotorEletrico" shape="rect" coords="133,168,256,192"/>
+<area href="class_motor_inducao.html" title="Motor de inducao. O aquecimento fica entre o eletrico e a combustao." alt="MotorInducao" shape="rect" coords="133,224,256,248"/>
+<area href="class_sensor_fumo.html" title="Sensor de fumo." alt="SensorFumo" shape="rect" coords="399,112,522,136"/>
+<area href="class_sensor_humidade.html" title="Sensor de humidade." alt="SensorHumidade" shape="rect" coords="399,168,522,192"/>
+<area href="class_sensor_luz.html" title="Sensor de luminosidade." alt="SensorLuz" shape="rect" coords="399,224,522,248"/>
+<area href="class_sensor_missel.html" title="Sensor de missel." alt="SensorMissel" shape="rect" coords="399,280,522,304"/>
+<area href="class_sensor_temperatura.html" title="Sensor de temperatura. No XML a etiqueta e STEMPERATURA." alt="SensorTemperatura" shape="rect" coords="399,336,522,360"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Membros públicos</h2></td></tr>
+<tr class="memitem:a86f47a4bdf12d881f9261e01db2c408f" id="r_a86f47a4bdf12d881f9261e01db2c408f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a86f47a4bdf12d881f9261e01db2c408f">Dispositivo</a> (int id, const string &amp;marca, double probabilidadeAvaria, int posX, int posY)</td></tr>
+<tr class="memdesc:a86f47a4bdf12d881f9261e01db2c408f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cria um dispositivo.  <br /></td></tr>
+<tr class="memitem:a446b5597ce5f6f040c0c3e94a826e31b" id="r_a446b5597ce5f6f040c0c3e94a826e31b"><td class="memItemLeft"><a id="a446b5597ce5f6f040c0c3e94a826e31b" name="a446b5597ce5f6f040c0c3e94a826e31b"></a>
+virtual&#160;</td><td class="memItemRight"><b>~Dispositivo</b> ()</td></tr>
+<tr class="memdesc:a446b5597ce5f6f040c0c3e94a826e31b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destrutor virtual, para apagar sensores e motores pela base. <br /></td></tr>
+<tr class="memitem:aa3e5d35de7ba0e6b30a21db60d21e05c" id="r_aa3e5d35de7ba0e6b30a21db60d21e05c"><td class="memItemLeft"><a id="aa3e5d35de7ba0e6b30a21db60d21e05c" name="aa3e5d35de7ba0e6b30a21db60d21e05c"></a>
+int&#160;</td><td class="memItemRight"><b>GetId</b> () const</td></tr>
+<tr class="memdesc:aa3e5d35de7ba0e6b30a21db60d21e05c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devolve o identificador. <br /></td></tr>
+<tr class="memitem:a46b1466bd1e4ba2261e4c5095311570c" id="r_a46b1466bd1e4ba2261e4c5095311570c"><td class="memItemLeft"><a id="a46b1466bd1e4ba2261e4c5095311570c" name="a46b1466bd1e4ba2261e4c5095311570c"></a>
+string&#160;</td><td class="memItemRight"><b>GetMarca</b> () const</td></tr>
+<tr class="memdesc:a46b1466bd1e4ba2261e4c5095311570c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devolve a marca. <br /></td></tr>
+<tr class="memitem:af97355f57f307a4df27cd0249f6b545d" id="r_af97355f57f307a4df27cd0249f6b545d"><td class="memItemLeft"><a id="af97355f57f307a4df27cd0249f6b545d" name="af97355f57f307a4df27cd0249f6b545d"></a>
+double&#160;</td><td class="memItemRight"><b>GetProbabilidadeAvaria</b> () const</td></tr>
+<tr class="memdesc:af97355f57f307a4df27cd0249f6b545d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devolve a probabilidade de avaria por hora. <br /></td></tr>
+<tr class="memitem:a069afb6f1f66b03edeb8026d7404c156" id="r_a069afb6f1f66b03edeb8026d7404c156"><td class="memItemLeft"><a id="a069afb6f1f66b03edeb8026d7404c156" name="a069afb6f1f66b03edeb8026d7404c156"></a>
+int&#160;</td><td class="memItemRight"><b>GetX</b> () const</td></tr>
+<tr class="memdesc:a069afb6f1f66b03edeb8026d7404c156"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devolve a coordenada X. <br /></td></tr>
+<tr class="memitem:aa90955be4318548786dbf4c1a6cf2ba5" id="r_aa90955be4318548786dbf4c1a6cf2ba5"><td class="memItemLeft"><a id="aa90955be4318548786dbf4c1a6cf2ba5" name="aa90955be4318548786dbf4c1a6cf2ba5"></a>
+int&#160;</td><td class="memItemRight"><b>GetY</b> () const</td></tr>
+<tr class="memdesc:aa90955be4318548786dbf4c1a6cf2ba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devolve a coordenada Y. <br /></td></tr>
+<tr class="memitem:ad8dc6ccd3abdcf96aba02acdb64674bb" id="r_ad8dc6ccd3abdcf96aba02acdb64674bb"><td class="memItemLeft"><a id="ad8dc6ccd3abdcf96aba02acdb64674bb" name="ad8dc6ccd3abdcf96aba02acdb64674bb"></a>
+int&#160;</td><td class="memItemRight"><b>GetTotalAvarias</b> () const</td></tr>
+<tr class="memdesc:ad8dc6ccd3abdcf96aba02acdb64674bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devolve o numero de avarias ja contadas. <br /></td></tr>
+<tr class="memitem:ae0101501a3917a5259316a664285ac4f" id="r_ae0101501a3917a5259316a664285ac4f"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ae0101501a3917a5259316a664285ac4f">EstaAvariado</a> () const</td></tr>
+<tr class="memdesc:ae0101501a3917a5259316a664285ac4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indica se o dispositivo ja avariou e ainda nao foi reparado.  <br /></td></tr>
+<tr class="memitem:a5a3f8baece1521e22ad3389c264194db" id="r_a5a3f8baece1521e22ad3389c264194db"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a5a3f8baece1521e22ad3389c264194db">SetPosicao</a> (int posX, int posY)</td></tr>
+<tr class="memdesc:a5a3f8baece1521e22ad3389c264194db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Altera a posicao.  <br /></td></tr>
+<tr class="memitem:ab191c0e40ca7fba2f650018a2e25bc92" id="r_ab191c0e40ca7fba2f650018a2e25bc92"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab191c0e40ca7fba2f650018a2e25bc92">RegistarAvaria</a> ()</td></tr>
+<tr class="memdesc:ab191c0e40ca7fba2f650018a2e25bc92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conta uma avaria.  <br /></td></tr>
+<tr class="memitem:a4103ac252a3a8ac90e7de4d80b850737" id="r_a4103ac252a3a8ac90e7de4d80b850737"><td class="memItemLeft"><a id="a4103ac252a3a8ac90e7de4d80b850737" name="a4103ac252a3a8ac90e7de4d80b850737"></a>
+void&#160;</td><td class="memItemRight"><b>RepararAvaria</b> ()</td></tr>
+<tr class="memdesc:a4103ac252a3a8ac90e7de4d80b850737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Limpa o estado de avaria para a contagem poder voltar a subir. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Membros protegidos</h2></td></tr>
+<tr class="memitem:a2e210872eb926743a568dd83440ece2b" id="r_a2e210872eb926743a568dd83440ece2b"><td class="memItemLeft">double&#160;</td><td class="memItemRight"><a class="el" href="#a2e210872eb926743a568dd83440ece2b">limitarProbabilidade</a> (double probabilidade) const</td></tr>
+<tr class="memdesc:a2e210872eb926743a568dd83440ece2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Garante que a probabilidade fica entre 0 e 1.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Atributos Protegidos</h2></td></tr>
+<tr class="memitem:a9ed6e1aa610907334a553ca041801494" id="r_a9ed6e1aa610907334a553ca041801494"><td class="memItemLeft"><a id="a9ed6e1aa610907334a553ca041801494" name="a9ed6e1aa610907334a553ca041801494"></a>
+int&#160;</td><td class="memItemRight"><b>id</b></td></tr>
+<tr class="memdesc:a9ed6e1aa610907334a553ca041801494"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identificador unico dentro do seu grupo (motor ou sensor). <br /></td></tr>
+<tr class="memitem:a882d7b33b62e779008372e906f065cd5" id="r_a882d7b33b62e779008372e906f065cd5"><td class="memItemLeft"><a id="a882d7b33b62e779008372e906f065cd5" name="a882d7b33b62e779008372e906f065cd5"></a>
+string&#160;</td><td class="memItemRight"><b>marca</b></td></tr>
+<tr class="memdesc:a882d7b33b62e779008372e906f065cd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fabricante do dispositivo. <br /></td></tr>
+<tr class="memitem:ad171c331ecfed56478771459c7c42a52" id="r_ad171c331ecfed56478771459c7c42a52"><td class="memItemLeft"><a id="ad171c331ecfed56478771459c7c42a52" name="ad171c331ecfed56478771459c7c42a52"></a>
+double&#160;</td><td class="memItemRight"><b>probabilidadeAvaria</b></td></tr>
+<tr class="memdesc:ad171c331ecfed56478771459c7c42a52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Probabilidade de avaria por hora, entre 0 e 1. <br /></td></tr>
+<tr class="memitem:a9e5bf2767fff763d3e7277d9c5532a6f" id="r_a9e5bf2767fff763d3e7277d9c5532a6f"><td class="memItemLeft"><a id="a9e5bf2767fff763d3e7277d9c5532a6f" name="a9e5bf2767fff763d3e7277d9c5532a6f"></a>
+int&#160;</td><td class="memItemRight"><b>x</b></td></tr>
+<tr class="memdesc:a9e5bf2767fff763d3e7277d9c5532a6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coordenada X. Fica -1 quando a posicao recebida e invalida. <br /></td></tr>
+<tr class="memitem:a0a5ecf8dcf4d3e20aa6f0f76d6a549b5" id="r_a0a5ecf8dcf4d3e20aa6f0f76d6a549b5"><td class="memItemLeft"><a id="a0a5ecf8dcf4d3e20aa6f0f76d6a549b5" name="a0a5ecf8dcf4d3e20aa6f0f76d6a549b5"></a>
+int&#160;</td><td class="memItemRight"><b>y</b></td></tr>
+<tr class="memdesc:a0a5ecf8dcf4d3e20aa6f0f76d6a549b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coordenada Y. Fica -1 quando a posicao recebida e invalida. <br /></td></tr>
+<tr class="memitem:a78c99facc2b717c7ef8d6e1162f5bfe0" id="r_a78c99facc2b717c7ef8d6e1162f5bfe0"><td class="memItemLeft"><a id="a78c99facc2b717c7ef8d6e1162f5bfe0" name="a78c99facc2b717c7ef8d6e1162f5bfe0"></a>
+int&#160;</td><td class="memItemRight"><b>totalAvarias</b></td></tr>
+<tr class="memdesc:a78c99facc2b717c7ef8d6e1162f5bfe0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Numero de avarias registadas. <br /></td></tr>
+<tr class="memitem:aa8782285206ab8283c5a650843265fc3" id="r_aa8782285206ab8283c5a650843265fc3"><td class="memItemLeft"><a id="aa8782285206ab8283c5a650843265fc3" name="aa8782285206ab8283c5a650843265fc3"></a>
+bool&#160;</td><td class="memItemRight"><b>avariado</b></td></tr>
+<tr class="memdesc:aa8782285206ab8283c5a650843265fc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">true enquanto a ultima avaria nao foi reparada. <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descrição detalhada</h2>
+<div class="textblock"><p>Base de sensores e motores. </p>
+<p>Guarda o identificador, a marca, a probabilidade de avaria, a posicao e o historico de avarias. </p>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Documentação dos Construtores &amp; Destrutor</h2>
+<a id="a86f47a4bdf12d881f9261e01db2c408f" name="a86f47a4bdf12d881f9261e01db2c408f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86f47a4bdf12d881f9261e01db2c408f">&#9670;&#160;</a></span>Dispositivo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dispositivo::Dispositivo </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>id</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;</td>          <td class="paramname"><span class="paramname"><em>marca</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>probabilidadeAvaria</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>posX</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>posY</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Cria um dispositivo. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>Identificador. Deve ser positivo para entrar na fabrica. </td></tr>
+    <tr><td class="paramname">marca</td><td>Fabricante. </td></tr>
+    <tr><td class="paramname">probabilidadeAvaria</td><td>Probabilidade por hora. Valores fora de [0, 1] sao limitados. </td></tr>
+    <tr><td class="paramname">posX</td><td>Coordenada X. Zero e aceite. Negativo deixa a posicao por guardar. </td></tr>
+    <tr><td class="paramname">posY</td><td>Coordenada Y. Zero e aceite. Negativo deixa a posicao por guardar. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentação das funções</h2>
+<a id="a2e210872eb926743a568dd83440ece2b" name="a2e210872eb926743a568dd83440ece2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e210872eb926743a568dd83440ece2b">&#9670;&#160;</a></span>limitarProbabilidade()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Dispositivo::limitarProbabilidade </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>probabilidade</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Garante que a probabilidade fica entre 0 e 1. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">probabilidade</td><td>Valor lido ou recebido. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Retorna</dt><dd>Probabilidade limitada ao intervalo [0, 1]. </dd></dl>
+
+</div>
+</div>
+<a id="ae0101501a3917a5259316a664285ac4f" name="ae0101501a3917a5259316a664285ac4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0101501a3917a5259316a664285ac4f">&#9670;&#160;</a></span>EstaAvariado()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Dispositivo::EstaAvariado </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Indica se o dispositivo ja avariou e ainda nao foi reparado. </p>
+<dl class="section return"><dt>Retorna</dt><dd>true depois de RegistarAvaria, ate RepararAvaria. </dd></dl>
+
+</div>
+</div>
+<a id="a5a3f8baece1521e22ad3389c264194db" name="a5a3f8baece1521e22ad3389c264194db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a3f8baece1521e22ad3389c264194db">&#9670;&#160;</a></span>SetPosicao()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Dispositivo::SetPosicao </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>posX</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>posY</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Altera a posicao. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">posX</td><td>Coordenada X. Zero e aceite. Negativo nao. </td></tr>
+    <tr><td class="paramname">posY</td><td>Coordenada Y. Zero e aceite. Negativo nao. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Retorna</dt><dd>false se X ou Y forem negativos. Nesse caso a posicao nao muda. </dd></dl>
+
+</div>
+</div>
+<a id="ab191c0e40ca7fba2f650018a2e25bc92" name="ab191c0e40ca7fba2f650018a2e25bc92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab191c0e40ca7fba2f650018a2e25bc92">&#9670;&#160;</a></span>RegistarAvaria()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Dispositivo::RegistarAvaria </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Conta uma avaria. </p>
+<p>So incrementa uma vez. Chamadas seguintes nao somam enquanto o dispositivo nao for reparado. </p>
+
+</div>
+</div>
+<hr/>A documentação para esta classe foi gerada a partir dos seguintes ficheiros:<ul>
+<li>include/<a class="el" href="_dispositivo_8h_source.html">Dispositivo.h</a></li>
+<li>src/<a class="el" href="_dispositivo_8cpp.html">Dispositivo.cpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="class_dispositivo.html">Dispositivo</a></li>
+    <li class="footer">Gerado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.18.0 </li>
+  </ul>
+</div>
+</body>
+</html>

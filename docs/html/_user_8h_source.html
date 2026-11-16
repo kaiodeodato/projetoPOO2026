@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.18.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Gestao de Fabrica: Código-Fonte de include/User.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="codefolding.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Gestao de Fabrica<span id="projectnumber">&#160;2026/2027</span>
+   </div>
+   <div id="projectbrief">Programacao Orientada a Objetos, ESTGV</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Gerado por Doxygen 1.18.0 -->
+<script type="text/javascript">
+let searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', codefold.init);
+</script>
+<script type="application/json" id="doxygen-config">
+{
+  "relPath": "",
+  "generateTreeView": true,
+  "searchEngine": true,
+  "serverBasedSearch": false,
+  "disableIndex": false,
+  "dynamicMenus": true,
+  "fullSidebar": false
+}
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<div id="main-nav-mobile">
+<div class="sm sm-dox"><input id="main-menu-state" type="checkbox"/>
+<label class="main-menu-btn" for="main-menu-state">
+<span class="main-menu-btn-icon"></span> Toggle main menu visibility</label>
+<span id="searchBoxPos1"></span>
+</div>
+</div><!-- main-nav-mobile -->
+<div id="main-nav">
+  <ul class="sm sm-dox" id="main-menu">
+    <li id="searchBoxPos2">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Localizar" accesskey="S"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+    </li>
+  </ul>
+</div><!-- main-nav -->
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded',() => { initNavTree('_user_8h_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Carregando...</div>
+<div class="SRStatus" id="Searching">Procurando...</div>
+<div class="SRStatus" id="NoMatches">Nenhuma entrada encontrada</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">User.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="_user_8h.html">Ir para a documentação deste ficheiro.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef USER_H</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define USER_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">using namespace </span>std;</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span></div>
+<div class="foldopen" id="foldopen00021" data-start="{" data-end="};">
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_user.html">   21</a></span><span class="keyword">class </span><a class="code hl_function" href="class_user.html#a18b37085eef9bfc3b7144a66743c69d3">User</a></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>{</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_user.html#aa7e6e39b43020bbe9c3a196b3689b0f7">   24</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="class_user.html#aa7e6e39b43020bbe9c3a196b3689b0f7">id</a>; </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="class_user.html#aead33358b0eb52d61e9ee8218e3bfff1">   25</a></span>        <span class="keywordtype">string</span> <a class="code hl_variable" href="class_user.html#aead33358b0eb52d61e9ee8218e3bfff1">nome</a>; </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <a class="code hl_function" href="class_user.html#a18b37085eef9bfc3b7144a66743c69d3">User</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_user.html#aead33358b0eb52d61e9ee8218e3bfff1">nome</a>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_user.html#a18b37085eef9bfc3b7144a66743c69d3">~User</a>();</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keywordtype">int</span> <a class="code hl_function" href="class_user.html#ad65977a7470582db00177ea3c5902e45">GetId</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordtype">string</span> <a class="code hl_function" href="class_user.html#aa041ca92ee154b71b769782f9906702b">GetNome</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="class_user.html#ae8d4357d676c525043566b3ff1914d92">   45</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_user.html#ae8d4357d676c525043566b3ff1914d92">GetTipo</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="class_user.html#a16019440f891fcbcff9e0bd1410cd67d">   48</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_user.html#a16019440f891fcbcff9e0bd1410cd67d">PodeAdicionar</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="class_user.html#ae5380b1ef1eb0b666f43601114f4689e">   51</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_user.html#ae5380b1ef1eb0b666f43601114f4689e">PodeRemover</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="class_user.html#a7e22e9f954a468ec1bd430d06e2522d0">   54</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_user.html#a7e22e9f954a468ec1bd430d06e2522d0">PodeListar</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="class_user.html#a6a814dfc2e304849b30f7116ebadde67">   57</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_user.html#a6a814dfc2e304849b30f7116ebadde67">PodeRun</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="class_user.html#a5ffd38aa1bece5f86c0af612a9704554">   60</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_user.html#a5ffd38aa1bece5f86c0af612a9704554">PodeManutencao</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>};</div>
+</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
+<div class="foldopen" id="foldopen00066" data-start="{" data-end="};">
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="class_admin.html">   66</a></span><span class="keyword">class </span><a class="code hl_function" href="class_admin.html#a42953f8a84ca1f70ca0bb0b90b1f5b6f">Admin</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_user.html#a18b37085eef9bfc3b7144a66743c69d3">User</a></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <a class="code hl_function" href="class_admin.html#a42953f8a84ca1f70ca0bb0b90b1f5b6f">Admin</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_user.html#aead33358b0eb52d61e9ee8218e3bfff1">nome</a>);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_admin.html#a42953f8a84ca1f70ca0bb0b90b1f5b6f">~Admin</a>();</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_admin.html#a31698b48b08bf2ae31c0f9334abc4d3d">GetTipo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_admin.html#ac81c4b4c9cdf39936ed86672d02910ba">PodeAdicionar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_admin.html#accef4beccbf6972274f9cf5c90606823">PodeRemover</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_admin.html#a6882b891abe6c3b2a69b0902441f0a0d">PodeListar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_admin.html#a3615f0ea25e643828decc7f389eb56f7">PodeRun</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_admin.html#a4e23a703f268d6970e1ee89a52688832">PodeManutencao</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>};</div>
+</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span></div>
+<div class="foldopen" id="foldopen00101" data-start="{" data-end="};">
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="class_normal.html">  101</a></span><span class="keyword">class </span><a class="code hl_function" href="class_normal.html#a04bab89839d1af32a18d93861d783396">Normal</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_user.html#a18b37085eef9bfc3b7144a66743c69d3">User</a></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>{</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <a class="code hl_function" href="class_normal.html#a04bab89839d1af32a18d93861d783396">Normal</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_user.html#aead33358b0eb52d61e9ee8218e3bfff1">nome</a>);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_normal.html#a04bab89839d1af32a18d93861d783396">~Normal</a>();</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_normal.html#a200dacfb9516a2bda225372011bff58b">GetTipo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_normal.html#a2368634d22e05d1fd225a860d7301884">PodeAdicionar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_normal.html#ad8da83f42a35147d03bf37a9b9e68d7c">PodeRemover</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_normal.html#a83502e499213de738f8a3b7580f31cdd">PodeListar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_normal.html#a20122242ac0228224864510496f35323">PodeRun</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_normal.html#a5eb4db8402185350264deb5f08e6f363">PodeManutencao</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>};</div>
+</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span></div>
+<div class="foldopen" id="foldopen00136" data-start="{" data-end="};">
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="class_visitante.html">  136</a></span><span class="keyword">class </span><a class="code hl_function" href="class_visitante.html#ab7231008fb3658a675fe293097965884">Visitante</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_user.html#a18b37085eef9bfc3b7144a66743c69d3">User</a></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>{</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <a class="code hl_function" href="class_visitante.html#ab7231008fb3658a675fe293097965884">Visitante</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_user.html#aead33358b0eb52d61e9ee8218e3bfff1">nome</a>);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_visitante.html#ab7231008fb3658a675fe293097965884">~Visitante</a>();</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        <span class="keyword">virtual</span> <span class="keywordtype">string</span> <a class="code hl_function" href="class_visitante.html#af36cac32f06a65e64a1b01b881a6bb3b">GetTipo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_visitante.html#ab9660a92523b056e58238538bbd4bf1f">PodeAdicionar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_visitante.html#a74c57b5d27db6aaf53209bf1b29399e3">PodeRemover</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_visitante.html#ab2c5a5fe835ea09fb4ea6fb36782d379">PodeListar</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_visitante.html#a4524fe3aa2d865528bb515fc9789f74a">PodeRun</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_visitante.html#a52759d8a5c12c1dd2bf1e2cf3b5efb79">PodeManutencao</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>};</div>
+</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclass_admin_html_a31698b48b08bf2ae31c0f9334abc4d3d"><div class="ttname"><a href="class_admin.html#a31698b48b08bf2ae31c0f9334abc4d3d">Admin::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const</div><div class="ttdoc">Devolve &quot;ADMIN&quot;.</div><div class="ttdef"><b>Definição</b> User.cpp:38</div></div>
+<div class="ttc" id="aclass_admin_html_a3615f0ea25e643828decc7f389eb56f7"><div class="ttname"><a href="class_admin.html#a3615f0ea25e643828decc7f389eb56f7">Admin::PodeRun</a></div><div class="ttdeci">virtual bool PodeRun() const</div><div class="ttdoc">O administrador pode operar motores.</div><div class="ttdef"><b>Definição</b> User.cpp:58</div></div>
+<div class="ttc" id="aclass_admin_html_a42953f8a84ca1f70ca0bb0b90b1f5b6f"><div class="ttname"><a href="class_admin.html#a42953f8a84ca1f70ca0bb0b90b1f5b6f">Admin::Admin</a></div><div class="ttdeci">Admin(int id, const string &amp;nome)</div><div class="ttdoc">Cria um administrador.</div><div class="ttdef"><b>Definição</b> User.cpp:29</div></div>
+<div class="ttc" id="aclass_admin_html_a4e23a703f268d6970e1ee89a52688832"><div class="ttname"><a href="class_admin.html#a4e23a703f268d6970e1ee89a52688832">Admin::PodeManutencao</a></div><div class="ttdeci">virtual bool PodeManutencao() const</div><div class="ttdoc">O administrador pode fazer manutencao.</div><div class="ttdef"><b>Definição</b> User.cpp:63</div></div>
+<div class="ttc" id="aclass_admin_html_a6882b891abe6c3b2a69b0902441f0a0d"><div class="ttname"><a href="class_admin.html#a6882b891abe6c3b2a69b0902441f0a0d">Admin::PodeListar</a></div><div class="ttdeci">virtual bool PodeListar() const</div><div class="ttdoc">O administrador pode listar.</div><div class="ttdef"><b>Definição</b> User.cpp:53</div></div>
+<div class="ttc" id="aclass_admin_html_ac81c4b4c9cdf39936ed86672d02910ba"><div class="ttname"><a href="class_admin.html#ac81c4b4c9cdf39936ed86672d02910ba">Admin::PodeAdicionar</a></div><div class="ttdeci">virtual bool PodeAdicionar() const</div><div class="ttdoc">O administrador pode adicionar.</div><div class="ttdef"><b>Definição</b> User.cpp:43</div></div>
+<div class="ttc" id="aclass_admin_html_accef4beccbf6972274f9cf5c90606823"><div class="ttname"><a href="class_admin.html#accef4beccbf6972274f9cf5c90606823">Admin::PodeRemover</a></div><div class="ttdeci">virtual bool PodeRemover() const</div><div class="ttdoc">O administrador pode remover.</div><div class="ttdef"><b>Definição</b> User.cpp:48</div></div>
+<div class="ttc" id="aclass_normal_html_a04bab89839d1af32a18d93861d783396"><div class="ttname"><a href="class_normal.html#a04bab89839d1af32a18d93861d783396">Normal::Normal</a></div><div class="ttdeci">Normal(int id, const string &amp;nome)</div><div class="ttdoc">Cria um utilizador normal.</div><div class="ttdef"><b>Definição</b> User.cpp:68</div></div>
+<div class="ttc" id="aclass_normal_html_a200dacfb9516a2bda225372011bff58b"><div class="ttname"><a href="class_normal.html#a200dacfb9516a2bda225372011bff58b">Normal::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const</div><div class="ttdoc">Devolve &quot;NORMAL&quot;.</div><div class="ttdef"><b>Definição</b> User.cpp:77</div></div>
+<div class="ttc" id="aclass_normal_html_a20122242ac0228224864510496f35323"><div class="ttname"><a href="class_normal.html#a20122242ac0228224864510496f35323">Normal::PodeRun</a></div><div class="ttdeci">virtual bool PodeRun() const</div><div class="ttdoc">O utilizador normal pode operar motores.</div><div class="ttdef"><b>Definição</b> User.cpp:97</div></div>
+<div class="ttc" id="aclass_normal_html_a2368634d22e05d1fd225a860d7301884"><div class="ttname"><a href="class_normal.html#a2368634d22e05d1fd225a860d7301884">Normal::PodeAdicionar</a></div><div class="ttdeci">virtual bool PodeAdicionar() const</div><div class="ttdoc">O utilizador normal pode adicionar.</div><div class="ttdef"><b>Definição</b> User.cpp:82</div></div>
+<div class="ttc" id="aclass_normal_html_a5eb4db8402185350264deb5f08e6f363"><div class="ttname"><a href="class_normal.html#a5eb4db8402185350264deb5f08e6f363">Normal::PodeManutencao</a></div><div class="ttdeci">virtual bool PodeManutencao() const</div><div class="ttdoc">O utilizador normal pode fazer manutencao.</div><div class="ttdef"><b>Definição</b> User.cpp:102</div></div>
+<div class="ttc" id="aclass_normal_html_a83502e499213de738f8a3b7580f31cdd"><div class="ttname"><a href="class_normal.html#a83502e499213de738f8a3b7580f31cdd">Normal::PodeListar</a></div><div class="ttdeci">virtual bool PodeListar() const</div><div class="ttdoc">O utilizador normal pode listar.</div><div class="ttdef"><b>Definição</b> User.cpp:92</div></div>
+<div class="ttc" id="aclass_normal_html_ad8da83f42a35147d03bf37a9b9e68d7c"><div class="ttname"><a href="class_normal.html#ad8da83f42a35147d03bf37a9b9e68d7c">Normal::PodeRemover</a></div><div class="ttdeci">virtual bool PodeRemover() const</div><div class="ttdoc">O utilizador normal nao pode remover.</div><div class="ttdef"><b>Definição</b> User.cpp:87</div></div>
+<div class="ttc" id="aclass_user_html_a16019440f891fcbcff9e0bd1410cd67d"><div class="ttname"><a href="class_user.html#a16019440f891fcbcff9e0bd1410cd67d">User::PodeAdicionar</a></div><div class="ttdeci">virtual bool PodeAdicionar() const =0</div><div class="ttdoc">Indica se pode adicionar utilizadores e motores.</div></div>
+<div class="ttc" id="aclass_user_html_a18b37085eef9bfc3b7144a66743c69d3"><div class="ttname"><a href="class_user.html#a18b37085eef9bfc3b7144a66743c69d3">User::User</a></div><div class="ttdeci">User(int id, const string &amp;nome)</div><div class="ttdoc">Cria um utilizador.</div><div class="ttdef"><b>Definição</b> User.cpp:10</div></div>
+<div class="ttc" id="aclass_user_html_a5ffd38aa1bece5f86c0af612a9704554"><div class="ttname"><a href="class_user.html#a5ffd38aa1bece5f86c0af612a9704554">User::PodeManutencao</a></div><div class="ttdeci">virtual bool PodeManutencao() const =0</div><div class="ttdoc">Indica se pode fazer a manutencao dos dispositivos.</div></div>
+<div class="ttc" id="aclass_user_html_a6a814dfc2e304849b30f7116ebadde67"><div class="ttname"><a href="class_user.html#a6a814dfc2e304849b30f7116ebadde67">User::PodeRun</a></div><div class="ttdeci">virtual bool PodeRun() const =0</div><div class="ttdoc">Indica se pode ligar e desligar motores.</div></div>
+<div class="ttc" id="aclass_user_html_a7e22e9f954a468ec1bd430d06e2522d0"><div class="ttname"><a href="class_user.html#a7e22e9f954a468ec1bd430d06e2522d0">User::PodeListar</a></div><div class="ttdeci">virtual bool PodeListar() const =0</div><div class="ttdoc">Indica se pode listar o estado da fabrica.</div></div>
+<div class="ttc" id="aclass_user_html_aa041ca92ee154b71b769782f9906702b"><div class="ttname"><a href="class_user.html#aa041ca92ee154b71b769782f9906702b">User::GetNome</a></div><div class="ttdeci">string GetNome() const</div><div class="ttdoc">Devolve o nome.</div><div class="ttdef"><b>Definição</b> User.cpp:24</div></div>
+<div class="ttc" id="aclass_user_html_aa7e6e39b43020bbe9c3a196b3689b0f7"><div class="ttname"><a href="class_user.html#aa7e6e39b43020bbe9c3a196b3689b0f7">User::id</a></div><div class="ttdeci">int id</div><div class="ttdoc">Identificador. Tem de ser positivo para entrar na fabrica.</div><div class="ttdef"><b>Definição</b> User.h:24</div></div>
+<div class="ttc" id="aclass_user_html_ad65977a7470582db00177ea3c5902e45"><div class="ttname"><a href="class_user.html#ad65977a7470582db00177ea3c5902e45">User::GetId</a></div><div class="ttdeci">int GetId() const</div><div class="ttdoc">Devolve o identificador.</div><div class="ttdef"><b>Definição</b> User.cpp:19</div></div>
+<div class="ttc" id="aclass_user_html_ae5380b1ef1eb0b666f43601114f4689e"><div class="ttname"><a href="class_user.html#ae5380b1ef1eb0b666f43601114f4689e">User::PodeRemover</a></div><div class="ttdeci">virtual bool PodeRemover() const =0</div><div class="ttdoc">Indica se pode remover utilizadores, motores e sensores.</div></div>
+<div class="ttc" id="aclass_user_html_ae8d4357d676c525043566b3ff1914d92"><div class="ttname"><a href="class_user.html#ae8d4357d676c525043566b3ff1914d92">User::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const =0</div><div class="ttdoc">Nome do perfil: ADMIN, NORMAL ou VISITANTE.</div></div>
+<div class="ttc" id="aclass_user_html_aead33358b0eb52d61e9ee8218e3bfff1"><div class="ttname"><a href="class_user.html#aead33358b0eb52d61e9ee8218e3bfff1">User::nome</a></div><div class="ttdeci">string nome</div><div class="ttdoc">Nome apresentado nas listagens.</div><div class="ttdef"><b>Definição</b> User.h:25</div></div>
+<div class="ttc" id="aclass_visitante_html_a4524fe3aa2d865528bb515fc9789f74a"><div class="ttname"><a href="class_visitante.html#a4524fe3aa2d865528bb515fc9789f74a">Visitante::PodeRun</a></div><div class="ttdeci">virtual bool PodeRun() const</div><div class="ttdoc">O visitante nao pode operar motores.</div><div class="ttdef"><b>Definição</b> User.cpp:136</div></div>
+<div class="ttc" id="aclass_visitante_html_a52759d8a5c12c1dd2bf1e2cf3b5efb79"><div class="ttname"><a href="class_visitante.html#a52759d8a5c12c1dd2bf1e2cf3b5efb79">Visitante::PodeManutencao</a></div><div class="ttdeci">virtual bool PodeManutencao() const</div><div class="ttdoc">O visitante nao pode fazer manutencao.</div><div class="ttdef"><b>Definição</b> User.cpp:141</div></div>
+<div class="ttc" id="aclass_visitante_html_a74c57b5d27db6aaf53209bf1b29399e3"><div class="ttname"><a href="class_visitante.html#a74c57b5d27db6aaf53209bf1b29399e3">Visitante::PodeRemover</a></div><div class="ttdeci">virtual bool PodeRemover() const</div><div class="ttdoc">O visitante nao pode remover.</div><div class="ttdef"><b>Definição</b> User.cpp:126</div></div>
+<div class="ttc" id="aclass_visitante_html_ab2c5a5fe835ea09fb4ea6fb36782d379"><div class="ttname"><a href="class_visitante.html#ab2c5a5fe835ea09fb4ea6fb36782d379">Visitante::PodeListar</a></div><div class="ttdeci">virtual bool PodeListar() const</div><div class="ttdoc">O visitante pode listar.</div><div class="ttdef"><b>Definição</b> User.cpp:131</div></div>
+<div class="ttc" id="aclass_visitante_html_ab7231008fb3658a675fe293097965884"><div class="ttname"><a href="class_visitante.html#ab7231008fb3658a675fe293097965884">Visitante::Visitante</a></div><div class="ttdeci">Visitante(int id, const string &amp;nome)</div><div class="ttdoc">Cria um visitante.</div><div class="ttdef"><b>Definição</b> User.cpp:107</div></div>
+<div class="ttc" id="aclass_visitante_html_ab9660a92523b056e58238538bbd4bf1f"><div class="ttname"><a href="class_visitante.html#ab9660a92523b056e58238538bbd4bf1f">Visitante::PodeAdicionar</a></div><div class="ttdeci">virtual bool PodeAdicionar() const</div><div class="ttdoc">O visitante nao pode adicionar.</div><div class="ttdef"><b>Definição</b> User.cpp:121</div></div>
+<div class="ttc" id="aclass_visitante_html_af36cac32f06a65e64a1b01b881a6bb3b"><div class="ttname"><a href="class_visitante.html#af36cac32f06a65e64a1b01b881a6bb3b">Visitante::GetTipo</a></div><div class="ttdeci">virtual string GetTipo() const</div><div class="ttdoc">Devolve &quot;VISITANTE&quot;.</div><div class="ttdef"><b>Definição</b> User.cpp:116</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>include</b></li><li class="navelem"><a href="_user_8h.html">User.h</a></li>
+    <li class="footer">Gerado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.18.0 </li>
+  </ul>
+</div>
+</body>
+</html>
