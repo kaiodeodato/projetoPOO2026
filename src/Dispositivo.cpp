@@ -1,9 +1,14 @@
+/**
+ * @file Dispositivo.cpp
+ * @brief Implementacao da classe Dispositivo.
+ */
+
 #include "Dispositivo.h"
 
 using namespace std;
 
 Dispositivo::Dispositivo(int id, const string& marca, double probabilidadeAvaria, int posX, int posY)
-    : id(id), marca(marca), probabilidadeAvaria(0.0), x(0), y(0), totalAvarias(0), avariado(false)
+    : id(id), marca(marca), probabilidadeAvaria(0.0), x(-1), y(-1), totalAvarias(0), avariado(false)
 {
     this->probabilidadeAvaria = limitarProbabilidade(probabilidadeAvaria);
     SetPosicao(posX, posY);
@@ -45,7 +50,7 @@ int Dispositivo::GetTotalAvarias() const
 
 bool Dispositivo::SetPosicao(int posX, int posY)
 {
-    if (posX <= 0 || posY <= 0)
+    if (posX < 0 || posY < 0)
     {
         return false;
     }

@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['ranking_5fdos_5ffracos_0',['Ranking_Dos_Fracos',['../class_fabrica.html#ac6db87c7ca6fcccefae7a23fcbe5ec09',1,'Fabrica']]],
+  ['ranking_5fdos_5fmais_5ftrabalhadores_1',['Ranking_Dos_Mais_Trabalhadores',['../class_fabrica.html#a46d410abc684f7831ee1f5e1924bfaf2',1,'Fabrica']]],
+  ['registaravaria_2',['RegistarAvaria',['../class_dispositivo.html#ab191c0e40ca7fba2f650018a2e25bc92',1,'Dispositivo']]],
+  ['registartrabalho_3',['RegistarTrabalho',['../class_motor.html#abc37234580beadb562db45052a088e76',1,'Motor']]],
+  ['reiniciarconsumodia_4',['ReiniciarConsumoDia',['../class_motor.html#a901d040838faac1c928a3e277093751a',1,'Motor']]],
+  ['relatorio_5',['Relatorio',['../class_fabrica.html#a3179e9b4eb8919da66af207d98f9bdf8',1,'Fabrica']]],
+  ['remover_6',['remover',['../main_8cpp.html#a8f46a72eda6e546c95fc2ffcca7a0eb4',1,'main.cpp']]],
+  ['removermotor_7',['RemoverMotor',['../class_fabrica.html#abf72bcad06424a59982525d365f3820d',1,'Fabrica']]],
+  ['removersensor_8',['RemoverSensor',['../class_fabrica.html#ab65f420181cbcde18e5f842f2af3f9c8',1,'Fabrica']]],
+  ['removerutilizador_9',['RemoverUtilizador',['../class_fabrica.html#a45ff76e5a322d9430f8e51b9b73f2f19',1,'Fabrica']]],
+  ['reparar_10',['Reparar',['../class_motor.html#a63779466975a488d3201dd5f2f79fe1e',1,'Motor']]],
+  ['repararavaria_11',['RepararAvaria',['../class_dispositivo.html#a4103ac252a3a8ac90e7de4d80b850737',1,'Dispositivo']]],
+  ['repor_12',['Repor',['../class_sensor.html#a0d370247a832c14d9dcb90bfbb2df789',1,'Sensor']]],
+  ['restart_13',['RESTART',['../class_motor.html#a28710eb57aed95a0938e1191749b39e6',1,'Motor::RESTART()'],['../class_motor_eletrico.html#addd37227617360203a0e8e9049b575df',1,'MotorEletrico::RESTART()'],['../class_motor_combustao.html#ac7a70084db10afd99846d2a847d4f76c',1,'MotorCombustao::RESTART()'],['../class_motor_inducao.html#a5f335d4f87defe629ee27f67984b2eab',1,'MotorInducao::RESTART()']]],
+  ['ritmoaquecimento_14',['RitmoAquecimento',['../class_motor.html#af0f138e30c6c4b356d3aa6fbedb303af',1,'Motor::RitmoAquecimento()'],['../class_motor_eletrico.html#a500d3a435b42d001acbf7aaab1b62357',1,'MotorEletrico::RitmoAquecimento()'],['../class_motor_combustao.html#a62082dc8eed405cc36f6f56812bb415d',1,'MotorCombustao::RitmoAquecimento()'],['../class_motor_inducao.html#a1ee095d28b83b402e56215c86fdac272',1,'MotorInducao::RitmoAquecimento()']]],
+  ['run_15',['RUN',['../class_motor.html#af5f093388a781a744465ccec4af19d46',1,'Motor::RUN()'],['../class_motor_eletrico.html#aa615a07f62e6ed6291e24e25dcd94767',1,'MotorEletrico::RUN()'],['../class_motor_combustao.html#a2a0917b6a7a848113bf76189eb1bcb3f',1,'MotorCombustao::RUN()'],['../class_motor_inducao.html#a2457281d1478817805b74ba97e834f17',1,'MotorInducao::RUN()']]]
+];

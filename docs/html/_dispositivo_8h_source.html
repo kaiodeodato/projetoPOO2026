@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.18.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Gestao de Fabrica: Código-Fonte de include/Dispositivo.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="codefolding.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Gestao de Fabrica<span id="projectnumber">&#160;2026/2027</span>
+   </div>
+   <div id="projectbrief">Programacao Orientada a Objetos, ESTGV</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Gerado por Doxygen 1.18.0 -->
+<script type="text/javascript">
+let searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', codefold.init);
+</script>
+<script type="application/json" id="doxygen-config">
+{
+  "relPath": "",
+  "generateTreeView": true,
+  "searchEngine": true,
+  "serverBasedSearch": false,
+  "disableIndex": false,
+  "dynamicMenus": true,
+  "fullSidebar": false
+}
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<div id="main-nav-mobile">
+<div class="sm sm-dox"><input id="main-menu-state" type="checkbox"/>
+<label class="main-menu-btn" for="main-menu-state">
+<span class="main-menu-btn-icon"></span> Toggle main menu visibility</label>
+<span id="searchBoxPos1"></span>
+</div>
+</div><!-- main-nav-mobile -->
+<div id="main-nav">
+  <ul class="sm sm-dox" id="main-menu">
+    <li id="searchBoxPos2">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Localizar" accesskey="S"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+    </li>
+  </ul>
+</div><!-- main-nav -->
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded',() => { initNavTree('_dispositivo_8h_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Carregando...</div>
+<div class="SRStatus" id="Searching">Procurando...</div>
+<div class="SRStatus" id="NoMatches">Nenhuma entrada encontrada</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Dispositivo.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="_dispositivo_8h.html">Ir para a documentação deste ficheiro.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef DISPOSITIVO_H</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define DISPOSITIVO_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">using namespace </span>std;</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
+<div class="foldopen" id="foldopen00023" data-start="{" data-end="};">
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_dispositivo.html">   23</a></span><span class="keyword">class </span><a class="code hl_function" href="class_dispositivo.html#a86f47a4bdf12d881f9261e01db2c408f">Dispositivo</a></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="class_dispositivo.html#a9ed6e1aa610907334a553ca041801494">   26</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="class_dispositivo.html#a9ed6e1aa610907334a553ca041801494">id</a>; </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">   27</a></span>        <span class="keywordtype">string</span> <a class="code hl_variable" href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">marca</a>; </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">   28</a></span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">probabilidadeAvaria</a>; </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="class_dispositivo.html#a9e5bf2767fff763d3e7277d9c5532a6f">   29</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="class_dispositivo.html#a9e5bf2767fff763d3e7277d9c5532a6f">x</a>; </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_dispositivo.html#a0a5ecf8dcf4d3e20aa6f0f76d6a549b5">   30</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="class_dispositivo.html#a0a5ecf8dcf4d3e20aa6f0f76d6a549b5">y</a>; </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="class_dispositivo.html#a78c99facc2b717c7ef8d6e1162f5bfe0">   31</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="class_dispositivo.html#a78c99facc2b717c7ef8d6e1162f5bfe0">totalAvarias</a>; </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="class_dispositivo.html#aa8782285206ab8283c5a650843265fc3">   32</a></span>        <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_dispositivo.html#aa8782285206ab8283c5a650843265fc3">avariado</a>; </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keywordtype">double</span> <a class="code hl_function" href="class_dispositivo.html#a2e210872eb926743a568dd83440ece2b">limitarProbabilidade</a>(<span class="keywordtype">double</span> probabilidade) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <a class="code hl_function" href="class_dispositivo.html#a86f47a4bdf12d881f9261e01db2c408f">Dispositivo</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; <a class="code hl_variable" href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">marca</a>, <span class="keywordtype">double</span> <a class="code hl_variable" href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">probabilidadeAvaria</a>, <span class="keywordtype">int</span> posX, <span class="keywordtype">int</span> posY);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="class_dispositivo.html#a86f47a4bdf12d881f9261e01db2c408f">~Dispositivo</a>();</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordtype">int</span> <a class="code hl_function" href="class_dispositivo.html#aa3e5d35de7ba0e6b30a21db60d21e05c">GetId</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordtype">string</span> <a class="code hl_function" href="class_dispositivo.html#a46b1466bd1e4ba2261e4c5095311570c">GetMarca</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordtype">double</span> <a class="code hl_function" href="class_dispositivo.html#af97355f57f307a4df27cd0249f6b545d">GetProbabilidadeAvaria</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordtype">int</span> <a class="code hl_function" href="class_dispositivo.html#a069afb6f1f66b03edeb8026d7404c156">GetX</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordtype">int</span> <a class="code hl_function" href="class_dispositivo.html#aa90955be4318548786dbf4c1a6cf2ba5">GetY</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordtype">int</span> <a class="code hl_function" href="class_dispositivo.html#ad8dc6ccd3abdcf96aba02acdb64674bb">GetTotalAvarias</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="class_dispositivo.html#ae0101501a3917a5259316a664285ac4f">EstaAvariado</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="class_dispositivo.html#a5a3f8baece1521e22ad3389c264194db">SetPosicao</a>(<span class="keywordtype">int</span> posX, <span class="keywordtype">int</span> posY);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="class_dispositivo.html#ab191c0e40ca7fba2f650018a2e25bc92">RegistarAvaria</a>();</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="class_dispositivo.html#a4103ac252a3a8ac90e7de4d80b850737">RepararAvaria</a>();</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>};</div>
+</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclass_dispositivo_html_a069afb6f1f66b03edeb8026d7404c156"><div class="ttname"><a href="class_dispositivo.html#a069afb6f1f66b03edeb8026d7404c156">Dispositivo::GetX</a></div><div class="ttdeci">int GetX() const</div><div class="ttdoc">Devolve a coordenada X.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:36</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a0a5ecf8dcf4d3e20aa6f0f76d6a549b5"><div class="ttname"><a href="class_dispositivo.html#a0a5ecf8dcf4d3e20aa6f0f76d6a549b5">Dispositivo::y</a></div><div class="ttdeci">int y</div><div class="ttdoc">Coordenada Y. Fica -1 quando a posicao recebida e invalida.</div><div class="ttdef"><b>Definição</b> Dispositivo.h:30</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a2e210872eb926743a568dd83440ece2b"><div class="ttname"><a href="class_dispositivo.html#a2e210872eb926743a568dd83440ece2b">Dispositivo::limitarProbabilidade</a></div><div class="ttdeci">double limitarProbabilidade(double probabilidade) const</div><div class="ttdoc">Garante que a probabilidade fica entre 0 e 1.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:84</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a4103ac252a3a8ac90e7de4d80b850737"><div class="ttname"><a href="class_dispositivo.html#a4103ac252a3a8ac90e7de4d80b850737">Dispositivo::RepararAvaria</a></div><div class="ttdeci">void RepararAvaria()</div><div class="ttdoc">Limpa o estado de avaria para a contagem poder voltar a subir.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:79</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a46b1466bd1e4ba2261e4c5095311570c"><div class="ttname"><a href="class_dispositivo.html#a46b1466bd1e4ba2261e4c5095311570c">Dispositivo::GetMarca</a></div><div class="ttdeci">string GetMarca() const</div><div class="ttdoc">Devolve a marca.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:26</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a5a3f8baece1521e22ad3389c264194db"><div class="ttname"><a href="class_dispositivo.html#a5a3f8baece1521e22ad3389c264194db">Dispositivo::SetPosicao</a></div><div class="ttdeci">bool SetPosicao(int posX, int posY)</div><div class="ttdoc">Altera a posicao.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:51</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a78c99facc2b717c7ef8d6e1162f5bfe0"><div class="ttname"><a href="class_dispositivo.html#a78c99facc2b717c7ef8d6e1162f5bfe0">Dispositivo::totalAvarias</a></div><div class="ttdeci">int totalAvarias</div><div class="ttdoc">Numero de avarias registadas.</div><div class="ttdef"><b>Definição</b> Dispositivo.h:31</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a86f47a4bdf12d881f9261e01db2c408f"><div class="ttname"><a href="class_dispositivo.html#a86f47a4bdf12d881f9261e01db2c408f">Dispositivo::Dispositivo</a></div><div class="ttdeci">Dispositivo(int id, const string &amp;marca, double probabilidadeAvaria, int posX, int posY)</div><div class="ttdoc">Cria um dispositivo.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:10</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a882d7b33b62e779008372e906f065cd5"><div class="ttname"><a href="class_dispositivo.html#a882d7b33b62e779008372e906f065cd5">Dispositivo::marca</a></div><div class="ttdeci">string marca</div><div class="ttdoc">Fabricante do dispositivo.</div><div class="ttdef"><b>Definição</b> Dispositivo.h:27</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a9e5bf2767fff763d3e7277d9c5532a6f"><div class="ttname"><a href="class_dispositivo.html#a9e5bf2767fff763d3e7277d9c5532a6f">Dispositivo::x</a></div><div class="ttdeci">int x</div><div class="ttdoc">Coordenada X. Fica -1 quando a posicao recebida e invalida.</div><div class="ttdef"><b>Definição</b> Dispositivo.h:29</div></div>
+<div class="ttc" id="aclass_dispositivo_html_a9ed6e1aa610907334a553ca041801494"><div class="ttname"><a href="class_dispositivo.html#a9ed6e1aa610907334a553ca041801494">Dispositivo::id</a></div><div class="ttdeci">int id</div><div class="ttdoc">Identificador unico dentro do seu grupo (motor ou sensor).</div><div class="ttdef"><b>Definição</b> Dispositivo.h:26</div></div>
+<div class="ttc" id="aclass_dispositivo_html_aa3e5d35de7ba0e6b30a21db60d21e05c"><div class="ttname"><a href="class_dispositivo.html#aa3e5d35de7ba0e6b30a21db60d21e05c">Dispositivo::GetId</a></div><div class="ttdeci">int GetId() const</div><div class="ttdoc">Devolve o identificador.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:21</div></div>
+<div class="ttc" id="aclass_dispositivo_html_aa8782285206ab8283c5a650843265fc3"><div class="ttname"><a href="class_dispositivo.html#aa8782285206ab8283c5a650843265fc3">Dispositivo::avariado</a></div><div class="ttdeci">bool avariado</div><div class="ttdoc">true enquanto a ultima avaria nao foi reparada.</div><div class="ttdef"><b>Definição</b> Dispositivo.h:32</div></div>
+<div class="ttc" id="aclass_dispositivo_html_aa90955be4318548786dbf4c1a6cf2ba5"><div class="ttname"><a href="class_dispositivo.html#aa90955be4318548786dbf4c1a6cf2ba5">Dispositivo::GetY</a></div><div class="ttdeci">int GetY() const</div><div class="ttdoc">Devolve a coordenada Y.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:41</div></div>
+<div class="ttc" id="aclass_dispositivo_html_ab191c0e40ca7fba2f650018a2e25bc92"><div class="ttname"><a href="class_dispositivo.html#ab191c0e40ca7fba2f650018a2e25bc92">Dispositivo::RegistarAvaria</a></div><div class="ttdeci">void RegistarAvaria()</div><div class="ttdoc">Conta uma avaria.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:68</div></div>
+<div class="ttc" id="aclass_dispositivo_html_ad171c331ecfed56478771459c7c42a52"><div class="ttname"><a href="class_dispositivo.html#ad171c331ecfed56478771459c7c42a52">Dispositivo::probabilidadeAvaria</a></div><div class="ttdeci">double probabilidadeAvaria</div><div class="ttdoc">Probabilidade de avaria por hora, entre 0 e 1.</div><div class="ttdef"><b>Definição</b> Dispositivo.h:28</div></div>
+<div class="ttc" id="aclass_dispositivo_html_ad8dc6ccd3abdcf96aba02acdb64674bb"><div class="ttname"><a href="class_dispositivo.html#ad8dc6ccd3abdcf96aba02acdb64674bb">Dispositivo::GetTotalAvarias</a></div><div class="ttdeci">int GetTotalAvarias() const</div><div class="ttdoc">Devolve o numero de avarias ja contadas.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:46</div></div>
+<div class="ttc" id="aclass_dispositivo_html_ae0101501a3917a5259316a664285ac4f"><div class="ttname"><a href="class_dispositivo.html#ae0101501a3917a5259316a664285ac4f">Dispositivo::EstaAvariado</a></div><div class="ttdeci">bool EstaAvariado() const</div><div class="ttdoc">Indica se o dispositivo ja avariou e ainda nao foi reparado.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:63</div></div>
+<div class="ttc" id="aclass_dispositivo_html_af97355f57f307a4df27cd0249f6b545d"><div class="ttname"><a href="class_dispositivo.html#af97355f57f307a4df27cd0249f6b545d">Dispositivo::GetProbabilidadeAvaria</a></div><div class="ttdeci">double GetProbabilidadeAvaria() const</div><div class="ttdoc">Devolve a probabilidade de avaria por hora.</div><div class="ttdef"><b>Definição</b> Dispositivo.cpp:31</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>include</b></li><li class="navelem"><a href="_dispositivo_8h.html">Dispositivo.h</a></li>
+    <li class="footer">Gerado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.18.0 </li>
+  </ul>
+</div>
+</body>
+</html>

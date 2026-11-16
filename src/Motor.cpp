@@ -1,3 +1,8 @@
+/**
+ * @file Motor.cpp
+ * @brief Implementacao da classe base Motor e dos motores concretos.
+ */
+
 #include "Motor.h"
 
 using namespace std;
@@ -206,4 +211,149 @@ void Motor::RegistarTrabalho(int minutos)
 void Motor::ReiniciarConsumoDia()
 {
     consumoDia = 0.0;
+}
+
+double Motor::RitmoAquecimento() const
+{
+    return 1.5;
+}
+
+void Motor::AplicarAquecimento()
+{
+    Aquecer(RitmoAquecimento());
+}
+
+MotorEletrico::MotorEletrico(int id, const string& marca, double consumoHora, double temperaturaAviso,
+                             double temperaturaParagem, double probabilidadeAvaria, int posX, int posY)
+    : Motor(id, "MELETRICO", marca, consumoHora, temperaturaAviso, temperaturaParagem, probabilidadeAvaria, posX, posY)
+{
+}
+
+MotorEletrico::~MotorEletrico()
+{
+}
+
+void MotorEletrico::RUN()
+{
+    Motor::RUN();
+}
+
+void MotorEletrico::START()
+{
+    Motor::START();
+}
+
+void MotorEletrico::RESTART()
+{
+    Motor::RESTART();
+}
+
+void MotorEletrico::STOP()
+{
+    Motor::STOP();
+}
+
+CLASSE_TEMPERATURA MotorEletrico::ESTOU_QUENTE()
+{
+    return Motor::ESTOU_QUENTE();
+}
+
+string MotorEletrico::GetTipo() const
+{
+    return "MELETRICO";
+}
+
+double MotorEletrico::RitmoAquecimento() const
+{
+    return 0.8;
+}
+
+MotorCombustao::MotorCombustao(int id, const string& marca, double consumoHora, double temperaturaAviso,
+                               double temperaturaParagem, double probabilidadeAvaria, int posX, int posY)
+    : Motor(id, "MCOMBUSTAO", marca, consumoHora, temperaturaAviso, temperaturaParagem, probabilidadeAvaria, posX, posY)
+{
+}
+
+MotorCombustao::~MotorCombustao()
+{
+}
+
+void MotorCombustao::RUN()
+{
+    Motor::RUN();
+}
+
+void MotorCombustao::START()
+{
+    Motor::START();
+}
+
+void MotorCombustao::RESTART()
+{
+    Motor::RESTART();
+}
+
+void MotorCombustao::STOP()
+{
+    Motor::STOP();
+}
+
+CLASSE_TEMPERATURA MotorCombustao::ESTOU_QUENTE()
+{
+    return Motor::ESTOU_QUENTE();
+}
+
+string MotorCombustao::GetTipo() const
+{
+    return "MCOMBUSTAO";
+}
+
+double MotorCombustao::RitmoAquecimento() const
+{
+    return 2.2;
+}
+
+MotorInducao::MotorInducao(int id, const string& marca, double consumoHora, double temperaturaAviso,
+                           double temperaturaParagem, double probabilidadeAvaria, int posX, int posY)
+    : Motor(id, "MINDUCAO", marca, consumoHora, temperaturaAviso, temperaturaParagem, probabilidadeAvaria, posX, posY)
+{
+}
+
+MotorInducao::~MotorInducao()
+{
+}
+
+void MotorInducao::RUN()
+{
+    Motor::RUN();
+}
+
+void MotorInducao::START()
+{
+    Motor::START();
+}
+
+void MotorInducao::RESTART()
+{
+    Motor::RESTART();
+}
+
+void MotorInducao::STOP()
+{
+    Motor::STOP();
+}
+
+CLASSE_TEMPERATURA MotorInducao::ESTOU_QUENTE()
+{
+    return Motor::ESTOU_QUENTE();
+}
+
+string MotorInducao::GetTipo() const
+{
+    return "MINDUCAO";
+}
+
+double MotorInducao::RitmoAquecimento() const
+{
+    return 1.2;
 }

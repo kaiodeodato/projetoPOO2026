@@ -8,3 +8,6 @@ fabrica: $(FONTES)
 
 clean:
 	del /Q fabrica.exe
+
+docs:
+	doxygen Doxyfile

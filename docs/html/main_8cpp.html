@@ -1,0 +1,474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.18.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Gestao de Fabrica: Referência ao ficheiro src/main.cpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="codefolding.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Gestao de Fabrica<span id="projectnumber">&#160;2026/2027</span>
+   </div>
+   <div id="projectbrief">Programacao Orientada a Objetos, ESTGV</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Gerado por Doxygen 1.18.0 -->
+<script type="text/javascript">
+let searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', codefold.init);
+</script>
+<script type="application/json" id="doxygen-config">
+{
+  "relPath": "",
+  "generateTreeView": true,
+  "searchEngine": true,
+  "serverBasedSearch": false,
+  "disableIndex": false,
+  "dynamicMenus": true,
+  "fullSidebar": false
+}
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<div id="main-nav-mobile">
+<div class="sm sm-dox"><input id="main-menu-state" type="checkbox"/>
+<label class="main-menu-btn" for="main-menu-state">
+<span class="main-menu-btn-icon"></span> Toggle main menu visibility</label>
+<span id="searchBoxPos1"></span>
+</div>
+</div><!-- main-nav-mobile -->
+<div id="main-nav">
+  <ul class="sm sm-dox" id="main-menu">
+    <li id="searchBoxPos2">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Localizar" accesskey="S"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+    </li>
+  </ul>
+</div><!-- main-nav -->
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded',() => { initNavTree('main_8cpp.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Carregando...</div>
+<div class="SRStatus" id="Searching">Procurando...</div>
+<div class="SRStatus" id="NoMatches">Nenhuma entrada encontrada</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referência ao ficheiro main.cpp</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Arranque da fabrica, pergunta do relatorio XML e menu da tecla M.  
+<a href="#details">Mais...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="_fabrica_8h_source.html">Fabrica.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_user_8h_source.html">User.h</a>&quot;</code><br />
+<code>#include &lt;conio.h&gt;</code><br />
+<code>#include &lt;cstdlib&gt;</code><br />
+<code>#include &lt;ctime&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;windows.h&gt;</code><br />
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funções</h2></td></tr>
+<tr class="memitem:afee9a0c7e989e83e8472f09fef5c640b" id="r_afee9a0c7e989e83e8472f09fef5c640b"><td class="memItemLeft"><a id="afee9a0c7e989e83e8472f09fef5c640b" name="afee9a0c7e989e83e8472f09fef5c640b"></a>
+static void&#160;</td><td class="memItemRight"><b>limparEntrada</b> ()</td></tr>
+<tr class="memdesc:afee9a0c7e989e83e8472f09fef5c640b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Descarta o resto da linha depois de uma leitura falhada. <br /></td></tr>
+<tr class="memitem:a5b0f50747f9d836720ef7322025683cc" id="r_a5b0f50747f9d836720ef7322025683cc"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#a5b0f50747f9d836720ef7322025683cc">lerInteiro</a> (const string &amp;pedido, int &amp;destino)</td></tr>
+<tr class="memdesc:a5b0f50747f9d836720ef7322025683cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pede um inteiro ao operador.  <br /></td></tr>
+<tr class="memitem:acfb34c6436fd8feca8254fab006a368b" id="r_acfb34c6436fd8feca8254fab006a368b"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#acfb34c6436fd8feca8254fab006a368b">lerReal</a> (const string &amp;pedido, double &amp;destino)</td></tr>
+<tr class="memdesc:acfb34c6436fd8feca8254fab006a368b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pede um numero real ao operador.  <br /></td></tr>
+<tr class="memitem:a1b693b698717a52a6f8b22ad7c26dc7d" id="r_a1b693b698717a52a6f8b22ad7c26dc7d"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#a1b693b698717a52a6f8b22ad7c26dc7d">lerTexto</a> (const string &amp;pedido, string &amp;destino)</td></tr>
+<tr class="memdesc:a1b693b698717a52a6f8b22ad7c26dc7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pede uma linha de texto ao operador.  <br /></td></tr>
+<tr class="memitem:ac771c86771fb3ce48f08bd59fd96664f" id="r_ac771c86771fb3ce48f08bd59fd96664f"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#ac771c86771fb3ce48f08bd59fd96664f">mostrarHora</a> (const <a class="el" href="class_fabrica.html">Fabrica</a> &amp;fabrica)</td></tr>
+<tr class="memdesc:ac771c86771fb3ce48f08bd59fd96664f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Escreve a hora simulada com dois digitos nos minutos.  <br /></td></tr>
+<tr class="memitem:a8c4a08aa9acafdf0e9522da2061b2543" id="r_a8c4a08aa9acafdf0e9522da2061b2543"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a8c4a08aa9acafdf0e9522da2061b2543">adicionarUtilizador</a> (<a class="el" href="class_fabrica.html">Fabrica</a> &amp;fabrica)</td></tr>
+<tr class="memdesc:a8c4a08aa9acafdf0e9522da2061b2543"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pergunta os dados e tenta adicionar um utilizador.  <br /></td></tr>
+<tr class="memitem:af650fd4be7aa03598e0a7fee83a8b6f4" id="r_af650fd4be7aa03598e0a7fee83a8b6f4"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#af650fd4be7aa03598e0a7fee83a8b6f4">adicionarMotor</a> (<a class="el" href="class_fabrica.html">Fabrica</a> &amp;fabrica)</td></tr>
+<tr class="memdesc:af650fd4be7aa03598e0a7fee83a8b6f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pergunta os dados e tenta criar um motor de um tipo do XML.  <br /></td></tr>
+<tr class="memitem:a8f46a72eda6e546c95fc2ffcca7a0eb4" id="r_a8f46a72eda6e546c95fc2ffcca7a0eb4"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a8f46a72eda6e546c95fc2ffcca7a0eb4">remover</a> (<a class="el" href="class_fabrica.html">Fabrica</a> &amp;fabrica)</td></tr>
+<tr class="memdesc:a8f46a72eda6e546c95fc2ffcca7a0eb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pergunta o que remover e chama o metodo correspondente.  <br /></td></tr>
+<tr class="memitem:aa0aedd22b8ffa16731d54492924bde82" id="r_aa0aedd22b8ffa16731d54492924bde82"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#aa0aedd22b8ffa16731d54492924bde82">menu</a> (<a class="el" href="class_fabrica.html">Fabrica</a> &amp;fabrica)</td></tr>
+<tr class="memdesc:aa0aedd22b8ffa16731d54492924bde82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mostra o menu e executa uma opcao. A simulacao fica parada entretanto.  <br /></td></tr>
+<tr class="memitem:ae66f6b31b5ad750f1fe042a706a4e3d4" id="r_ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a> ()</td></tr>
+<tr class="memdesc:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Carrega a fabrica, pede o intervalo do XML e corre o simulador.  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descrição detalhada</h2>
+<div class="textblock"><p>Arranque da fabrica, pergunta do relatorio XML e menu da tecla M. </p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentação das funções</h2>
+<a id="a5b0f50747f9d836720ef7322025683cc" name="a5b0f50747f9d836720ef7322025683cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b0f50747f9d836720ef7322025683cc">&#9670;&#160;</a></span>lerInteiro()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool lerInteiro </td>
+          <td>(</td>
+          <td class="paramtype">const string &amp;</td>          <td class="paramname"><span class="paramname"><em>pedido</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;</td>          <td class="paramname"><span class="paramname"><em>destino</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pede um inteiro ao operador. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pedido</td><td>Texto mostrado antes da leitura. </td></tr>
+    <tr><td class="paramname">destino</td><td>Fica com o valor lido. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Retorna</dt><dd>false se a leitura falhar. </dd></dl>
+
+</div>
+</div>
+<a id="acfb34c6436fd8feca8254fab006a368b" name="acfb34c6436fd8feca8254fab006a368b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfb34c6436fd8feca8254fab006a368b">&#9670;&#160;</a></span>lerReal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool lerReal </td>
+          <td>(</td>
+          <td class="paramtype">const string &amp;</td>          <td class="paramname"><span class="paramname"><em>pedido</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;</td>          <td class="paramname"><span class="paramname"><em>destino</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pede um numero real ao operador. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pedido</td><td>Texto mostrado antes da leitura. </td></tr>
+    <tr><td class="paramname">destino</td><td>Fica com o valor lido. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Retorna</dt><dd>false se a leitura falhar. </dd></dl>
+
+</div>
+</div>
+<a id="a1b693b698717a52a6f8b22ad7c26dc7d" name="a1b693b698717a52a6f8b22ad7c26dc7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b693b698717a52a6f8b22ad7c26dc7d">&#9670;&#160;</a></span>lerTexto()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool lerTexto </td>
+          <td>(</td>
+          <td class="paramtype">const string &amp;</td>          <td class="paramname"><span class="paramname"><em>pedido</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string &amp;</td>          <td class="paramname"><span class="paramname"><em>destino</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pede uma linha de texto ao operador. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pedido</td><td>Texto mostrado antes da leitura. </td></tr>
+    <tr><td class="paramname">destino</td><td>Fica com a linha, sem o Enter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Retorna</dt><dd>false se a linha vier vazia. </dd></dl>
+
+</div>
+</div>
+<a id="ac771c86771fb3ce48f08bd59fd96664f" name="ac771c86771fb3ce48f08bd59fd96664f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac771c86771fb3ce48f08bd59fd96664f">&#9670;&#160;</a></span>mostrarHora()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mostrarHora </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_fabrica.html">Fabrica</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>fabrica</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Escreve a hora simulada com dois digitos nos minutos. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fabrica</td><td><a class="el" href="class_fabrica.html" title="Fabrica: campo, dispositivos, acessos, XML e simulacao.">Fabrica</a> cuja hora se mostra. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8c4a08aa9acafdf0e9522da2061b2543" name="a8c4a08aa9acafdf0e9522da2061b2543"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c4a08aa9acafdf0e9522da2061b2543">&#9670;&#160;</a></span>adicionarUtilizador()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void adicionarUtilizador </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fabrica.html">Fabrica</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>fabrica</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pergunta os dados e tenta adicionar um utilizador. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fabrica</td><td><a class="el" href="class_fabrica.html" title="Fabrica: campo, dispositivos, acessos, XML e simulacao.">Fabrica</a> que recebe o utilizador se o Add tiver sucesso. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af650fd4be7aa03598e0a7fee83a8b6f4" name="af650fd4be7aa03598e0a7fee83a8b6f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af650fd4be7aa03598e0a7fee83a8b6f4">&#9670;&#160;</a></span>adicionarMotor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void adicionarMotor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fabrica.html">Fabrica</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>fabrica</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pergunta os dados e tenta criar um motor de um tipo do XML. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fabrica</td><td><a class="el" href="class_fabrica.html" title="Fabrica: campo, dispositivos, acessos, XML e simulacao.">Fabrica</a> que recebe o motor. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8f46a72eda6e546c95fc2ffcca7a0eb4" name="a8f46a72eda6e546c95fc2ffcca7a0eb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f46a72eda6e546c95fc2ffcca7a0eb4">&#9670;&#160;</a></span>remover()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void remover </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fabrica.html">Fabrica</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>fabrica</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pergunta o que remover e chama o metodo correspondente. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fabrica</td><td><a class="el" href="class_fabrica.html" title="Fabrica: campo, dispositivos, acessos, XML e simulacao.">Fabrica</a> sobre a qual se remove. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa0aedd22b8ffa16731d54492924bde82" name="aa0aedd22b8ffa16731d54492924bde82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0aedd22b8ffa16731d54492924bde82">&#9670;&#160;</a></span>menu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool menu </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_fabrica.html">Fabrica</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>fabrica</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Mostra o menu e executa uma opcao. A simulacao fica parada entretanto. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fabrica</td><td><a class="el" href="class_fabrica.html" title="Fabrica: campo, dispositivos, acessos, XML e simulacao.">Fabrica</a> em pausa. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Retorna</dt><dd>false quando o operador escolhe sair. </dd></dl>
+
+</div>
+</div>
+<a id="ae66f6b31b5ad750f1fe042a706a4e3d4" name="ae66f6b31b5ad750f1fe042a706a4e3d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae66f6b31b5ad750f1fe042a706a4e3d4">&#9670;&#160;</a></span>main()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int main </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Carrega a fabrica, pede o intervalo do XML e corre o simulador. </p>
+<dl class="section return"><dt>Retorna</dt><dd>0 no fim normal, 1 se a configuracao ou o intervalo falharem. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>src</b></li><li class="navelem"><a href="main_8cpp.html">main.cpp</a></li>
+    <li class="footer">Gerado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.18.0 </li>
+  </ul>
+</div>
+</body>
+</html>
