@@ -498,7 +498,7 @@ int main()
     cout << "Fabrica carregada. Prima 'M' para o menu, 'Q' para sair." << endl;
     fabrica.Listar(cout);
 
-    int minutoPasso  = 0;
+    int minutoPasso  = 8 * 60;
     int horaSimulada = 8;
 
     bool correr = true;
