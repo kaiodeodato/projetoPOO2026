@@ -11,10 +11,11 @@ using namespace std;
  * @file Sensor.h
  * @brief Sensores da fabrica.
  *
- * O XML usa STEMPERATURA, SFOGO e SMISSEL. LUZ e HUMIDADE continuam
- * disponiveis para o restante da fabrica.
- * Campos comuns: ID, MARCA, VALOR, PROB_AVARIA, X, Y e VALOR_AVISO.
+ * O XML usa STEMPERATURA, SFOGO, SMISSEL, SLUZ e SHUMIDADE.
+ * Campos comuns: ID, MARCA, VALOR_AVISO, POSICAO e PROB_AVARIA.
  * SFOGO e SMISSEL trazem ainda PROB_1, a probabilidade do evento.
+ * SHUMIDADE pode trazer RAIO_VIZINHANCA; se faltar,
+ * usa-se o raio geral da fabrica.
  */
 
 /**

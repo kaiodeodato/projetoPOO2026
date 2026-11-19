@@ -226,11 +226,18 @@ void SensorHumidade::DefinirValorSeguro()
     }
 }
 
+
 void SensorFumo::Actualizar(bool motoresEmMarcha, int, int, int, double fracaoHora)
 {
-    if (probabilidadeUm > 0.0 && !EstaAvariado() && valor < limiar)
+    if (EstaAvariado())
+    {
+        return;
+    }
+
+    if (probabilidadeUm > 0.0 && valor < limiar)
     {
         double sorteio = (rand() % 10000) / 10000.0;
+
         if (sorteio < probabilidadeUm * fracaoHora)
         {
             valor = limiar;
@@ -238,11 +245,29 @@ void SensorFumo::Actualizar(bool motoresEmMarcha, int, int, int, double fracaoHo
         }
     }
 
-    if (motoresEmMarcha && valor < limiar + 5.0)
+    if (motoresEmMarcha)
     {
-        valor = valor + 0.8 * fracaoHora;
+        if (valor < limiar + 5.0)
+        {
+            valor += 0.8 * fracaoHora;
+
+            if (valor > limiar + 5.0)
+            {
+                valor = limiar + 5.0;
+            }
+        }
+    }
+    else
+    {
+        valor -= 1.0 * fracaoHora;
+
+        if (valor < 0.0)
+        {
+            valor = 0.0;
+        }
     }
 }
+
 
 void SensorFumo::DefinirValorSeguro()
 {

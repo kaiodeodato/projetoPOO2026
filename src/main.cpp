@@ -11,6 +11,7 @@
 #include <ctime>
 #include <iostream>
 #include <windows.h>
+#define WIN32_LEAN_AND_MEAN
 
 using namespace std;
 
@@ -388,6 +389,7 @@ static bool menu(Fabrica& fabrica)
     }
     else if (opcao == "12")
     {
+        cout << "A gerar relatorio..." << endl;
         fabrica.Relatorio("xml/relatorio.xml");
         cout << "Relatorio gravado em xml/relatorio.xml" << endl;
     }
