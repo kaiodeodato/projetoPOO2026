@@ -1,0 +1,35 @@
+
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar Projeto POO",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-std=c++14",
+                "-Wall",
+                "-Wextra",
+                "-g3",
+                "-I",
+                "include",
+                "src/main.cpp",
+                "src/Dispositivo.cpp",
+                "src/Fabrica.cpp",
+                "src/Motor.cpp",
+                "src/Sensor.cpp",
+                "src/User.cpp",
+                "-o",
+                "projetoPOO.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

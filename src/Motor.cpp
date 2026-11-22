@@ -18,7 +18,10 @@ Motor::Motor(int id, const string& tipo, const string& marca, double consumoHora
       temperaturaAtual(0.0),
       consumoDia(0.0),
       tempoTrabalho(0),
-      estado(::STOP)
+      estado(::STOP),
+      bloqueadoPorTemperatura(false),
+      temperaturaDesbloqueio(0.0),
+      aguardaArranqueManual(false)
 {
 }
 
@@ -30,11 +33,11 @@ void Motor::RUN()
 {
     if (estaEmPerigo())
     {
-        estado = ::STOP;
+        BloquearPorTemperatura();
         return;
     }
 
-    if (estado != ::START)
+    if (estado != ::START || bloqueadoPorTemperatura)
     {
         return;
     }
@@ -46,15 +49,16 @@ void Motor::START()
 {
     if (estaEmPerigo())
     {
-        estado = ::STOP;
+        BloquearPorTemperatura();
         return;
     }
 
-    if (estado == AVARIADO)
+    if (estado == AVARIADO || bloqueadoPorTemperatura)
     {
         return;
     }
 
+    aguardaArranqueManual = false;
     estado = ::START;
 }
 
@@ -62,10 +66,18 @@ void Motor::RESTART()
 {
     if (estaEmPerigo())
     {
-        estado = ::STOP;
+        BloquearPorTemperatura();
         return;
     }
 
+    if (bloqueadoPorTemperatura)
+    {
+        return;
+    }
+
+    RepararAvaria();
+
+    aguardaArranqueManual = false;
     estado = ::START;
 }
 
@@ -77,13 +89,30 @@ void Motor::STOP()
     }
 }
 
+void Motor::BloquearPorTemperatura()
+{
+    if (!bloqueadoPorTemperatura)
+    {
+        temperaturaDesbloqueio = temperaturaAtual - 15.0;
+
+        if (temperaturaDesbloqueio < 0.0)
+        {
+            temperaturaDesbloqueio = 0.0;
+        }
+
+        bloqueadoPorTemperatura = true;
+    }
+
+    estado = ::STOP;
+}
+
 CLASSE_TEMPERATURA Motor::ESTOU_QUENTE()
 {
     CLASSE_TEMPERATURA classe = GetClasseTemperatura();
 
     if (classe == VERMELHO)
     {
-        estado = ::STOP;
+        BloquearPorTemperatura();
     }
 
     return classe;
@@ -102,6 +131,11 @@ CLASSE_TEMPERATURA Motor::GetClasseTemperatura() const
     }
 
     return VERDE;
+}
+
+bool Motor::EstaBloqueadoPorTemperatura() const
+{
+    return bloqueadoPorTemperatura;
 }
 
 bool Motor::estaEmPerigo() const
@@ -170,9 +204,19 @@ void Motor::Arrefecer(double graus)
     }
 
     temperaturaAtual = temperaturaAtual - graus;
+
     if (temperaturaAtual < 0.0)
     {
         temperaturaAtual = 0.0;
+    }
+
+    if (bloqueadoPorTemperatura &&
+        temperaturaAtual <= temperaturaDesbloqueio)
+    {
+        bloqueadoPorTemperatura = false;
+        temperaturaDesbloqueio = 0.0;
+        aguardaArranqueManual = true;
+
     }
 }
 
@@ -188,13 +232,27 @@ bool Motor::Avariar()
     return true;
 }
 
+bool Motor::AguardaArranqueManual() const
+{
+    return aguardaArranqueManual;
+}
+
 void Motor::Reparar()
 {
+
+    bool aguardavaAutorizacao =
+        bloqueadoPorTemperatura || aguardaArranqueManual;
+
     RepararAvaria();
+
     if (estado == AVARIADO)
     {
         estado = ::STOP;
     }
+
+    bloqueadoPorTemperatura = false;
+    temperaturaDesbloqueio = 0.0;
+    aguardaArranqueManual = aguardavaAutorizacao;
 }
 
 void Motor::RegistarTrabalho(int minutos)

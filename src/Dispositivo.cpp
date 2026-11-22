@@ -4,7 +4,6 @@
  */
 
 #include "Dispositivo.h"
-
 using namespace std;
 
 Dispositivo::Dispositivo(int id, const string& marca, double probabilidadeAvaria, int posX, int posY)

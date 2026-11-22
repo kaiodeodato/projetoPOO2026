@@ -46,12 +46,16 @@ class Motor : public Dispositivo
         double consumoDia; ///< Consumo acumulado no dia simulado.
         int tempoTrabalho; ///< Minutos passados em RUN.
         ESTADO_MOTOR estado; ///< STOP, START, RUN ou AVARIADO.
+        bool bloqueadoPorTemperatura;
+        double temperaturaDesbloqueio;
+        bool aguardaArranqueManual;
 
         /**
         * @brief Indica se a temperatura ja chegou a paragem.
         * @return true quando a classe actual e VERMELHO.
         */
         bool estaEmPerigo() const;
+        void BloquearPorTemperatura();
 
     protected:
         /**
@@ -86,7 +90,9 @@ class Motor : public Dispositivo
         /** @brief Passa a START, excepto se estiver avariado ou vermelho. */
         virtual void START();
 
-        /** @brief Sai de AVARIADO para START, se a temperatura nao estiver vermelha. */
+        /** @brief Limpa a avaria e passa a START, apenas se nao estiver VERMELHO.
+        * Se estiver VERMELHO, mantem o estado e a avaria.
+        */
         virtual void RESTART();
 
         /** @brief Passa a STOP. Um motor avariado nao muda de estado. */
@@ -145,6 +151,8 @@ class Motor : public Dispositivo
         */
         void Aquecer(double graus);
 
+        bool AguardaArranqueManual() const;
+
         /**
         * @brief Tira graus a temperatura, sem descer abaixo de zero.
         * @param graus Valor positivo de arrefecimento.
@@ -170,6 +178,8 @@ class Motor : public Dispositivo
 
         /** @brief Poe o consumo do dia a zero, no virar do dia. */
         void ReiniciarConsumoDia();
+
+        bool EstaBloqueadoPorTemperatura() const;
 };
 
 /**
