@@ -196,7 +196,15 @@ void Fabrica::Listar(ostream& f) const
           << " | aviso " << m->GetTemperaturaAviso()
           << " | paragem " << m->GetTemperaturaParagem()
           << " | consumo/h " << m->GetConsumoHora()
-          << " | consumo dia " << m->GetConsumoDia()
+          << " | consumo dia " << m->GetConsumoDia();
+
+        if (m->TemDeposito())
+        {
+            int percentagem = static_cast<int>(m->GetCombustivelPercentagem() + 0.5);
+            f << " | combustivel " << percentagem << "%";
+        }
+
+        f
           << " | trabalho " << m->GetTempoTrabalho()
           << " | avarias " << m->GetTotalAvarias()
           << endl;
@@ -704,6 +712,9 @@ static const char* VIDEO_MISSEL = "Assets/video 2 - alerta missel.mp4";
 /** @brief Video do alerta de fumo, em Assets. */
 static const char* VIDEO_FUMO = "Assets/video 3 - alerta fumo.mp4";
 
+/** @brief Video de reabastecimento, em Assets. */
+static const char* VIDEO_COMBUSTIVEL = "Assets/video 4 - combustivel.mp4";
+
 /**
  * @brief Le um inteiro de 32 bits em big-endian.
  */
@@ -1055,7 +1066,15 @@ void Fabrica::Aviso_Missel(string, string festado)
                         << " | " << textoClasse(motor->GetClasseTemperatura())
                         << " | temp " << motor->GetTemperaturaAtual()
                         << " | consumo/h " << motor->GetConsumoHora()
-                        << " | consumo dia " << motor->GetConsumoDia()
+                        << " | consumo dia " << motor->GetConsumoDia();
+
+                    if (motor->TemDeposito())
+                    {
+                        int percentagem = static_cast<int>(motor->GetCombustivelPercentagem() + 0.5);
+                        estado << " | combustivel " << percentagem << "%";
+                    }
+
+                    estado
                         << " | trabalho " << motor->GetTempoTrabalho()
                         << " | avarias " << motor->GetTotalAvarias()
                         << endl;
@@ -1422,6 +1441,7 @@ void Fabrica::AvancarMinuto()
 
     bool motoresEmMarcha = false;
     bool fumo = fumoEmAviso();
+    bool depositoVazio = false;
 
     for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
     {
@@ -1487,8 +1507,14 @@ void Fabrica::AvancarMinuto()
             continue;
         }
 
-        // 7. Registar trabalho e aquecimento.
+        // 7. Registar trabalho, combustivel e aquecimento.
         motor->RegistarTrabalho(1);
+
+        if (motor->ConsumirCombustivel(1))
+        {
+            depositoVazio = true;
+        }
+
         motoresEmMarcha = true;
 
         CLASSE_TEMPERATURA antes = motor->GetClasseTemperatura();
@@ -1514,6 +1540,30 @@ void Fabrica::AvancarMinuto()
                   << " em AMARELO. Esta a aquecer.";
 
             avisarGestor(texto.str());
+        }
+    }
+
+    if (depositoVazio)
+    {
+        bool videoAberto = reproduzirVideo(VIDEO_COMBUSTIVEL);
+
+        for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
+        {
+            Motor* motor = *it;
+
+            if (motor->TemDeposito() && motor->GetCombustivel() <= 0.0)
+            {
+                motor->Reabastecer();
+            }
+        }
+
+        if (videoAberto)
+        {
+            avisarGestor("Combustivel esgotado. Video de reabastecimento reproduzido. Deposito a 100%.");
+        }
+        else
+        {
+            avisarGestor("Combustivel esgotado. Nao foi possivel reproduzir o video. Deposito a 100%.");
         }
     }
 

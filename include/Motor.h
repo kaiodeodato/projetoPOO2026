@@ -44,6 +44,8 @@ class Motor : public Dispositivo
         double temperaturaParagem; ///< A partir daqui a classe passa a VERMELHO.
         double temperaturaAtual; ///< Temperatura neste momento.
         double consumoDia; ///< Consumo acumulado no dia simulado.
+        double capacidadeCombustivel; ///< Deposito cheio. Zero se o tipo nao usa combustivel.
+        double combustivelAtual; ///< Combustivel que ainda resta no deposito.
         int tempoTrabalho; ///< Minutos passados em RUN.
         ESTADO_MOTOR estado; ///< STOP, START, RUN ou AVARIADO.
         bool bloqueadoPorTemperatura;
@@ -63,6 +65,12 @@ class Motor : public Dispositivo
         * @return Ritmo da classe base. Cada tipo concreto substitui o valor.
         */
         virtual double RitmoAquecimento() const;
+
+        /**
+        * @brief Cria o deposito e enche-o. Zero desliga o combustivel neste motor.
+        * @param total Quantidade inicial, igual ao deposito cheio.
+        */
+        void DefinirDeposito(double total);
 
     public:
         /**
@@ -126,6 +134,25 @@ class Motor : public Dispositivo
 
         /** @brief Devolve o consumo acumulado no dia. */
         double GetConsumoDia() const;
+
+        /** @brief Indica se este motor tem deposito de combustivel. */
+        bool TemDeposito() const;
+
+        /** @brief Devolve o combustivel que ainda resta. */
+        double GetCombustivel() const;
+
+        /** @brief Devolve o combustivel em percentagem do deposito cheio. */
+        double GetCombustivelPercentagem() const;
+
+        /**
+        * @brief Gasta combustivel pelo consumo horario.
+        * @param minutos Minutos em RUN.
+        * @return true quando o deposito chega a zero neste passo.
+        */
+        bool ConsumirCombustivel(int minutos);
+
+        /** @brief Volta a encher o deposito, a 100 por cento. */
+        void Reabastecer();
 
         /** @brief Devolve a temperatura de aviso. */
         double GetTemperaturaAviso() const;
@@ -230,6 +257,9 @@ class MotorEletrico : public Motor
 
 /**
  * @brief Motor de combustao. Aquece mais depressa do que a base.
+ *
+ * Tem um deposito cheio com uma hora de combustivel. Enquanto trabalha,
+ * o nivel desce. Ao chegar a zero a fabrica reabastece-o.
  */
 class MotorCombustao : public Motor
 {

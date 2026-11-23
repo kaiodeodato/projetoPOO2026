@@ -17,6 +17,8 @@ Motor::Motor(int id, const string& tipo, const string& marca, double consumoHora
       temperaturaParagem(temperaturaParagem),
       temperaturaAtual(0.0),
       consumoDia(0.0),
+      capacidadeCombustivel(0.0),
+      combustivelAtual(0.0),
       tempoTrabalho(0),
       estado(::STOP),
       bloqueadoPorTemperatura(false),
@@ -271,6 +273,63 @@ void Motor::ReiniciarConsumoDia()
     consumoDia = 0.0;
 }
 
+void Motor::DefinirDeposito(double total)
+{
+    if (total <= 0.0)
+    {
+        capacidadeCombustivel = 0.0;
+        combustivelAtual = 0.0;
+        return;
+    }
+
+    capacidadeCombustivel = total;
+    combustivelAtual = total;
+}
+
+bool Motor::TemDeposito() const
+{
+    return capacidadeCombustivel > 0.0;
+}
+
+double Motor::GetCombustivel() const
+{
+    return combustivelAtual;
+}
+
+double Motor::GetCombustivelPercentagem() const
+{
+    if (capacidadeCombustivel <= 0.0)
+    {
+        return 0.0;
+    }
+
+    return (combustivelAtual / capacidadeCombustivel) * 100.0;
+}
+
+bool Motor::ConsumirCombustivel(int minutos)
+{
+    if (!TemDeposito() || minutos <= 0 || combustivelAtual <= 0.0)
+    {
+        return false;
+    }
+
+    double gasto = consumoHora * (static_cast<double>(minutos) / 60.0);
+    combustivelAtual = combustivelAtual - gasto;
+
+    if (combustivelAtual > 0.0000001)
+    {
+        return false;
+    }
+
+    combustivelAtual = 0.0;
+    return true;
+}
+
+void Motor::Reabastecer()
+{
+    combustivelAtual = capacidadeCombustivel;
+}
+
 double Motor::RitmoAquecimento() const
 {
     return 1.5;
@@ -330,6 +389,7 @@ MotorCombustao::MotorCombustao(int id, const string& marca, double consumoHora, 
                                double temperaturaParagem, double probabilidadeAvaria, int posX, int posY)
     : Motor(id, "MCOMBUSTAO", marca, consumoHora, temperaturaAviso, temperaturaParagem, probabilidadeAvaria, posX, posY)
 {
+    DefinirDeposito(consumoHora);
 }
 
 MotorCombustao::~MotorCombustao()
