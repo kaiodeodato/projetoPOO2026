@@ -814,10 +814,125 @@ static DWORD duracaoVideoMs(const char* caminho)
 }
 
 /**
- * @brief Abre um video no Windows Media Player e fecha-o no fim.
+ * @brief Dados para saber se a janela do leitor ainda esta visivel.
+ */
+struct JanelaDoLeitor
+{
+    HANDLE trabalho;
+    DWORD pid;
+    bool visivel;
+};
+
+/**
+ * @brief Procura uma janela visivel do leitor ou de um processo do mesmo trabalho.
+ */
+static BOOL CALLBACK procurarJanelaLeitor(HWND janela, LPARAM param)
+{
+    JanelaDoLeitor* dados = reinterpret_cast<JanelaDoLeitor*>(param);
+
+    if (!IsWindowVisible(janela))
+    {
+        return TRUE;
+    }
+
+    DWORD pid = 0;
+    GetWindowThreadProcessId(janela, &pid);
+
+    if (pid == 0)
+    {
+        return TRUE;
+    }
+
+    if (pid == dados->pid)
+    {
+        dados->visivel = true;
+        return FALSE;
+    }
+
+    if (dados->trabalho != NULL)
+    {
+        HANDLE processo = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+
+        if (processo != NULL)
+        {
+            BOOL noTrabalho = FALSE;
+
+            if (IsProcessInJob(processo, dados->trabalho, &noTrabalho) && noTrabalho)
+            {
+                dados->visivel = true;
+            }
+
+            CloseHandle(processo);
+        }
+    }
+
+    if (dados->visivel)
+    {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+/**
+ * @brief Espera o video acabar e encerra o leitor assim que a janela fecha.
  *
- * A opcao /close nao encerra o leitor. A duracao sai do cabecalho do MP4
- * e, passado esse tempo, o processo do leitor e terminado.
+ * A simulacao fica parada apenas enquanto esta funcao nao regressa.
+ * @param processo Processo do leitor.
+ * @param trabalho Trabalho que agrupa o leitor e os processos que ele abrir. Pode ser NULL.
+ * @param pid Identificador do processo do leitor.
+ * @param duracaoMs Duracao do video. Zero usa um limite de seguranca.
+ */
+static void esperarFimDoVideo(HANDLE processo, HANDLE trabalho, DWORD pid, DWORD duracaoMs)
+{
+    DWORD inicio = GetTickCount();
+    bool janelaVista = false;
+    DWORD limite = 30000;
+
+    if (duracaoMs > 0)
+    {
+        limite = duracaoMs + 2000;
+    }
+
+    while (WaitForSingleObject(processo, 200) == WAIT_TIMEOUT)
+    {
+        JanelaDoLeitor dados;
+        dados.trabalho = trabalho;
+        dados.pid = pid;
+        dados.visivel = false;
+        EnumWindows(procurarJanelaLeitor, reinterpret_cast<LPARAM>(&dados));
+
+        if (dados.visivel)
+        {
+            janelaVista = true;
+        }
+        else if (janelaVista)
+        {
+            break;
+        }
+
+        if (GetTickCount() - inicio >= limite)
+        {
+            break;
+        }
+    }
+
+    if (trabalho != NULL)
+    {
+        TerminateJobObject(trabalho, 0);
+    }
+    else
+    {
+        TerminateProcess(processo, 0);
+    }
+
+    WaitForSingleObject(processo, 3000);
+}
+
+/**
+ * @brief Abre um video no Windows Media Player e so regressa quando a janela fecha.
+ *
+ * O tempo gasto aqui nao avanca a fabrica. Quem chamou retoma o minuto seguinte.
  * @param caminhoRelativo Caminho do video a partir da pasta do programa.
  * @return false se o ficheiro ou o leitor nao abrirem.
  */
@@ -840,12 +955,6 @@ static bool reproduzirVideo(const char* caminhoRelativo)
     reprodutores[1] = "C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe";
 
     DWORD duracao = duracaoVideoMs(caminho);
-    DWORD espera = 30000;
-
-    if (duracao > 0)
-    {
-        espera = duracao + 4000;
-    }
 
     for (int i = 0; i < 2; i++)
     {
@@ -876,12 +985,27 @@ static bool reproduzirVideo(const char* caminhoRelativo)
             continue;
         }
 
-        DWORD estado = WaitForSingleObject(processo.hProcess, espera);
+        HANDLE trabalho = CreateJobObjectA(NULL, NULL);
 
-        if (estado == WAIT_TIMEOUT)
+        if (trabalho != NULL)
         {
-            TerminateProcess(processo.hProcess, 0);
-            WaitForSingleObject(processo.hProcess, 3000);
+            JOBOBJECT_EXTENDED_LIMIT_INFORMATION limites;
+            ZeroMemory(&limites, sizeof(limites));
+            limites.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+
+            if (!SetInformationJobObject(trabalho, JobObjectExtendedLimitInformation, &limites, sizeof(limites))
+                || !AssignProcessToJobObject(trabalho, processo.hProcess))
+            {
+                CloseHandle(trabalho);
+                trabalho = NULL;
+            }
+        }
+
+        esperarFimDoVideo(processo.hProcess, trabalho, processo.dwProcessId, duracao);
+
+        if (trabalho != NULL)
+        {
+            CloseHandle(trabalho);
         }
 
         CloseHandle(processo.hProcess);

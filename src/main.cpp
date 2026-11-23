@@ -499,7 +499,9 @@ int main()
                 cout << "Relatorio XML atualizado: xml/relatorio.xml" << endl;
                 decorrido = 0;
             }
-            marca = agora;
+
+            // O video para o relogio. O minuto seguinte so conta depois de a janela fechar.
+            marca = GetTickCount();
         }
 
         Sleep(50);
