@@ -44,20 +44,35 @@ class User
         /** @brief Nome do perfil: ADMIN, NORMAL ou VISITANTE. */
         virtual string GetTipo() const = 0;
 
-        /** @brief Indica se pode adicionar utilizadores e motores. */
-        virtual bool PodeAdicionar() const = 0;
+        /**
+        * @brief Indica se pode adicionar utilizadores e motores.
+        * A base recusa e avisa. Cada perfil autorizado redefine o metodo.
+        */
+        virtual bool PodeAdicionar() const;
 
-        /** @brief Indica se pode remover utilizadores, motores e sensores. */
-        virtual bool PodeRemover() const = 0;
+        /**
+        * @brief Indica se pode remover utilizadores, motores e sensores.
+        * A base recusa e avisa. Cada perfil autorizado redefine o metodo.
+        */
+        virtual bool PodeRemover() const;
 
-        /** @brief Indica se pode listar o estado da fabrica. */
-        virtual bool PodeListar() const = 0;
+        /**
+        * @brief Indica se pode listar o estado da fabrica.
+        * A base recusa e avisa. Cada perfil autorizado redefine o metodo.
+        */
+        virtual bool PodeListar() const;
 
-        /** @brief Indica se pode ligar e desligar motores. */
-        virtual bool PodeRun() const = 0;
+        /**
+        * @brief Indica se pode ligar e desligar motores.
+        * A base recusa e avisa. Cada perfil autorizado redefine o metodo.
+        */
+        virtual bool PodeRun() const;
 
-        /** @brief Indica se pode fazer a manutencao dos dispositivos. */
-        virtual bool PodeManutencao() const = 0;
+        /**
+        * @brief Indica se pode fazer a manutencao dos dispositivos.
+        * A base recusa e avisa. Cada perfil autorizado redefine o metodo.
+        */
+        virtual bool PodeManutencao() const;
 };
 
 /**
@@ -117,9 +132,6 @@ class Normal : public User
         /** @brief O utilizador normal pode adicionar. */
         virtual bool PodeAdicionar() const;
 
-        /** @brief O utilizador normal nao pode remover. */
-        virtual bool PodeRemover() const;
-
         /** @brief O utilizador normal pode listar. */
         virtual bool PodeListar() const;
 
@@ -149,20 +161,8 @@ class Visitante : public User
         /** @brief Devolve "VISITANTE". */
         virtual string GetTipo() const;
 
-        /** @brief O visitante nao pode adicionar. */
-        virtual bool PodeAdicionar() const;
-
-        /** @brief O visitante nao pode remover. */
-        virtual bool PodeRemover() const;
-
-        /** @brief O visitante pode listar. */
+        /** @brief O visitante pode listar. As restantes permissoes ficam na base. */
         virtual bool PodeListar() const;
-
-        /** @brief O visitante nao pode operar motores. */
-        virtual bool PodeRun() const;
-
-        /** @brief O visitante nao pode fazer manutencao. */
-        virtual bool PodeManutencao() const;
 };
 
 #endif

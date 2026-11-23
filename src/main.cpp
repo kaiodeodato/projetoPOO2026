@@ -250,6 +250,7 @@ static bool menu(Fabrica& fabrica)
     cout << "11 Ranking dos motores que mais trabalharam" << endl;
     cout << "12 Gerar relatorio XML agora" << endl;
     cout << "13 Gravar listagem HTML" << endl;
+    cout << "14 Mudar de utilizador" << endl;
     cout << "0  Continuar a simulacao" << endl;
     cout << "S  Sair" << endl;
 
@@ -397,6 +398,25 @@ static bool menu(Fabrica& fabrica)
     {
         fabrica.Listagem_HTML("xml/fabrica.html");
         cout << "Listagem gravada em xml/fabrica.html" << endl;
+    }
+    else if (opcao == "14")
+    {
+        fabrica.ListarUtilizadores(cout);
+
+        int id = 0;
+        if (!lerInteiro("ID do utilizador: ", id))
+        {
+            return true;
+        }
+
+        if (fabrica.MudarUtilizador(id))
+        {
+            cout << "Utilizador alterado com sucesso." << endl;
+        }
+        else
+        {
+            cout << "Nao existe nenhum utilizador com esse ID." << endl;
+        }
     }
     else
     {

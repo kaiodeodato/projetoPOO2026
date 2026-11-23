@@ -2885,3 +2885,30 @@ void Fabrica::inserirPorTrabalho(list<Motor*>& destino, Motor* motor) const
 
     destino.push_back(motor);
 }
+
+bool Fabrica::MudarUtilizador(int id)
+{
+    for (list<User*>::iterator it = utilizadores.begin(); it != utilizadores.end(); ++it)
+    {
+        if ((*it)->GetId() == id)
+        {
+            utilizadorAtual = *it;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void Fabrica::ListarUtilizadores(ostream& f) const
+{
+    f << endl << "=== Utilizadores ===" << endl;
+
+    for (list<User*>::const_iterator it = utilizadores.begin(); it != utilizadores.end(); ++it)
+    {
+        f << "ID: " << (*it)->GetId()
+          << " | Nome: " << (*it)->GetNome()
+          << " | Tipo: " << (*it)->GetTipo()
+          << endl;
+    }
+}

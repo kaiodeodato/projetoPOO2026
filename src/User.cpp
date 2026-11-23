@@ -5,6 +5,8 @@
 
 #include "User.h"
 
+#include <iostream>
+
 using namespace std;
 
 User::User(int id, const string& nome)
@@ -24,6 +26,36 @@ int User::GetId() const
 string User::GetNome() const
 {
     return nome;
+}
+
+bool User::PodeAdicionar() const
+{
+    cout << "Nao tem permissao para adicionar." << endl;
+    return false;
+}
+
+bool User::PodeRemover() const
+{
+    cout << "Nao tem permissao para remover." << endl;
+    return false;
+}
+
+bool User::PodeListar() const
+{
+    cout << "Nao tem permissao para listar." << endl;
+    return false;
+}
+
+bool User::PodeRun() const
+{
+    cout << "Nao tem permissao para executar motores." << endl;
+    return false;
+}
+
+bool User::PodeManutencao() const
+{
+    cout << "Nao tem permissao para realizar manutencao." << endl;
+    return false;
 }
 
 Admin::Admin(int id, const string& nome)
@@ -84,11 +116,6 @@ bool Normal::PodeAdicionar() const
     return true;
 }
 
-bool Normal::PodeRemover() const
-{
-    return false;
-}
-
 bool Normal::PodeListar() const
 {
     return true;
@@ -118,27 +145,7 @@ string Visitante::GetTipo() const
     return "VISITANTE";
 }
 
-bool Visitante::PodeAdicionar() const
-{
-    return false;
-}
-
-bool Visitante::PodeRemover() const
-{
-    return false;
-}
-
 bool Visitante::PodeListar() const
 {
     return true;
-}
-
-bool Visitante::PodeRun() const
-{
-    return false;
-}
-
-bool Visitante::PodeManutencao() const
-{
-    return false;
 }
