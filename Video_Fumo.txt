@@ -1,0 +1,7 @@
+VIDEO: saidas de emergencia
+Empresa: Empresa-da-Minha-Terra
+Dirija-se a saida mais proxima.
+Campo: 50 x 80
+Saida norte: (0, 0)
+Saida sul: (50, 80)
+Motores desligados: 1

@@ -533,6 +533,15 @@ class Fabrica
 
         /** @brief Devolve a altura do campo. */
         int GetCampoY() const;
+
+         /**
+         * @brief Altera o utilizador atualmente ativo.
+         * @param id Identificador do utilizador a selecionar.
+         * @return true se encontrou e selecionou o utilizador.
+         */
+        bool MudarUtilizador(int id);
+
+        void ListarUtilizadores(ostream& f = cout) const;
 };
 
 #endif

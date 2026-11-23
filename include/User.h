@@ -1,168 +1,162 @@
+
 #ifndef USER_H
 #define USER_H
 
 #include <string>
-
 using namespace std;
 
 /**
  * @file User.h
- * @brief Utilizadores da fabrica e os respectivos niveis de acesso.
- *
- * USER (ID, NOME), com tres perfis:
- * - ADMIN: ADD, REMOVER, LISTAR, RUN, MANUTENCAO
- * - NORMAL: ADD, LISTAR, RUN, MANUTENCAO
- * - VISITANTE: LISTAR
+ * @brief Declaracao da classe User e dos seus tipos de utilizador.
  */
 
 /**
- * @brief Utilizador generico. Os perfis concretizam as permissoes.
+ * @brief Classe base abstrata dos utilizadores da fabrica.
+ *
+ * Define a identificacao do utilizador e as permissoes
+ * para executar as operacoes da fabrica.
  */
 class User
 {
-    protected:
-        int id; ///< Identificador. Tem de ser positivo para entrar na fabrica.
-        string nome; ///< Nome apresentado nas listagens.
+protected:
+    int id;       ///< Identificador do utilizador.
+    string nome;  ///< Nome do utilizador.
 
-    public:
-        /**
-        * @brief Cria um utilizador.
-        * @param id Identificador.
-        * @param nome Nome.
-        */
-        User(int id, const string& nome);
+public:
+    /**
+     * @brief Construtor da classe User.
+     * @param id Identificador do utilizador.
+     * @param nome Nome do utilizador.
+     */
+    User(int id, const string& nome);
 
-        /** @brief Destrutor virtual. */
-        virtual ~User();
+    /**
+     * @brief Destrutor virtual.
+     */
+    virtual ~User();
 
-        /** @brief Devolve o identificador. */
-        int GetId() const;
+    /**
+     * @brief Devolve o identificador do utilizador.
+     * @return Identificador.
+     */
+    int GetId() const;
 
-        /** @brief Devolve o nome. */
-        string GetNome() const;
+    /**
+     * @brief Devolve o nome do utilizador.
+     * @return Nome.
+     */
+    string GetNome() const;
 
-        /** @brief Nome do perfil: ADMIN, NORMAL ou VISITANTE. */
-        virtual string GetTipo() const = 0;
+    /**
+     * @brief Devolve o tipo de utilizador.
+     * @return Tipo de utilizador.
+     */
+    virtual string GetTipo() const = 0;
 
-        /** @brief Indica se pode adicionar utilizadores e motores. */
-        virtual bool PodeAdicionar() const = 0;
+    /**
+     * @brief Verifica se o utilizador pode adicionar.
+     * @return true se tiver permissao, false caso contrario.
+     */
+    virtual bool PodeAdicionar() const;
 
-        /** @brief Indica se pode remover utilizadores, motores e sensores. */
-        virtual bool PodeRemover() const = 0;
+    /**
+     * @brief Verifica se o utilizador pode remover.
+     * @return true se tiver permissao, false caso contrario.
+     */
+    virtual bool PodeRemover() const;
 
-        /** @brief Indica se pode listar o estado da fabrica. */
-        virtual bool PodeListar() const = 0;
+    /**
+     * @brief Verifica se o utilizador pode listar.
+     * @return true se tiver permissao, false caso contrario.
+     */
+    virtual bool PodeListar() const;
 
-        /** @brief Indica se pode ligar e desligar motores. */
-        virtual bool PodeRun() const = 0;
+    /**
+     * @brief Verifica se o utilizador pode executar motores (RUN).
+     * @return true se tiver permissao, false caso contrario.
+     */
+    virtual bool PodeRun() const;
 
-        /** @brief Indica se pode fazer a manutencao dos dispositivos. */
-        virtual bool PodeManutencao() const = 0;
+    /**
+     * @brief Verifica se o utilizador pode realizar manutencao.
+     * @return true se tiver permissao, false caso contrario.
+     */
+    virtual bool PodeManutencao() const;
 };
 
 /**
- * @brief Administrador. Pode adicionar, remover, listar, operar e fazer manutencao.
+ * @brief Utilizador com todas as permissoes.
  */
 class Admin : public User
 {
-    public:
-        /**
-        * @brief Cria um administrador.
-        * @param id Identificador.
-        * @param nome Nome.
-        */
-        Admin(int id, const string& nome);
+public:
+    /**
+     * @brief Construtor do administrador.
+     */
+    Admin(int id, const string& nome);
 
-        /** @brief Destrutor. */
-        virtual ~Admin();
+    /**
+     * @brief Destrutor do administrador.
+     */
+    virtual ~Admin();
 
-        /** @brief Devolve "ADMIN". */
-        virtual string GetTipo() const;
+    virtual string GetTipo() const;
 
-        /** @brief O administrador pode adicionar. */
-        virtual bool PodeAdicionar() const;
-
-        /** @brief O administrador pode remover. */
-        virtual bool PodeRemover() const;
-
-        /** @brief O administrador pode listar. */
-        virtual bool PodeListar() const;
-
-        /** @brief O administrador pode operar motores. */
-        virtual bool PodeRun() const;
-
-        /** @brief O administrador pode fazer manutencao. */
-        virtual bool PodeManutencao() const;
+    virtual bool PodeAdicionar() const;
+    virtual bool PodeRemover() const;
+    virtual bool PodeListar() const;
+    virtual bool PodeRun() const;
+    virtual bool PodeManutencao() const;
 };
 
 /**
- * @brief Utilizador normal. Pode adicionar, listar, operar e fazer manutencao.
+ * @brief Utilizador com permissoes limitadas.
+ *
+ * Pode adicionar, listar, executar motores e realizar manutencao,
+ * mas nao pode remover elementos.
  */
 class Normal : public User
 {
-    public:
-        /**
-        * @brief Cria um utilizador normal.
-        * @param id Identificador.
-        * @param nome Nome.
-        */
-        Normal(int id, const string& nome);
+public:
+    /**
+     * @brief Construtor do utilizador normal.
+     */
+    Normal(int id, const string& nome);
 
-        /** @brief Destrutor. */
-        virtual ~Normal();
+    /**
+     * @brief Destrutor do utilizador normal.
+     */
+    virtual ~Normal();
 
-        /** @brief Devolve "NORMAL". */
-        virtual string GetTipo() const;
+    virtual string GetTipo() const;
 
-        /** @brief O utilizador normal pode adicionar. */
-        virtual bool PodeAdicionar() const;
-
-        /** @brief O utilizador normal nao pode remover. */
-        virtual bool PodeRemover() const;
-
-        /** @brief O utilizador normal pode listar. */
-        virtual bool PodeListar() const;
-
-        /** @brief O utilizador normal pode operar motores. */
-        virtual bool PodeRun() const;
-
-        /** @brief O utilizador normal pode fazer manutencao. */
-        virtual bool PodeManutencao() const;
+    virtual bool PodeAdicionar() const;
+    virtual bool PodeListar() const;
+    virtual bool PodeRun() const;
+    virtual bool PodeManutencao() const;
 };
 
 /**
- * @brief Visitante. So pode listar.
+ * @brief Utilizador com permissoes apenas de consulta.
+ *
+ * Apenas pode listar os elementos da fabrica.
  */
 class Visitante : public User
 {
-    public:
-        /**
-        * @brief Cria um visitante.
-        * @param id Identificador.
-        * @param nome Nome.
-        */
-        Visitante(int id, const string& nome);
+public:
+    /**
+     * @brief Construtor do visitante.
+     */
+    Visitante(int id, const string& nome);
 
-        /** @brief Destrutor. */
-        virtual ~Visitante();
+    /**
+     * @brief Destrutor do visitante.
+     */
+    virtual ~Visitante();
 
-        /** @brief Devolve "VISITANTE". */
-        virtual string GetTipo() const;
+    virtual string GetTipo() const;
 
-        /** @brief O visitante nao pode adicionar. */
-        virtual bool PodeAdicionar() const;
-
-        /** @brief O visitante nao pode remover. */
-        virtual bool PodeRemover() const;
-
-        /** @brief O visitante pode listar. */
-        virtual bool PodeListar() const;
-
-        /** @brief O visitante nao pode operar motores. */
-        virtual bool PodeRun() const;
-
-        /** @brief O visitante nao pode fazer manutencao. */
-        virtual bool PodeManutencao() const;
+    virtual bool PodeListar() const;
 };
 
 #endif
