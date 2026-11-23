@@ -8,7 +8,7 @@
 #include <iostream>
 
 using namespace std;
-
+// User
 User::User(int id, const string& nome)
     : id(id), nome(nome)
 {
@@ -57,9 +57,8 @@ bool User::PodeManutencao() const
     cout << "Nao tem permissao para realizar manutencao." << endl;
     return false;
 }
-
-Admin::Admin(int id, const string& nome)
-    : User(id, nome)
+// Admin
+Admin::Admin(int id, const string& nome): User(id, nome)
 {
 }
 
@@ -96,7 +95,7 @@ bool Admin::PodeManutencao() const
 {
     return true;
 }
-
+// Normal
 Normal::Normal(int id, const string& nome)
     : User(id, nome)
 {
@@ -130,7 +129,7 @@ bool Normal::PodeManutencao() const
 {
     return true;
 }
-
+// Visitante
 Visitante::Visitante(int id, const string& nome)
     : User(id, nome)
 {
