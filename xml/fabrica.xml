@@ -83,5 +83,12 @@
             <PROB_1>3</PROB_1>
             <PROB_AVARIA>10</PROB_AVARIA>
         </SMISSEL>
+        <SLUZ>
+            <ID>400</ID>
+            <MARCA>Portaria</MARCA>
+            <VALOR_AVISO>40</VALOR_AVISO>
+            <POSICAO>5,5</POSICAO>
+            <PROB_AVARIA>1</PROB_AVARIA>
+        </SLUZ>
     </SENSORES>
 </DADOS>

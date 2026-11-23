@@ -1,7 +1,7 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++11 -Iinclude
+CXXFLAGS = -Wall -Wextra -std=c++11 -Iinclude -Ithird_party/tinyxml2
 
-FONTES = src/main.cpp src/Dispositivo.cpp src/User.cpp src/Sensor.cpp src/Motor.cpp src/Fabrica.cpp
+FONTES = src/main.cpp src/Dispositivo.cpp src/User.cpp src/Sensor.cpp src/Motor.cpp src/Fabrica.cpp third_party/tinyxml2/tinyxml2.cpp
 
 fabrica: $(FONTES)
 	$(CXX) $(CXXFLAGS) -o fabrica $(FONTES)

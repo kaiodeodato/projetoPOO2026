@@ -206,7 +206,7 @@ static void remover(Fabrica& fabrica)
     else if (opcao == 3)
     {
         string tipo;
-        if (!lerTexto("Tipo do sensor (STEMPERATURA, SFOGO, SMISSEL): ", tipo))
+        if (!lerTexto("Tipo do sensor (STEMPERATURA, SFOGO, SMISSEL, LUZ): ", tipo))
         {
             return;
         }

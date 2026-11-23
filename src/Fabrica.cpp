@@ -1,17 +1,20 @@
 /**
  * @file Fabrica.cpp
- * @brief Implementacao da gestao, da leitura XML e do passo de simulacao.
+ * @brief Implementacao da gestao, do XML com TinyXML-2 e do passo de simulacao.
  */
 
 #include "Fabrica.h"
+#include "tinyxml2.h"
 
+#include <cstring>
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-#include <limits>
-#include <cmath>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 using namespace std;
 
@@ -56,12 +59,6 @@ bool Fabrica::Load(const string& ficheiro)
         return false;
     }
 
-    list<string> linhas;
-    if (!lerLinhas(ficheiro, linhas))
-    {
-        return false;
-    }
-
     definicoesMotores.clear();
 
     string nome;
@@ -76,7 +73,7 @@ bool Fabrica::Load(const string& ficheiro)
     list<Motor*> novosMotores;
     list<Sensor*> novosSensores;
 
-    if (!lerDados(linhas, nome, novoX, novoY, novaAbertura, novoEncerramento, novaVizinhanca,
+    if (!lerDados(ficheiro, nome, novoX, novoY, novaAbertura, novoEncerramento, novaVizinhanca,
                   novoVerde, novoAmarelo, novoVermelho, novosMotores, novosSensores))
     {
         definicoesMotores.clear();
@@ -386,42 +383,9 @@ list<Motor*>* Fabrica::Ranking_Dos_Mais_Trabalhadores() const
 }
 
 /**
- * @brief Escreve um numero sem zeros inuteis a direita.
- * @param valor Numero a converter.
- * @return Texto compacto, por exemplo 0.1 ou 80.
- */
-static string textoNumero(double valor)
-{
-    if (valor < 0.0)
-    {
-        return "-" + textoNumero(-valor);
-    }
-
-    ostringstream fluxo;
-    fluxo << fixed << setprecision(6) << valor;
-    string texto = fluxo.str();
-    size_t ponto = texto.find('.');
-    if (ponto == string::npos)
-    {
-        return texto;
-    }
-
-    size_t fim = texto.size();
-    while (fim > ponto && texto[fim - 1] == '0')
-    {
-        fim--;
-    }
-    if (fim > ponto && texto[fim - 1] == '.')
-    {
-        fim--;
-    }
-    return texto.substr(0, fim);
-}
-
-/**
  * @brief Etiqueta de sensor usada no XML exportado.
  * @param tipo Nome interno do sensor.
- * @return SHUMIDADE, SLUZ, SMISSIL ou a etiqueta original.
+ * @return SHUMIDADE, SLUZ, SMISSEL ou a etiqueta original.
  */
 static string etiquetaSensorExportada(const string& tipo)
 {
@@ -449,18 +413,68 @@ static string etiquetaSensorExportada(const string& tipo)
 }
 
 /**
- * @brief Probabilidade do sensor no estilo do XML exportado.
+ * @brief Texto de um numero, no formato da TinyXML-2.
+ * @param valor Numero a converter.
+ * @return Texto produzido por XMLUtil::ToStr.
+ */
+static string textoDaBiblioteca(double valor)
+{
+    char buffer[64];
+    tinyxml2::XMLUtil::ToStr(valor, buffer, 64);
+    return buffer;
+}
+
+/**
+ * @brief Probabilidade tal como o relatorio a mostra.
  *
- * Uma fracao entre 0 e 1 volta a percentagem inteira: 0.05 fica 5.
+ * Uma fracao entre 0 e 1 volta a percentagem: 0.05 fica 5.
  * @param fracao Probabilidade guardada no sensor.
  */
-static string textoProbabilidadeSensor(double fracao)
+static double probabilidadeExportada(double fracao)
 {
     if (fracao >= 0.0 && fracao <= 1.0)
     {
-        return textoNumero(fracao * 100.0);
+        return fracao * 100.0;
     }
-    return textoNumero(fracao);
+    return fracao;
+}
+
+/**
+ * @brief Acrescenta a definicao de um tipo de motor ao relatorio.
+ * @param documento Documento do relatorio.
+ * @param definicoes Elemento DEFINICOES.
+ * @param tipo Etiqueta do tipo.
+ * @param verdeMinimo Limite inferior da zona verde.
+ * @param verdeMaximo Limite superior da zona verde.
+ * @param amareloMinimo Limite inferior da zona amarela.
+ * @param amareloMaximo Limite superior da zona amarela.
+ * @param vermelhoMinimo Limite inferior da zona vermelha.
+ * @param vermelhoMaximo Limite superior da zona vermelha.
+ * @param probabilidade Probabilidade de avaria, em fracao.
+ */
+static void escreverTipoMotor(tinyxml2::XMLDocument& documento, tinyxml2::XMLElement* definicoes,
+                              const string& tipo, double verdeMinimo, double verdeMaximo,
+                              double amareloMinimo, double amareloMaximo,
+                              double vermelhoMinimo, double vermelhoMaximo, double probabilidade)
+{
+    tinyxml2::XMLElement* bloco = documento.NewElement(tipo.c_str());
+    definicoes->InsertEndChild(bloco);
+
+    tinyxml2::XMLElement* verde = documento.NewElement("VERDE");
+    verde->SetText((textoDaBiblioteca(verdeMinimo) + ", " + textoDaBiblioteca(verdeMaximo)).c_str());
+    bloco->InsertEndChild(verde);
+
+    tinyxml2::XMLElement* amarelo = documento.NewElement("AMARELO");
+    amarelo->SetText((textoDaBiblioteca(amareloMinimo) + ", " + textoDaBiblioteca(amareloMaximo)).c_str());
+    bloco->InsertEndChild(amarelo);
+
+    tinyxml2::XMLElement* vermelho = documento.NewElement("VERMELHO");
+    vermelho->SetText((textoDaBiblioteca(vermelhoMinimo) + ", " + textoDaBiblioteca(vermelhoMaximo)).c_str());
+    bloco->InsertEndChild(vermelho);
+
+    tinyxml2::XMLElement* avaria = documento.NewElement("PROB_AVARIA");
+    avaria->SetText(probabilidade);
+    bloco->InsertEndChild(avaria);
 }
 
 void Fabrica::Relatorio(string fich_xml) const
@@ -470,19 +484,31 @@ void Fabrica::Relatorio(string fich_xml) const
         return;
     }
 
-    ofstream saida(fich_xml.c_str());
-    if (!saida.is_open())
-    {
-        return;
-    }
+    tinyxml2::XMLDocument documento;
+    tinyxml2::XMLElement* dados = documento.NewElement("DADOS");
+    documento.InsertEndChild(dados);
+    tinyxml2::XMLElement* definicoes = documento.NewElement("DEFINICOES");
+    dados->InsertEndChild(definicoes);
 
-    saida << "<DADOS>" << endl;
-    saida << "<DEFINICOES>" << endl;
-    saida << "<NOME_EMPRESA>" << escaparXml(nomeEmpresa) << "</NOME_EMPRESA>" << endl;
-    saida << "<HORA_INICIO>" << horaAbertura << "</HORA_INICIO>" << endl;
-    saida << "<HORA_FECHO>" << horaEncerramento << "</HORA_FECHO>" << endl;
-    saida << "<VIZINHANCA_AVISO>" << vizinhancaAviso << "</VIZINHANCA_AVISO>" << endl;
-    saida << "<DIMENSAO_FABRICA>" << campoX << "," << campoY << "</DIMENSAO_FABRICA>" << endl;
+    tinyxml2::XMLElement* empresa = documento.NewElement("NOME_EMPRESA");
+    empresa->SetText(nomeEmpresa.c_str());
+    definicoes->InsertEndChild(empresa);
+
+    tinyxml2::XMLElement* inicio = documento.NewElement("HORA_INICIO");
+    inicio->SetText(horaAbertura);
+    definicoes->InsertEndChild(inicio);
+
+    tinyxml2::XMLElement* fecho = documento.NewElement("HORA_FECHO");
+    fecho->SetText(horaEncerramento);
+    definicoes->InsertEndChild(fecho);
+
+    tinyxml2::XMLElement* vizinhanca = documento.NewElement("VIZINHANCA_AVISO");
+    vizinhanca->SetText(vizinhancaAviso);
+    definicoes->InsertEndChild(vizinhanca);
+
+    tinyxml2::XMLElement* dimensao = documento.NewElement("DIMENSAO_FABRICA");
+    dimensao->SetText((to_string(campoX) + "," + to_string(campoY)).c_str());
+    definicoes->InsertEndChild(dimensao);
 
     string ordemTipos[3];
     ordemTipos[0] = "MELETRICO";
@@ -497,12 +523,11 @@ void Fabrica::Relatorio(string fich_xml) const
             continue;
         }
 
-        saida << "<" << def->first << ">" << endl;
-        saida << "<VERDE>" << textoNumero(def->second.verde.minimo) << ", " << textoNumero(def->second.verde.maximo) << "</VERDE>" << endl;
-        saida << "<AMARELO>" << textoNumero(def->second.amarelo.minimo) << ", " << textoNumero(def->second.amarelo.maximo) << "</AMARELO>" << endl;
-        saida << "<VERMELHO>" << textoNumero(def->second.vermelho.minimo) << ", " << textoNumero(def->second.vermelho.maximo) << "</VERMELHO>" << endl;
-        saida << "<PROB_AVARIA>" << textoNumero(def->second.probabilidade) << "</PROB_AVARIA>" << endl;
-        saida << "</" << def->first << ">" << endl;
+        escreverTipoMotor(documento, definicoes, def->first,
+                          def->second.verde.minimo, def->second.verde.maximo,
+                          def->second.amarelo.minimo, def->second.amarelo.maximo,
+                          def->second.vermelho.minimo, def->second.vermelho.maximo,
+                          def->second.probabilidade);
     }
 
     for (map<string, DefinicaoTipoMotor>::const_iterator def = definicoesMotores.begin(); def != definicoesMotores.end(); ++def)
@@ -512,72 +537,103 @@ void Fabrica::Relatorio(string fich_xml) const
             continue;
         }
 
-        saida << "<" << def->first << ">" << endl;
-        saida << "<VERDE>" << textoNumero(def->second.verde.minimo) << ", " << textoNumero(def->second.verde.maximo) << "</VERDE>" << endl;
-        saida << "<AMARELO>" << textoNumero(def->second.amarelo.minimo) << ", " << textoNumero(def->second.amarelo.maximo) << "</AMARELO>" << endl;
-        saida << "<VERMELHO>" << textoNumero(def->second.vermelho.minimo) << ", " << textoNumero(def->second.vermelho.maximo) << "</VERMELHO>" << endl;
-        saida << "<PROB_AVARIA>" << textoNumero(def->second.probabilidade) << "</PROB_AVARIA>" << endl;
-        saida << "</" << def->first << ">" << endl;
+        escreverTipoMotor(documento, definicoes, def->first,
+                          def->second.verde.minimo, def->second.verde.maximo,
+                          def->second.amarelo.minimo, def->second.amarelo.maximo,
+                          def->second.vermelho.minimo, def->second.vermelho.maximo,
+                          def->second.probabilidade);
     }
 
-    saida << "</DEFINICOES>" << endl;
-    saida << "<MOTORES>" << endl;
-
-    for (list<Motor*>::const_iterator it = motores.begin(); it != motores.end(); ++it)
-    {
-        Motor* motor = *it;
-        string tipo = motor->GetTipo();
-        saida << "<" << tipo << ">" << endl;
-        saida << "<ID>" << motor->GetId() << "</ID>" << endl;
-        saida << "<MARCA>" << escaparXml(motor->GetMarca()) << "</MARCA>" << endl;
-        saida << "<VALOR_TEMP_ATUAL>" << textoNumero(motor->GetTemperaturaAtual()) << "</VALOR_TEMP_ATUAL>" << endl;
-        saida << "<ESTADO_ATUAL>" << textoEstado(motor->GetEstado()) << "</ESTADO_ATUAL>" << endl;
-        saida << "<ESTADO_COR>" << textoClasse(motor->GetClasseTemperatura()) << "</ESTADO_COR>" << endl;
-        saida << "<CONSUMO_HORA>" << textoNumero(motor->GetConsumoHora()) << "</CONSUMO_HORA>" << endl;
-        saida << "<CONSUMO_DIA>" << textoNumero(motor->GetConsumoDia()) << "</CONSUMO_DIA>" << endl;
-        saida << "<POSICAO>" << motor->GetX() << "," << motor->GetY() << "</POSICAO>" << endl;
-        saida << "</" << tipo << ">" << endl;
-    }
-
+    tinyxml2::XMLElement* blocoMotores = documento.NewElement("MOTORES");
+    dados->InsertEndChild(blocoMotores);
     double consumoTotalDia = 0.0;
 
     for (list<Motor*>::const_iterator it = motores.begin(); it != motores.end(); ++it)
     {
-        consumoTotalDia += (*it)->GetConsumoDia();
+        Motor* motor = *it;
+        tinyxml2::XMLElement* bloco = documento.NewElement(motor->GetTipo().c_str());
+        blocoMotores->InsertEndChild(bloco);
+
+        tinyxml2::XMLElement* id = documento.NewElement("ID");
+        id->SetText(motor->GetId());
+        bloco->InsertEndChild(id);
+
+        tinyxml2::XMLElement* marca = documento.NewElement("MARCA");
+        marca->SetText(motor->GetMarca().c_str());
+        bloco->InsertEndChild(marca);
+
+        tinyxml2::XMLElement* temperatura = documento.NewElement("VALOR_TEMP_ATUAL");
+        temperatura->SetText(motor->GetTemperaturaAtual());
+        bloco->InsertEndChild(temperatura);
+
+        tinyxml2::XMLElement* estado = documento.NewElement("ESTADO_ATUAL");
+        estado->SetText(textoEstado(motor->GetEstado()).c_str());
+        bloco->InsertEndChild(estado);
+
+        tinyxml2::XMLElement* cor = documento.NewElement("ESTADO_COR");
+        cor->SetText(textoClasse(motor->GetClasseTemperatura()).c_str());
+        bloco->InsertEndChild(cor);
+
+        tinyxml2::XMLElement* consumoHora = documento.NewElement("CONSUMO_HORA");
+        consumoHora->SetText(motor->GetConsumoHora());
+        bloco->InsertEndChild(consumoHora);
+
+        tinyxml2::XMLElement* consumoDia = documento.NewElement("CONSUMO_DIA");
+        consumoDia->SetText(motor->GetConsumoDia());
+        bloco->InsertEndChild(consumoDia);
+
+        tinyxml2::XMLElement* posicao = documento.NewElement("POSICAO");
+        posicao->SetText((to_string(motor->GetX()) + "," + to_string(motor->GetY())).c_str());
+        bloco->InsertEndChild(posicao);
+
+        consumoTotalDia = consumoTotalDia + motor->GetConsumoDia();
     }
 
-    saida << "</MOTORES>" << endl;
+    tinyxml2::XMLElement* total = documento.NewElement("CONSUMO_TOTAL_DIA");
+    total->SetText(consumoTotalDia);
+    dados->InsertEndChild(total);
 
-    saida << "<CONSUMO_TOTAL_DIA>"
-         << textoNumero(consumoTotalDia)
-        << "</CONSUMO_TOTAL_DIA>" << endl;
-
-    saida << "<SENSORES>" << endl;
-    
-
+    tinyxml2::XMLElement* blocoSensores = documento.NewElement("SENSORES");
+    dados->InsertEndChild(blocoSensores);
     for (list<Sensor*>::const_iterator it = sensores.begin(); it != sensores.end(); ++it)
     {
         Sensor* sensor = *it;
         string tipo = etiquetaSensorExportada(sensor->GetTipo());
-        string valorAtual = textoNumero(sensor->GetValor());
+        string valorAtual = textoDaBiblioteca(sensor->GetValor());
         if (tipo == "SHUMIDADE")
         {
             valorAtual = valorAtual + "%";
         }
 
-        saida << "<" << tipo << ">" << endl;
-        saida << "<ID>" << sensor->GetId() << "</ID>" << endl;
-        saida << "<MARCA>" << escaparXml(sensor->GetMarca()) << "</MARCA>" << endl;
-        saida << "<VALOR_AVISO>" << textoNumero(sensor->GetLimiar()) << "</VALOR_AVISO>" << endl;
-        saida << "<POSICAO>" << sensor->GetX() << "," << sensor->GetY() << "</POSICAO>" << endl;
-        saida << "<PROB_AVARIA>" << textoProbabilidadeSensor(sensor->GetProbabilidadeAvaria()) << "</PROB_AVARIA>" << endl;
-        saida << "<VALOR_ATUAL>" << valorAtual << "</VALOR_ATUAL>" << endl;
-        saida << "</" << tipo << ">" << endl;
+        tinyxml2::XMLElement* bloco = documento.NewElement(tipo.c_str());
+        blocoSensores->InsertEndChild(bloco);
+
+        tinyxml2::XMLElement* id = documento.NewElement("ID");
+        id->SetText(sensor->GetId());
+        bloco->InsertEndChild(id);
+
+        tinyxml2::XMLElement* marca = documento.NewElement("MARCA");
+        marca->SetText(sensor->GetMarca().c_str());
+        bloco->InsertEndChild(marca);
+
+        tinyxml2::XMLElement* aviso = documento.NewElement("VALOR_AVISO");
+        aviso->SetText(sensor->GetLimiar());
+        bloco->InsertEndChild(aviso);
+
+        tinyxml2::XMLElement* posicao = documento.NewElement("POSICAO");
+        posicao->SetText((to_string(sensor->GetX()) + "," + to_string(sensor->GetY())).c_str());
+        bloco->InsertEndChild(posicao);
+
+        tinyxml2::XMLElement* avaria = documento.NewElement("PROB_AVARIA");
+        avaria->SetText(probabilidadeExportada(sensor->GetProbabilidadeAvaria()));
+        bloco->InsertEndChild(avaria);
+
+        tinyxml2::XMLElement* atual = documento.NewElement("VALOR_ATUAL");
+        atual->SetText(valorAtual.c_str());
+        bloco->InsertEndChild(atual);
     }
 
-    saida << "</SENSORES>" << endl;
-    saida << "</DADOS>" << endl;
-    saida.close();
+    documento.SaveFile(fich_xml.c_str());
 }
 
 int Fabrica::Aviso_Humidade(list<Motor*>& lm)
@@ -639,6 +695,192 @@ int Fabrica::Aviso_Humidade(list<Motor*>& lm)
     return desligados;
 }
 
+/** @brief Video de regresso a casa, em Assets. */
+static const char* VIDEO_LUZ = "Assets/video 1 - bom regresso.mp4";
+
+/** @brief Video do alerta de missil, em Assets. */
+static const char* VIDEO_MISSEL = "Assets/video 2 - alerta missel.mp4";
+
+/** @brief Video do alerta de fumo, em Assets. */
+static const char* VIDEO_FUMO = "Assets/video 3 - alerta fumo.mp4";
+
+/**
+ * @brief Le um inteiro de 32 bits em big-endian.
+ */
+static unsigned int lerU32(const unsigned char* dados)
+{
+    return (static_cast<unsigned int>(dados[0]) << 24)
+        | (static_cast<unsigned int>(dados[1]) << 16)
+        | (static_cast<unsigned int>(dados[2]) << 8)
+        | static_cast<unsigned int>(dados[3]);
+}
+
+/**
+ * @brief Le um inteiro de 64 bits em big-endian.
+ */
+static unsigned long long lerU64(const unsigned char* dados)
+{
+    unsigned long long valor = 0;
+
+    for (int i = 0; i < 8; i++)
+    {
+        valor = (valor << 8) | dados[i];
+    }
+
+    return valor;
+}
+
+/**
+ * @brief Duracao do video, em milissegundos, lida do cabecalho MP4.
+ * @return 0 se o cabecalho nao tiver a duracao.
+ */
+static DWORD duracaoVideoMs(const char* caminho)
+{
+    ifstream ficheiro(caminho, ios::binary);
+
+    if (!ficheiro)
+    {
+        return 0;
+    }
+
+    ficheiro.seekg(0, ios::end);
+    streamoff tamanho = ficheiro.tellg();
+    ficheiro.seekg(0, ios::beg);
+
+    if (tamanho < 32)
+    {
+        return 0;
+    }
+
+    unsigned char* dados = new unsigned char[static_cast<size_t>(tamanho)];
+    ficheiro.read(reinterpret_cast<char*>(dados), tamanho);
+    streamsize lidos = ficheiro.gcount();
+    ficheiro.close();
+
+    DWORD resultado = 0;
+
+    for (streamsize i = 0; i + 32 < lidos; i++)
+    {
+        if (dados[i] != 'm' || dados[i + 1] != 'v' || dados[i + 2] != 'h' || dados[i + 3] != 'd')
+        {
+            continue;
+        }
+
+        streamsize payload = i + 4;
+
+        if (payload >= lidos)
+        {
+            break;
+        }
+
+        unsigned char versao = dados[payload];
+        unsigned long long duracao = 0;
+        unsigned int escala = 0;
+
+        if (versao == 0 && payload + 20 <= lidos)
+        {
+            streamsize base = payload + 12;
+            escala = lerU32(dados + base);
+            duracao = lerU32(dados + base + 4);
+        }
+        else if (versao == 1 && payload + 32 <= lidos)
+        {
+            streamsize base = payload + 20;
+            escala = lerU32(dados + base);
+            duracao = lerU64(dados + base + 4);
+        }
+
+        if (escala > 0)
+        {
+            resultado = static_cast<DWORD>((duracao * 1000ull) / escala);
+        }
+
+        break;
+    }
+
+    delete[] dados;
+    return resultado;
+}
+
+/**
+ * @brief Abre um video no Windows Media Player e fecha-o no fim.
+ *
+ * A opcao /close nao encerra o leitor. A duracao sai do cabecalho do MP4
+ * e, passado esse tempo, o processo do leitor e terminado.
+ * @param caminhoRelativo Caminho do video a partir da pasta do programa.
+ * @return false se o ficheiro ou o leitor nao abrirem.
+ */
+static bool reproduzirVideo(const char* caminhoRelativo)
+{
+    char caminho[MAX_PATH];
+    DWORD tamanho = GetFullPathNameA(caminhoRelativo, MAX_PATH, caminho, NULL);
+    if (tamanho == 0 || tamanho >= MAX_PATH)
+    {
+        return false;
+    }
+
+    if (GetFileAttributesA(caminho) == INVALID_FILE_ATTRIBUTES)
+    {
+        return false;
+    }
+
+    const char* reprodutores[2];
+    reprodutores[0] = "C:\\Program Files\\Windows Media Player\\wmplayer.exe";
+    reprodutores[1] = "C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe";
+
+    DWORD duracao = duracaoVideoMs(caminho);
+    DWORD espera = 30000;
+
+    if (duracao > 0)
+    {
+        espera = duracao + 4000;
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+        if (GetFileAttributesA(reprodutores[i]) == INVALID_FILE_ATTRIBUTES)
+        {
+            continue;
+        }
+
+        string linha = string("\"") + reprodutores[i] + "\" /play /close \"" + caminho + "\"";
+        char* comando = new char[linha.size() + 1];
+        for (size_t indice = 0; indice < linha.size(); indice++)
+        {
+            comando[indice] = linha[indice];
+        }
+        comando[linha.size()] = '\0';
+
+        STARTUPINFOA arranque;
+        PROCESS_INFORMATION processo;
+        ZeroMemory(&arranque, sizeof(arranque));
+        arranque.cb = sizeof(arranque);
+        ZeroMemory(&processo, sizeof(processo));
+
+        BOOL criado = CreateProcessA(reprodutores[i], comando, NULL, NULL, FALSE, 0, NULL, NULL, &arranque, &processo);
+        delete[] comando;
+
+        if (!criado)
+        {
+            continue;
+        }
+
+        DWORD estado = WaitForSingleObject(processo.hProcess, espera);
+
+        if (estado == WAIT_TIMEOUT)
+        {
+            TerminateProcess(processo.hProcess, 0);
+            WaitForSingleObject(processo.hProcess, 3000);
+        }
+
+        CloseHandle(processo.hProcess);
+        CloseHandle(processo.hThread);
+        return true;
+    }
+
+    return false;
+}
+
 /*int Fabrica::Aviso_Fumo(list<Motor*>& lm, string fich_video)
 {
     lm.clear();
@@ -677,7 +919,7 @@ int Fabrica::Aviso_Humidade(list<Motor*>& lm)
     return desligados;
 }*/
 
-int Fabrica::Aviso_Fumo(list<Motor*>& lm, string fich_video)
+int Fabrica::Aviso_Fumo(list<Motor*>& lm, string)
 {
     lm.clear();
 
@@ -702,39 +944,20 @@ int Fabrica::Aviso_Fumo(list<Motor*>& lm, string fich_video)
         }
     }
 
-    bool videoGravado = false;
-
-    if (!fich_video.empty())
-    {
-        ostringstream video;
-
-        video << "VIDEO: saidas de emergencia" << endl;
-        video << "Empresa: " << nomeEmpresa << endl;
-        video << "Dirija-se a saida mais proxima." << endl;
-        video << "Campo: " << campoX << " x " << campoY << endl;
-        video << "Saida norte: (0, 0)" << endl;
-        video << "Saida sul: (" << campoX << ", " << campoY << ")" << endl;
-        video << "Motores desligados: " << desligados << endl;
-
-        videoGravado = gravarTexto(fich_video, video.str());
-    }
+    bool videoAberto = reproduzirVideo(VIDEO_FUMO);
 
     ostringstream texto;
 
     texto << "Fumo detetado. Paragem de seguranca executada. ";
     texto << "Motores desligados: " << desligados << ".";
 
-    if (fich_video.empty())
+    if (videoAberto)
     {
-        texto << " Ficheiro informativo nao indicado.";
-    }
-    else if (!videoGravado)
-    {
-        texto << " Nao foi possivel gravar: " << fich_video << ".";
+        texto << " Video das saidas reproduzido.";
     }
     else
     {
-        texto << " Informacao guardada em: " << fich_video << ".";
+        texto << " Nao foi possivel reproduzir o video das saidas.";
     }
 
     avisarGestor(texto.str());
@@ -742,25 +965,15 @@ int Fabrica::Aviso_Fumo(list<Motor*>& lm, string fich_video)
     return desligados;
 }
 
-int Fabrica::Aviso_Luz(string fich_video)
+int Fabrica::Aviso_Luz(string)
 {
-    if (fich_video.empty())
+    if (!reproduzirVideo(VIDEO_LUZ))
     {
+        avisarGestor("Luz em aviso. Nao foi possivel reproduzir o video de regresso.");
         return 0;
     }
 
-    ostringstream video;
-    video << "VIDEO: regresso a casa" << endl;
-    video << "A luz baixou e o encerramento aproxima-se." << endl;
-    video << "Bom regresso a casa." << endl;
-    if (!gravarTexto(fich_video, video.str()))
-    {
-        return 0;
-    }
-
-    ostringstream texto;
-    texto << "Luz em aviso. Video: " << fich_video;
-    avisarGestor(texto.str());
+    avisarGestor("Luz em aviso. Video de regresso reproduzido.");
     return 1;
 }
 
@@ -795,28 +1008,18 @@ int Fabrica::Aviso_Luz(string fich_video)
     texto << "Missel em aviso. Fabrica desligada. Video: " << fvideo << ". Estado: " << festado;
     avisarGestor(texto.str());
 }*/
-    void Fabrica::Aviso_Missel(string fvideo, string festado)
+void Fabrica::Aviso_Missel(string, string festado)
+{
+    for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
     {
-        for (list<Motor*>::iterator it = motores.begin(); it != motores.end(); ++it)
-        {
-            (*it)->STOP();
-        }
+        (*it)->STOP();
+    }
 
-        fabricaActiva = false;
+    fabricaActiva = false;
 
-        bool videoGravado = false;
+    bool videoAberto = reproduzirVideo(VIDEO_MISSEL);
 
-        if (!fvideo.empty())
-        {
-            ostringstream video;
-            video << "VIDEO: abrigos" << endl;
-            video << "Missel detetado na direcao da fabrica." << endl;
-            video << "Dirija-se ao abrigo mais proximo e aguarde." << endl;
-
-            videoGravado = gravarTexto(fvideo, video.str());
-        }
-
-        bool estadoGravado = false;
+    bool estadoGravado = false;
 
         if (!festado.empty())
         {
@@ -883,13 +1086,13 @@ int Fabrica::Aviso_Luz(string fich_video)
 
         texto << "Missil detetado. Paragem de seguranca executada e fabrica inativa.";
 
-        if (fvideo.empty())
+        if (videoAberto)
         {
-            texto << " Ficheiro de video nao indicado.";
+            texto << " Video dos abrigos reproduzido.";
         }
-        else if (!videoGravado)
+        else
         {
-            texto << " Nao foi possivel gravar o ficheiro de video: " << fvideo << ".";
+            texto << " Nao foi possivel reproduzir o video dos abrigos.";
         }
 
         if (festado.empty())
@@ -1854,62 +2057,6 @@ void Fabrica::libertarCargaParcial(list<User*>& users, list<Motor*>& mots, list<
     apagarSensores(sens);
 }
 
-bool Fabrica::lerLinhas(const string& ficheiro, list<string>& linhas) const
-{
-    ifstream entrada(ficheiro.c_str());
-
-    if (!entrada.is_open())
-    {
-        return false;
-    }
-
-    string linha;
-
-    while (getline(entrada, linha))
-    {
-        linha = limparLinha(linha);
-
-        if (!linha.empty())
-        {
-            linhas.push_back(linha);
-        }
-    }
-
-    bool leituraValida = entrada.eof() && !entrada.bad();
-
-    entrada.close();
-
-    return leituraValida;
-}
-
-string Fabrica::limparLinha(const string& linha) const
-{
-    size_t inicio = 0;
-    size_t fim = linha.size();
-
-    while (inicio < fim)
-    {
-        char c = linha[inicio];
-        if (c != ' ' && c != '\t' && c != '\r')
-        {
-            break;
-        }
-        inicio++;
-    }
-
-    while (fim > inicio)
-    {
-        char c = linha[fim - 1];
-        if (c != ' ' && c != '\t' && c != '\r')
-        {
-            break;
-        }
-        fim--;
-    }
-
-    return linha.substr(inicio, fim - inicio);
-}
-
 /** @brief Indica se a etiqueta e um tipo de motor do XML. */
 static bool eTipoMotor(const string& tag)
 {
@@ -1919,178 +2066,93 @@ static bool eTipoMotor(const string& tag)
 /** @brief Indica se a etiqueta e um tipo de sensor do XML. */
 static bool eTipoSensor(const string& tag)
 {
-     return tag == "STEMPERATURA" || tag == "SFOGO" || tag == "SMISSEL" || tag == "SLUZ" || tag == "SHUMIDADE";
+    return tag == "STEMPERATURA" || tag == "SFOGO" || tag == "SMISSEL" || tag == "SLUZ" || tag == "SHUMIDADE";
 }
 
 /**
- * @brief Reconhece uma linha que so tem uma etiqueta de abertura ou de fecho.
- * @param linha Linha ja limpa.
- * @param tag Fica com o nome da etiqueta.
- * @param fecho true para procurar um fecho.
- * @return false se a linha tiver texto ou outra etiqueta.
+ * @brief Nome interno do sensor a partir da etiqueta do XML.
+ * @param tipoXml Etiqueta usada no ficheiro.
+ * @return LUZ, HUMIDADE ou a propria etiqueta.
  */
-static bool tagSimples(const string& linha, string& tag, bool fecho)
+static string tipoSensorInterno(const string& tipoXml)
 {
-    if (linha.size() < 3 || linha[0] != '<' || linha[linha.size() - 1] != '>')
+    if (tipoXml == "SLUZ")
     {
-        return false;
+        return "LUZ";
     }
 
-    if (linha.find('>') != linha.size() - 1)
+    if (tipoXml == "SHUMIDADE")
     {
-        return false;
+        return "HUMIDADE";
     }
 
-    size_t inicio = 1;
-    if (fecho)
+    return tipoXml;
+}
+
+/**
+ * @brief Indica se ja existe um sensor com o mesmo identificador e o mesmo tipo.
+ * @param lista Sensores ja aceites.
+ * @param id Identificador.
+ * @param tipoXml Etiqueta do sensor no XML.
+ */
+static bool sensorDoMesmoTipo(const list<Sensor*>& lista, int id, const string& tipoXml)
+{
+    string tipoInterno = tipoSensorInterno(tipoXml);
+
+    for (list<Sensor*>::const_iterator it = lista.begin(); it != lista.end(); ++it)
     {
-        if (linha.size() < 4 || linha[1] != '/')
+        if ((*it)->GetId() == id && (*it)->GetTipo() == tipoInterno)
         {
-            return false;
+            return true;
         }
-        inicio = 2;
-    }
-    else if (linha[1] == '/' || linha[1] == '?' || linha[1] == '!')
-    {
-        return false;
     }
 
-    tag = linha.substr(inicio, linha.size() - 1 - inicio);
-    if (tag.empty() || tag.find(' ') != string::npos)
-    {
-        return false;
-    }
-
-    return true;
+    return false;
 }
 
 /**
- * @brief Le um elemento com texto na mesma linha.
- * @param linha Linha ja limpa.
- * @param tag Fica com o nome da etiqueta.
- * @param texto Fica com o conteudo.
- * @return false se a linha nao for um elemento completo.
+ * @brief Le dois numeros separados por virgula no texto que a TinyXML-2 ja extraiu.
+ * @param elemento Elemento cujo texto esta no formato primeiro,segundo.
+ * @param primeiro Primeiro valor, convertido por XMLUtil::ToDouble.
+ * @param segundo Segundo valor, convertido por XMLUtil::ToDouble.
+ * @return false se o texto nao tiver exactamente uma virgula ou um numero falhar.
  */
-static bool elementoTexto(const string& linha, string& tag, string& texto)
+static bool lerPar(const tinyxml2::XMLElement* elemento, double& primeiro, double& segundo)
 {
-    if (linha.size() < 5 || linha[0] != '<' || linha[1] == '/' || linha[1] == '?' || linha[1] == '!')
+    if (elemento == NULL)
     {
         return false;
     }
 
-    size_t fimAbertura = linha.find('>');
-    if (fimAbertura == string::npos || fimAbertura < 2 || fimAbertura == linha.size() - 1)
+    const char* texto = elemento->GetText();
+    if (texto == NULL)
     {
         return false;
     }
 
-    tag = linha.substr(1, fimAbertura - 1);
-    if (tag.empty() || tag.find(' ') != string::npos)
+    const char* virgula = strchr(texto, ',');
+    if (virgula == NULL || strchr(virgula + 1, ',') != NULL)
     {
         return false;
     }
 
-    string fecho = "</" + tag + ">";
-    if (linha.size() <= fimAbertura + fecho.size())
-    {
-        return false;
-    }
-
-    if (linha.compare(linha.size() - fecho.size(), fecho.size(), fecho) != 0)
-    {
-        return false;
-    }
-
-    texto = linha.substr(fimAbertura + 1, linha.size() - fecho.size() - (fimAbertura + 1));
-    return !texto.empty();
+    string esquerda(texto, static_cast<size_t>(virgula - texto));
+    return tinyxml2::XMLUtil::ToDouble(esquerda.c_str(), &primeiro) &&
+           tinyxml2::XMLUtil::ToDouble(virgula + 1, &segundo);
 }
 
 /**
- * @brief Converte um texto num numero real, sem lixo a seguir.
- * @param texto Texto do XML.
- * @param destino Valor lido.
- */
-static bool lerRealTexto(const string& texto, double& destino)
-{
-    stringstream fluxo(texto);
-    double valor = 0.0;
-    char extra = 0;
-
-    if (!(fluxo >> valor))
-    {
-        return false;
-    }
-
-    if (fluxo >> extra)
-    {
-        return false;
-    }
-
-    if (!isfinite(valor))
-    {
-        return false;
-    }
-
-    destino = valor;
-    return true;
-}
-
-/**
- * @brief Converte um texto num inteiro.
- * @param texto Texto do XML.
- * @param destino Valor lido.
- */
-static bool lerInteiroTexto(const string& texto, int& destino)
-{
-    double valor = 0.0;
-
-    if (!lerRealTexto(texto, valor))
-    {
-        return false;
-    }
-
-    if (valor < numeric_limits<int>::min() ||
-        valor > numeric_limits<int>::max())
-    {
-        return false;
-    }
-
-    if (valor != static_cast<double>(static_cast<int>(valor)))
-    {
-        return false;
-    }
-
-    destino = static_cast<int>(valor);
-    return true;
-}
-
-/**
- * @brief Le dois numeros separados por uma virgula.
- * @param texto Texto no formato primeiro,segundo.
- * @param primeiro Primeiro valor.
- * @param segundo Segundo valor.
- */
-static bool lerParTexto(const string& texto, double& primeiro, double& segundo)
-{
-    size_t virgula = texto.find(',');
-    if (virgula == string::npos || texto.find(',', virgula + 1) != string::npos)
-    {
-        return false;
-    }
-
-    return lerRealTexto(texto.substr(0, virgula), primeiro) && lerRealTexto(texto.substr(virgula + 1), segundo);
-}
-
-/**
- * @brief Converte uma probabilidade do XML para uma fracao entre 0 e 1.
+ * @brief Le uma probabilidade com QueryDoubleText.
  *
- * Um valor igual ou superior a 1 e tratado como percentagem.
- * @param bruto Valor lido.
- * @param destino Fracao resultante.
+ * Um valor igual ou superior a 1 e uma percentagem.
+ * @param elemento Elemento com o numero.
+ * @param destino Fracao entre 0 e 1.
+ * @return false se o texto nao for um numero valido.
  */
-static bool probabilidadeDoXml(double bruto, double& destino)
+static bool lerProbabilidade(const tinyxml2::XMLElement* elemento, double& destino)
 {
-    if (bruto < 0.0)
+    double bruto = 0.0;
+    if (elemento == NULL || elemento->QueryDoubleText(&bruto) != tinyxml2::XML_SUCCESS || bruto < 0.0)
     {
         return false;
     }
@@ -2109,124 +2171,91 @@ static bool probabilidadeDoXml(double bruto, double& destino)
     return true;
 }
 
-/**
- * @brief Indica se ja existe um sensor com o mesmo identificador e o mesmo tipo.
- * @param lista Sensores ja aceites.
- * @param id Identificador.
- * @param tipo Etiqueta do sensor.
- */
- static string tipoSensorInterno(const string& tipoXml)
-{
-    if (tipoXml == "SLUZ")
-    {
-        return "LUZ";
-    }
-
-    if (tipoXml == "SHUMIDADE")
-    {
-        return "HUMIDADE";
-    }
-
-    return tipoXml;
-}
-
-static bool sensorDoMesmoTipo(const list<Sensor*>& lista, int id, const string& tipoXml)
-{
-    string tipoInterno = tipoSensorInterno(tipoXml);
-
-    for (list<Sensor*>::const_iterator it = lista.begin(); it != lista.end(); ++it)
-    {
-        if ((*it)->GetId() == id && (*it)->GetTipo() == tipoInterno)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool Fabrica::lerDados(const list<string>& linhas, string& nome, int& novoX, int& novoY,
+bool Fabrica::lerDados(const string& ficheiro, string& nome, int& novoX, int& novoY,
                        int& abertura, int& fecho, int& vizinhanca,
                        IntervaloTemperatura& novoVerde, IntervaloTemperatura& novoAmarelo,
                        IntervaloTemperatura& novoVermelho, list<Motor*>& novosMotores,
                        list<Sensor*>& novosSensores)
 {
-    /**
-     * @brief Definicao de tipo enquanto a etiqueta ainda nao fechou.
-     */
-    struct DefinicaoMotor
+    tinyxml2::XMLDocument documento;
+    if (documento.LoadFile(ficheiro.c_str()) != tinyxml2::XML_SUCCESS)
     {
-        IntervaloTemperatura verde; ///< Zona verde ja lida.
-        IntervaloTemperatura amarelo; ///< Zona amarela ja lida.
-        IntervaloTemperatura vermelho; ///< Zona vermelha ja lida.
-        double probabilidade; ///< Probabilidade ja convertida para fracao.
-        bool temVerde; ///< true depois de aparecer VERDE.
-        bool temAmarelo; ///< true depois de aparecer AMARELO.
-        bool temVermelho; ///< true depois de aparecer VERMELHO.
-        bool temProbabilidade; ///< true depois de aparecer PROB_AVARIA.
+        return false;
+    }
 
-        DefinicaoMotor()
-            : probabilidade(0.0), temVerde(false), temAmarelo(false), temVermelho(false), temProbabilidade(false)
+    tinyxml2::XMLElement* dados = documento.FirstChildElement();
+    if (dados == NULL || string(dados->Name()) != "DADOS" || dados->NextSiblingElement() != NULL)
+    {
+        return false;
+    }
+
+    tinyxml2::XMLElement* definicoes = NULL;
+    tinyxml2::XMLElement* motores = NULL;
+    tinyxml2::XMLElement* sensores = NULL;
+
+    for (tinyxml2::XMLElement* filho = dados->FirstChildElement(); filho != NULL; filho = filho->NextSiblingElement())
+    {
+        string etiqueta = filho->Name();
+        if (etiqueta == "DEFINICOES")
         {
-            verde.minimo = 0.0;
-            verde.maximo = 0.0;
-            amarelo.minimo = 0.0;
-            amarelo.maximo = 0.0;
-            vermelho.minimo = 0.0;
-            vermelho.maximo = 0.0;
+            if (definicoes != NULL)
+            {
+                return false;
+            }
+            definicoes = filho;
         }
-    };
+        else if (etiqueta == "MOTORES")
+        {
+            if (motores != NULL)
+            {
+                return false;
+            }
+            motores = filho;
+        }
+        else if (etiqueta == "SENSORES")
+        {
+            if (sensores != NULL)
+            {
+                return false;
+            }
+            sensores = filho;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-    map<string, DefinicaoMotor> definicoes;
-    list<string> pilha;
+    if (definicoes == NULL || motores == NULL || sensores == NULL)
+    {
+        return false;
+    }
 
-    bool jaAbriuDados = false;
-    bool viuDefinicoes = false;
-    bool viuMotores = false;
-    bool viuSensores = false;
-    bool fechouDefinicoes = false;
-    bool fechouMotores = false;
-    bool fechouSensores = false;
+    if (!lerDefinicoesXml(definicoes, nome, novoX, novoY, abertura, fecho, vizinhanca,
+                          novoVerde, novoAmarelo, novoVermelho))
+    {
+        return false;
+    }
+
+    if (!lerMotoresXml(motores, novoX, novoY, novosMotores))
+    {
+        return false;
+    }
+
+    return lerSensoresXml(sensores, novoX, novoY, novosSensores);
+}
+
+bool Fabrica::lerDefinicoesXml(tinyxml2::XMLElement* definicoes, string& nome, int& novoX, int& novoY,
+                               int& abertura, int& fecho, int& vizinhanca,
+                               IntervaloTemperatura& novoVerde, IntervaloTemperatura& novoAmarelo,
+                               IntervaloTemperatura& novoVermelho)
+{
     bool temNome = false;
     bool temInicio = false;
     bool temFecho = false;
     bool temVizinhanca = false;
     bool temDimensao = false;
     bool temIntervaloGlobal = false;
-
-    bool definicaoActiva = false;
-    string nomeDefinicao;
-    DefinicaoMotor definicaoActual;
-
-    bool motorActivo = false;
-    string motorTipo;
-    int motorId = 0;
-    string motorMarca;
-    double motorConsumo = 0.0;
-    int motorX = 0;
-    int motorY = 0;
-    bool temMotorId = false;
-    bool temMotorMarca = false;
-    bool temMotorConsumo = false;
-    bool temMotorPosicao = false;
-
-    bool sensorActivo = false;
-    string sensorTipo;
-    int sensorId = 0;
-    string sensorMarca;
-    double sensorAviso = 0.0;
-    double sensorProb = 0.0;
-    double sensorProb1 = 0.0;
-    int sensorRaio = 0;
-    int sensorX = 0;
-    int sensorY = 0;
-    bool temSensorId = false;
-    bool temSensorMarca = false;
-    bool temSensorAviso = false;
-    bool temSensorProb = false;
-    bool temSensorProb1 = false;
-    bool temSensorPosicao = false;
-    bool temSensorRaio = false;
 
     nome = "";
     novoX = 0;
@@ -2235,584 +2264,534 @@ bool Fabrica::lerDados(const list<string>& linhas, string& nome, int& novoX, int
     fecho = 0;
     vizinhanca = 0;
 
-    for (list<string>::const_iterator it = linhas.begin(); it != linhas.end(); ++it)
+    if (definicoes == NULL)
     {
-        const string& linha = *it;
-        if (linha.size() >= 2 && linha[0] == '<' && linha[1] == '?')
-        {
-            continue;
-        }
-
-        string tag;
-        string texto;
-        if (elementoTexto(linha, tag, texto))
-        {
-            if (pilha.empty())
-            {
-                return false;
-            }
-
-            string pai = pilha.back();
-            if (tag == "NOME_EMPRESA" && pai == "DEFINICOES" && !definicaoActiva)
-            {
-                if (temNome)
-                {
-                    return false;
-                }
-                nome = texto;
-                temNome = true;
-            }
-            else if ((tag == "HORA_INICIO" || tag == "HORA_FECHO") && pai == "DEFINICOES" && !definicaoActiva)
-            {
-                int hora = 0;
-                if (!lerInteiroTexto(texto, hora) || !horaValida(hora))
-                {
-                    return false;
-                }
-                if (tag == "HORA_INICIO")
-                {
-                    if (temInicio)
-                    {
-                        return false;
-                    }
-                    abertura = hora;
-                    temInicio = true;
-                }
-                else
-                {
-                    if (temFecho)
-                    {
-                        return false;
-                    }
-                    fecho = hora;
-                    temFecho = true;
-                }
-            }
-            else if (tag == "VIZINHANCA_AVISO" && pai == "DEFINICOES" && !definicaoActiva)
-            {
-                int valor = 0;
-                if (temVizinhanca || !lerInteiroTexto(texto, valor) || valor < 0)
-                {
-                    return false;
-                }
-                vizinhanca = valor;
-                temVizinhanca = true;
-            }
-            else if (tag == "DIMENSAO_FABRICA" && pai == "DEFINICOES" && !definicaoActiva)
-            {
-                double eixoX = 0.0;
-                double eixoY = 0.0;
-                if (temDimensao || !lerParTexto(texto, eixoX, eixoY))
-                {
-                    return false;
-                }
-                if (eixoX != static_cast<double>(static_cast<int>(eixoX)) || eixoY != static_cast<double>(static_cast<int>(eixoY)))
-                {
-                    return false;
-                }
-                if (eixoX <= 0.0 || eixoY <= 0.0)
-                {
-                    return false;
-                }
-                novoX = static_cast<int>(eixoX);
-                novoY = static_cast<int>(eixoY);
-                temDimensao = true;
-            }
-            else if ((tag == "VERDE" || tag == "AMARELO" || tag == "VERMELHO") && definicaoActiva && pai == nomeDefinicao)
-            {
-                double minimo = 0.0;
-                double maximo = 0.0;
-                if (!lerParTexto(texto, minimo, maximo) || minimo > maximo)
-                {
-                    return false;
-                }
-                if (tag == "VERDE")
-                {
-                    if (definicaoActual.temVerde)
-                    {
-                        return false;
-                    }
-                    definicaoActual.verde.minimo = minimo;
-                    definicaoActual.verde.maximo = maximo;
-                    definicaoActual.temVerde = true;
-                }
-                else if (tag == "AMARELO")
-                {
-                    if (definicaoActual.temAmarelo)
-                    {
-                        return false;
-                    }
-                    definicaoActual.amarelo.minimo = minimo;
-                    definicaoActual.amarelo.maximo = maximo;
-                    definicaoActual.temAmarelo = true;
-                }
-                else
-                {
-                    if (definicaoActual.temVermelho)
-                    {
-                        return false;
-                    }
-                    definicaoActual.vermelho.minimo = minimo;
-                    definicaoActual.vermelho.maximo = maximo;
-                    definicaoActual.temVermelho = true;
-                }
-            }
-            else if (tag == "PROB_AVARIA" && definicaoActiva && pai == nomeDefinicao)
-            {
-                double bruto = 0.0;
-                double probabilidade = 0.0;
-                if (definicaoActual.temProbabilidade || !lerRealTexto(texto, bruto) || !probabilidadeDoXml(bruto, probabilidade))
-                {
-                    return false;
-                }
-                definicaoActual.probabilidade = probabilidade;
-                definicaoActual.temProbabilidade = true;
-            }
-            else if (tag == "ID" && motorActivo && pai == motorTipo)
-            {
-                int id = 0;
-                if (temMotorId || !lerInteiroTexto(texto, id) || id <= 0)
-                {
-                    return false;
-                }
-                motorId = id;
-                temMotorId = true;
-            }
-            else if (tag == "MARCA" && motorActivo && pai == motorTipo)
-            {
-                if (temMotorMarca || texto.empty())
-                {
-                    return false;
-                }
-                motorMarca = texto;
-                temMotorMarca = true;
-            }
-            else if (tag == "CONSUMO_HORA" && motorActivo && pai == motorTipo)
-            {
-                double consumo = 0.0;
-                if (temMotorConsumo || !lerRealTexto(texto, consumo) || consumo < 0.0)
-                {
-                    return false;
-                }
-                motorConsumo = consumo;
-                temMotorConsumo = true;
-            }
-            else if (tag == "POSICAO" && motorActivo && pai == motorTipo)
-            {
-                double posX = 0.0;
-                double posY = 0.0;
-                if (temMotorPosicao || !lerParTexto(texto, posX, posY))
-                {
-                    return false;
-                }
-                if (posX != static_cast<double>(static_cast<int>(posX)) || posY != static_cast<double>(static_cast<int>(posY)))
-                {
-                    return false;
-                }
-                motorX = static_cast<int>(posX);
-                motorY = static_cast<int>(posY);
-                temMotorPosicao = true;
-            }
-            else if (tag == "ID" && sensorActivo && pai == sensorTipo)
-            {
-                int id = 0;
-                if (temSensorId || !lerInteiroTexto(texto, id) || id <= 0)
-                {
-                    return false;
-                }
-                sensorId = id;
-                temSensorId = true;
-            }
-            else if (tag == "MARCA" && sensorActivo && pai == sensorTipo)
-            {
-                if (temSensorMarca || texto.empty())
-                {
-                    return false;
-                }
-                sensorMarca = texto;
-                temSensorMarca = true;
-            }
-            else if (tag == "VALOR_AVISO" && sensorActivo && pai == sensorTipo)
-            {
-                double aviso = 0.0;
-                if (temSensorAviso || !lerRealTexto(texto, aviso))
-                {
-                    return false;
-                }
-                sensorAviso = aviso;
-                temSensorAviso = true;
-            }
-            else if (tag == "POSICAO" && sensorActivo && pai == sensorTipo)
-            {
-                double posX = 0.0;
-                double posY = 0.0;
-                if (temSensorPosicao || !lerParTexto(texto, posX, posY))
-                {
-                    return false;
-                }
-                if (posX != static_cast<double>(static_cast<int>(posX)) || posY != static_cast<double>(static_cast<int>(posY)))
-                {
-                    return false;
-                }
-                sensorX = static_cast<int>(posX);
-                sensorY = static_cast<int>(posY);
-                temSensorPosicao = true;
-            }
-            else if (tag == "PROB_AVARIA" && sensorActivo && pai == sensorTipo)
-            {
-                double bruto = 0.0;
-                double probabilidade = 0.0;
-                if (temSensorProb || !lerRealTexto(texto, bruto) || !probabilidadeDoXml(bruto, probabilidade))
-                {
-                    return false;
-                }
-                sensorProb = probabilidade;
-                temSensorProb = true;
-            }
-            else if (tag == "PROB_1" && sensorActivo && pai == sensorTipo)
-            {
-                double bruto = 0.0;
-                double probabilidade = 0.0;
-                if (sensorTipo != "SFOGO" && sensorTipo != "SMISSEL")
-                {
-                    return false;
-                }
-                if (temSensorProb1 || !lerRealTexto(texto, bruto) || !probabilidadeDoXml(bruto, probabilidade))
-                {
-                    return false;
-                }
-                sensorProb1 = probabilidade;
-                temSensorProb1 = true;
-            }
-            else if (tag == "RAIO_VIZINHANCA" && sensorActivo && pai == sensorTipo)
-            {
-                int raio = 0;
-
-                if (sensorTipo != "SHUMIDADE" || temSensorRaio || !lerInteiroTexto(texto, raio) || raio < 0)
-                    {
-                         return false;
-                    }
-
-                sensorRaio = raio;
-                temSensorRaio = true;
-            }
-            else
-            {
-                return false;
-            }
-
-            continue;
-        }
-
-        if (tagSimples(linha, tag, true))
-        {
-            if (pilha.empty() || pilha.back() != tag)
-            {
-                return false;
-            }
-
-            pilha.pop_back();
-
-            if (tag == "DADOS")
-            {
-                if (!pilha.empty() || !fechouDefinicoes || !fechouMotores || !fechouSensores)
-                {
-                    return false;
-                }
-            }
-            else if (tag == "DEFINICOES")
-            {
-                if (definicaoActiva || !temNome || !temInicio || !temFecho || !temVizinhanca || !temDimensao)
-                {
-                    return false;
-                }
-                if (!horaValida(abertura) || !horaValida(fecho) || abertura >= fecho)
-                {
-                    return false;
-                }
-                if (definicoes.empty() || !temIntervaloGlobal)
-                {
-                    return false;
-                }
-                fechouDefinicoes = true;
-            }
-            else if (tag == "MOTORES")
-            {
-                if (motorActivo)
-                {
-                    return false;
-                }
-                fechouMotores = true;
-            }
-            else if (tag == "SENSORES")
-            {
-                if (sensorActivo)
-                {
-                    return false;
-                }
-                fechouSensores = true;
-            }
-            else if (eTipoMotor(tag) && definicaoActiva && tag == nomeDefinicao)
-            {
-                if (!definicaoActual.temVerde || !definicaoActual.temAmarelo || !definicaoActual.temVermelho || !definicaoActual.temProbabilidade)
-                {
-                    return false;
-                }
-                if (!intervalosCoerentes(definicaoActual.verde, definicaoActual.amarelo, definicaoActual.vermelho))
-                {
-                    return false;
-                }
-                if (definicoes.find(tag) != definicoes.end())
-                {
-                    return false;
-                }
-                definicoes[tag] = definicaoActual;
-                DefinicaoTipoMotor guardada;
-                guardada.verde = definicaoActual.verde;
-                guardada.amarelo = definicaoActual.amarelo;
-                guardada.vermelho = definicaoActual.vermelho;
-                guardada.probabilidade = definicaoActual.probabilidade;
-                definicoesMotores[tag] = guardada;
-                if (!temIntervaloGlobal)
-                {
-                    novoVerde = definicaoActual.verde;
-                    novoAmarelo = definicaoActual.amarelo;
-                    novoVermelho = definicaoActual.vermelho;
-                    temIntervaloGlobal = true;
-                }
-                definicaoActiva = false;
-            }
-            else if (eTipoMotor(tag) && motorActivo && tag == motorTipo)
-            {
-                if (!temMotorId || !temMotorMarca || !temMotorConsumo || !temMotorPosicao)
-                {
-                    return false;
-                }
-                if (!posicaoValida(motorX, motorY, novoX, novoY))
-                {
-                    return false;
-                }
-                if (idMotorExiste(novosMotores, motorId) || idMotorExiste(motores, motorId))
-                {
-                    return false;
-                }
-
-                map<string, DefinicaoMotor>::const_iterator def = definicoes.find(motorTipo);
-                if (def == definicoes.end())
-                {
-                    return false;
-                }
-
-                Motor* motor = NULL;
-                if (motorTipo == "MELETRICO")
-                {
-                    motor = new MotorEletrico(motorId, motorMarca, motorConsumo, def->second.amarelo.minimo,
-                                              def->second.vermelho.minimo, def->second.probabilidade, motorX, motorY);
-                }
-                else if (motorTipo == "MCOMBUSTAO")
-                {
-                    motor = new MotorCombustao(motorId, motorMarca, motorConsumo, def->second.amarelo.minimo,
-                                               def->second.vermelho.minimo, def->second.probabilidade, motorX, motorY);
-                }
-                else if (motorTipo == "MINDUCAO")
-                {
-                    motor = new MotorInducao(motorId, motorMarca, motorConsumo, def->second.amarelo.minimo,
-                                             def->second.vermelho.minimo, def->second.probabilidade, motorX, motorY);
-                }
-
-                if (motor == NULL)
-                {
-                    return false;
-                }
-
-                novosMotores.push_back(motor);
-                motorActivo = false;
-            }
-            else if (eTipoSensor(tag) && sensorActivo && tag == sensorTipo)
-            {
-                bool exigeEvento = sensorTipo == "SFOGO" || sensorTipo == "SMISSEL";
-                if (!temSensorId || !temSensorMarca || !temSensorAviso || !temSensorPosicao || !temSensorProb)
-                {
-                    return false;
-                }
-                if (exigeEvento && !temSensorProb1)
-                {
-                    return false;
-                }
-                if (!exigeEvento && temSensorProb1)
-                {
-                    return false;
-                }
-                if (!posicaoValida(sensorX, sensorY, novoX, novoY))
-                {
-                    return false;
-                }
-                if (sensorDoMesmoTipo(novosSensores, sensorId, sensorTipo) || sensorDoMesmoTipo(sensores, sensorId, sensorTipo))
-                {
-                    return false;
-                }
-
-                Sensor* sensor = NULL;
-                if (sensorTipo == "STEMPERATURA")
-                {
-                    sensor = new SensorTemperatura(sensorId, sensorMarca, 0.0,
-                                                sensorProb, sensorX, sensorY, sensorAviso);
-                }
-                else if (sensorTipo == "SLUZ")
-                {
-                    sensor = new SensorLuz(sensorId, sensorMarca, 0.0,
-                                        sensorProb, sensorX, sensorY, sensorAviso);
-                }
-                else if (sensorTipo == "SHUMIDADE")
-                {
-                    sensor = new SensorHumidade(sensorId, sensorMarca, 0.0,
-                                                sensorProb, sensorX, sensorY,
-                                                sensorAviso, sensorRaio);
-                }
-                else if (sensorTipo == "SFOGO")
-                {
-                    sensor = new SensorFumo(sensorId, sensorMarca, 0.0,
-                                            sensorProb, sensorX, sensorY, sensorAviso);
-
-                    sensor->SetProbabilidadeUm(sensorProb1);
-                }
-                else if (sensorTipo == "SMISSEL")
-                {
-                    sensor = new SensorMissel(sensorId, sensorMarca, 0.0,
-                                            sensorProb, sensorX, sensorY, sensorAviso);
-
-                    sensor->SetProbabilidadeUm(sensorProb1);
-                }
-                novosSensores.push_back(sensor);
-                sensorActivo = false;
-            }
-            else
-            {
-                return false;
-            }
-
-            continue;
-        }
-
-        if (!tagSimples(linha, tag, false))
-        {
-            return false;
-        }
-
-        if (pilha.empty())
-        {
-            if (tag != "DADOS" || jaAbriuDados)
-            {
-                return false;
-            }
-            jaAbriuDados = true;
-            pilha.push_back(tag);
-            continue;
-        }
-
-        string pai = pilha.back();
-        if (tag == "DEFINICOES" || tag == "MOTORES" || tag == "SENSORES")
-        {
-            if (pai != "DADOS" || definicaoActiva || motorActivo || sensorActivo)
-            {
-                return false;
-            }
-            if (tag == "DEFINICOES" && viuDefinicoes)
-            {
-                return false;
-            }
-            if (tag == "MOTORES" && viuMotores)
-            {
-                return false;
-            }
-            if (tag == "SENSORES" && viuSensores)
-            {
-                return false;
-            }
-            if (tag == "DEFINICOES")
-            {
-                viuDefinicoes = true;
-            }
-            else if (tag == "MOTORES")
-            {
-                viuMotores = true;
-            }
-            else
-            {
-                viuSensores = true;
-            }
-            pilha.push_back(tag);
-            continue;
-        }
-
-        if (eTipoMotor(tag))
-        {
-            if (pai == "DEFINICOES")
-            {
-                if (definicaoActiva)
-                {
-                    return false;
-                }
-                definicaoActiva = true;
-                nomeDefinicao = tag;
-                definicaoActual = DefinicaoMotor();
-                pilha.push_back(tag);
-                continue;
-            }
-            if (pai == "MOTORES")
-            {
-                if (motorActivo || !fechouDefinicoes)
-                {
-                    return false;
-                }
-                motorActivo = true;
-                motorTipo = tag;
-                motorId = 0;
-                motorMarca = "";
-                motorConsumo = 0.0;
-                motorX = 0;
-                motorY = 0;
-                temMotorId = false;
-                temMotorMarca = false;
-                temMotorConsumo = false;
-                temMotorPosicao = false;
-                pilha.push_back(tag);
-                continue;
-            }
-            return false;
-        }
-
-        if (eTipoSensor(tag))
-        {
-            if (pai != "SENSORES" || sensorActivo || !fechouDefinicoes)
-            {
-                return false;
-            }
-            sensorActivo = true;
-            sensorTipo = tag;
-            sensorId = 0;
-            sensorMarca = "";
-            sensorAviso = 0.0;
-            sensorProb = 0.0;
-            sensorProb1 = 0.0;
-            sensorX = 0;
-            sensorY = 0;
-            temSensorId = false;
-            temSensorMarca = false;
-            temSensorAviso = false;
-            temSensorProb = false;
-            temSensorProb1 = false;
-            temSensorPosicao = false;
-            sensorRaio = 0;
-            temSensorRaio = false;
-            pilha.push_back(tag);
-            continue;
-        }
-
         return false;
     }
 
-    return jaAbriuDados && pilha.empty();
+    for (tinyxml2::XMLElement* filho = definicoes->FirstChildElement(); filho != NULL; filho = filho->NextSiblingElement())
+    {
+        string etiqueta = filho->Name();
+
+        if (etiqueta == "NOME_EMPRESA")
+        {
+            const char* texto = filho->GetText();
+            if (temNome || texto == NULL || texto[0] == '\0')
+            {
+                return false;
+            }
+            nome = texto;
+            temNome = true;
+        }
+        else if (etiqueta == "HORA_INICIO" || etiqueta == "HORA_FECHO")
+        {
+            int hora = 0;
+            if (filho->QueryIntText(&hora) != tinyxml2::XML_SUCCESS || !horaValida(hora))
+            {
+                return false;
+            }
+            if (etiqueta == "HORA_INICIO")
+            {
+                if (temInicio)
+                {
+                    return false;
+                }
+                abertura = hora;
+                temInicio = true;
+            }
+            else
+            {
+                if (temFecho)
+                {
+                    return false;
+                }
+                fecho = hora;
+                temFecho = true;
+            }
+        }
+        else if (etiqueta == "VIZINHANCA_AVISO")
+        {
+            int valor = 0;
+            if (temVizinhanca || filho->QueryIntText(&valor) != tinyxml2::XML_SUCCESS || valor < 0)
+            {
+                return false;
+            }
+            vizinhanca = valor;
+            temVizinhanca = true;
+        }
+        else if (etiqueta == "DIMENSAO_FABRICA")
+        {
+            double eixoX = 0.0;
+            double eixoY = 0.0;
+            if (temDimensao || !lerPar(filho, eixoX, eixoY))
+            {
+                return false;
+            }
+            if (eixoX != static_cast<double>(static_cast<int>(eixoX)) || eixoY != static_cast<double>(static_cast<int>(eixoY)))
+            {
+                return false;
+            }
+            if (eixoX <= 0.0 || eixoY <= 0.0)
+            {
+                return false;
+            }
+            novoX = static_cast<int>(eixoX);
+            novoY = static_cast<int>(eixoY);
+            temDimensao = true;
+        }
+        else if (eTipoMotor(etiqueta))
+        {
+            if (!lerTipoMotorXml(filho, temIntervaloGlobal, novoVerde, novoAmarelo, novoVermelho))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    if (!temNome || !temInicio || !temFecho || !temVizinhanca || !temDimensao)
+    {
+        return false;
+    }
+
+    if (!horaValida(abertura) || !horaValida(fecho) || abertura >= fecho)
+    {
+        return false;
+    }
+
+    return !definicoesMotores.empty() && temIntervaloGlobal;
+}
+
+bool Fabrica::lerTipoMotorXml(tinyxml2::XMLElement* elemento, bool& temIntervaloGlobal,
+                              IntervaloTemperatura& novoVerde, IntervaloTemperatura& novoAmarelo,
+                              IntervaloTemperatura& novoVermelho)
+{
+    if (elemento == NULL || elemento->Name() == NULL)
+    {
+        return false;
+    }
+
+    string tipo = elemento->Name();
+    if (!eTipoMotor(tipo) || definicoesMotores.find(tipo) != definicoesMotores.end())
+    {
+        return false;
+    }
+
+    DefinicaoTipoMotor definicao;
+    definicao.verde.minimo = 0.0;
+    definicao.verde.maximo = 0.0;
+    definicao.amarelo.minimo = 0.0;
+    definicao.amarelo.maximo = 0.0;
+    definicao.vermelho.minimo = 0.0;
+    definicao.vermelho.maximo = 0.0;
+    definicao.probabilidade = 0.0;
+
+    bool temVerde = false;
+    bool temAmarelo = false;
+    bool temVermelho = false;
+    bool temProbabilidade = false;
+
+    for (tinyxml2::XMLElement* filho = elemento->FirstChildElement(); filho != NULL; filho = filho->NextSiblingElement())
+    {
+        string etiqueta = filho->Name();
+
+        if (etiqueta == "VERDE" || etiqueta == "AMARELO" || etiqueta == "VERMELHO")
+        {
+            double minimo = 0.0;
+            double maximo = 0.0;
+            if (!lerPar(filho, minimo, maximo) || minimo > maximo)
+            {
+                return false;
+            }
+
+            IntervaloTemperatura* intervalo = NULL;
+            bool* presente = NULL;
+            if (etiqueta == "VERDE")
+            {
+                intervalo = &definicao.verde;
+                presente = &temVerde;
+            }
+            else if (etiqueta == "AMARELO")
+            {
+                intervalo = &definicao.amarelo;
+                presente = &temAmarelo;
+            }
+            else
+            {
+                intervalo = &definicao.vermelho;
+                presente = &temVermelho;
+            }
+
+            if (*presente)
+            {
+                return false;
+            }
+
+            intervalo->minimo = minimo;
+            intervalo->maximo = maximo;
+            *presente = true;
+        }
+        else if (etiqueta == "PROB_AVARIA")
+        {
+            double probabilidade = 0.0;
+            if (temProbabilidade || !lerProbabilidade(filho, probabilidade))
+            {
+                return false;
+            }
+            definicao.probabilidade = probabilidade;
+            temProbabilidade = true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    if (!temVerde || !temAmarelo || !temVermelho || !temProbabilidade)
+    {
+        return false;
+    }
+
+    if (!intervalosCoerentes(definicao.verde, definicao.amarelo, definicao.vermelho))
+    {
+        return false;
+    }
+
+    definicoesMotores[tipo] = definicao;
+    if (!temIntervaloGlobal)
+    {
+        novoVerde = definicao.verde;
+        novoAmarelo = definicao.amarelo;
+        novoVermelho = definicao.vermelho;
+        temIntervaloGlobal = true;
+    }
+
+    return true;
+}
+
+bool Fabrica::lerMotoresXml(tinyxml2::XMLElement* motores, int limiteX, int limiteY, list<Motor*>& novosMotores)
+{
+    if (motores == NULL)
+    {
+        return false;
+    }
+
+    for (tinyxml2::XMLElement* elemento = motores->FirstChildElement(); elemento != NULL; elemento = elemento->NextSiblingElement())
+    {
+        if (elemento->Name() == NULL || !eTipoMotor(elemento->Name()))
+        {
+            return false;
+        }
+
+        if (!lerUmMotorXml(elemento, elemento->Name(), limiteX, limiteY, novosMotores))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Fabrica::lerUmMotorXml(tinyxml2::XMLElement* elemento, const string& tipo, int limiteX, int limiteY,
+                            list<Motor*>& novosMotores)
+{
+    bool temId = false;
+    bool temMarca = false;
+    bool temConsumo = false;
+    bool temPosicao = false;
+    int id = 0;
+    string marca;
+    double consumo = 0.0;
+    int posX = 0;
+    int posY = 0;
+
+    if (elemento == NULL)
+    {
+        return false;
+    }
+
+    for (tinyxml2::XMLElement* filho = elemento->FirstChildElement(); filho != NULL; filho = filho->NextSiblingElement())
+    {
+        string etiqueta = filho->Name();
+
+        if (etiqueta == "ID")
+        {
+            if (temId || filho->QueryIntText(&id) != tinyxml2::XML_SUCCESS || id <= 0)
+            {
+                return false;
+            }
+            temId = true;
+        }
+        else if (etiqueta == "MARCA")
+        {
+            const char* texto = filho->GetText();
+            if (temMarca || texto == NULL || texto[0] == '\0')
+            {
+                return false;
+            }
+            marca = texto;
+            temMarca = true;
+        }
+        else if (etiqueta == "CONSUMO_HORA")
+        {
+            if (temConsumo || filho->QueryDoubleText(&consumo) != tinyxml2::XML_SUCCESS || consumo < 0.0)
+            {
+                return false;
+            }
+            temConsumo = true;
+        }
+        else if (etiqueta == "POSICAO")
+        {
+            double eixoX = 0.0;
+            double eixoY = 0.0;
+            if (temPosicao || !lerPar(filho, eixoX, eixoY))
+            {
+                return false;
+            }
+            if (eixoX != static_cast<double>(static_cast<int>(eixoX)) || eixoY != static_cast<double>(static_cast<int>(eixoY)))
+            {
+                return false;
+            }
+            posX = static_cast<int>(eixoX);
+            posY = static_cast<int>(eixoY);
+            temPosicao = true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    if (!temId || !temMarca || !temConsumo || !temPosicao)
+    {
+        return false;
+    }
+
+    if (!posicaoValida(posX, posY, limiteX, limiteY))
+    {
+        return false;
+    }
+
+    if (idMotorExiste(novosMotores, id) || idMotorExiste(motores, id))
+    {
+        return false;
+    }
+
+    map<string, DefinicaoTipoMotor>::const_iterator def = definicoesMotores.find(tipo);
+    if (def == definicoesMotores.end())
+    {
+        return false;
+    }
+
+    Motor* motor = NULL;
+    if (tipo == "MELETRICO")
+    {
+        motor = new MotorEletrico(id, marca, consumo, def->second.amarelo.minimo,
+                                  def->second.vermelho.minimo, def->second.probabilidade, posX, posY);
+    }
+    else if (tipo == "MCOMBUSTAO")
+    {
+        motor = new MotorCombustao(id, marca, consumo, def->second.amarelo.minimo,
+                                   def->second.vermelho.minimo, def->second.probabilidade, posX, posY);
+    }
+    else if (tipo == "MINDUCAO")
+    {
+        motor = new MotorInducao(id, marca, consumo, def->second.amarelo.minimo,
+                                 def->second.vermelho.minimo, def->second.probabilidade, posX, posY);
+    }
+
+    if (motor == NULL)
+    {
+        return false;
+    }
+
+    novosMotores.push_back(motor);
+    return true;
+}
+
+bool Fabrica::lerSensoresXml(tinyxml2::XMLElement* sensores, int limiteX, int limiteY, list<Sensor*>& novosSensores)
+{
+    if (sensores == NULL)
+    {
+        return false;
+    }
+
+    for (tinyxml2::XMLElement* elemento = sensores->FirstChildElement(); elemento != NULL; elemento = elemento->NextSiblingElement())
+    {
+        if (elemento->Name() == NULL || !eTipoSensor(elemento->Name()))
+        {
+            return false;
+        }
+
+        if (!lerUmSensorXml(elemento, elemento->Name(), limiteX, limiteY, novosSensores))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Fabrica::lerUmSensorXml(tinyxml2::XMLElement* elemento, const string& tipo, int limiteX, int limiteY,
+                             list<Sensor*>& novosSensores)
+{
+    bool temId = false;
+    bool temMarca = false;
+    bool temAviso = false;
+    bool temProbabilidade = false;
+    bool temProbabilidadeUm = false;
+    bool temPosicao = false;
+    bool temRaio = false;
+    int id = 0;
+    string marca;
+    double aviso = 0.0;
+    double probabilidade = 0.0;
+    double probabilidadeUm = 0.0;
+    int raio = 0;
+    int posX = 0;
+    int posY = 0;
+
+    if (elemento == NULL)
+    {
+        return false;
+    }
+
+    for (tinyxml2::XMLElement* filho = elemento->FirstChildElement(); filho != NULL; filho = filho->NextSiblingElement())
+    {
+        string etiqueta = filho->Name();
+
+        if (etiqueta == "ID")
+        {
+            if (temId || filho->QueryIntText(&id) != tinyxml2::XML_SUCCESS || id <= 0)
+            {
+                return false;
+            }
+            temId = true;
+        }
+        else if (etiqueta == "MARCA")
+        {
+            const char* texto = filho->GetText();
+            if (temMarca || texto == NULL || texto[0] == '\0')
+            {
+                return false;
+            }
+            marca = texto;
+            temMarca = true;
+        }
+        else if (etiqueta == "VALOR_AVISO")
+        {
+            if (temAviso || filho->QueryDoubleText(&aviso) != tinyxml2::XML_SUCCESS)
+            {
+                return false;
+            }
+            temAviso = true;
+        }
+        else if (etiqueta == "POSICAO")
+        {
+            double eixoX = 0.0;
+            double eixoY = 0.0;
+            if (temPosicao || !lerPar(filho, eixoX, eixoY))
+            {
+                return false;
+            }
+            if (eixoX != static_cast<double>(static_cast<int>(eixoX)) || eixoY != static_cast<double>(static_cast<int>(eixoY)))
+            {
+                return false;
+            }
+            posX = static_cast<int>(eixoX);
+            posY = static_cast<int>(eixoY);
+            temPosicao = true;
+        }
+        else if (etiqueta == "PROB_AVARIA")
+        {
+            if (temProbabilidade || !lerProbabilidade(filho, probabilidade))
+            {
+                return false;
+            }
+            temProbabilidade = true;
+        }
+        else if (etiqueta == "PROB_1")
+        {
+            if ((tipo != "SFOGO" && tipo != "SMISSEL") || temProbabilidadeUm || !lerProbabilidade(filho, probabilidadeUm))
+            {
+                return false;
+            }
+            temProbabilidadeUm = true;
+        }
+        else if (etiqueta == "RAIO_VIZINHANCA")
+        {
+            if (tipo != "SHUMIDADE" || temRaio || filho->QueryIntText(&raio) != tinyxml2::XML_SUCCESS || raio < 0)
+            {
+                return false;
+            }
+            temRaio = true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool exigeEvento = tipo == "SFOGO" || tipo == "SMISSEL";
+    if (!temId || !temMarca || !temAviso || !temPosicao || !temProbabilidade)
+    {
+        return false;
+    }
+
+    if (exigeEvento && !temProbabilidadeUm)
+    {
+        return false;
+    }
+
+    if (!exigeEvento && temProbabilidadeUm)
+    {
+        return false;
+    }
+
+    if (!posicaoValida(posX, posY, limiteX, limiteY))
+    {
+        return false;
+    }
+
+    if (sensorDoMesmoTipo(novosSensores, id, tipo) || sensorDoMesmoTipo(sensores, id, tipo))
+    {
+        return false;
+    }
+
+    Sensor* sensor = NULL;
+    if (tipo == "STEMPERATURA")
+    {
+        sensor = new SensorTemperatura(id, marca, 0.0, probabilidade, posX, posY, aviso);
+    }
+    else if (tipo == "SLUZ")
+    {
+        sensor = new SensorLuz(id, marca, aviso + 40.0, probabilidade, posX, posY, aviso);
+    }
+    else if (tipo == "SHUMIDADE")
+    {
+        sensor = new SensorHumidade(id, marca, 0.0, probabilidade, posX, posY, aviso, raio);
+    }
+    else if (tipo == "SFOGO")
+    {
+        sensor = new SensorFumo(id, marca, 0.0, probabilidade, posX, posY, aviso);
+        sensor->SetProbabilidadeUm(probabilidadeUm);
+    }
+    else if (tipo == "SMISSEL")
+    {
+        sensor = new SensorMissel(id, marca, 0.0, probabilidade, posX, posY, aviso);
+        sensor->SetProbabilidadeUm(probabilidadeUm);
+    }
+
+    if (sensor == NULL)
+    {
+        return false;
+    }
+
+    novosSensores.push_back(sensor);
+    return true;
 }
 
 string Fabrica::textoEstado(ESTADO_MOTOR estado) const

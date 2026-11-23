@@ -13,12 +13,18 @@
 
 using namespace std;
 
+namespace tinyxml2
+{
+    class XMLElement;
+}
+
 /**
  * @file Fabrica.h
  * @brief Gestao da fabrica: campo, dispositivos, acessos e configuracao XML.
  *
  * A configuracao vem de xml/fabrica.xml, no formato DADOS / DEFINICOES /
- * MOTORES / SENSORES. O campo vai de 0 ate DIMENSAO_FABRICA, inclusive.
+ * MOTORES / SENSORES, lido e escrito com TinyXML-2. O campo vai de 0 ate
+ * DIMENSAO_FABRICA, inclusive.
  * Cada motor herda os intervalos de temperatura e a probabilidade de
  * avaria do seu tipo (MELETRICO, MCOMBUSTAO, MINDUCAO).
  *
@@ -273,25 +279,10 @@ class Fabrica
         void libertarCargaParcial(list<User*>& users, list<Motor*>& mots, list<Sensor*>& sens);
 
         /**
-        * @brief Le as linhas nao vazias de um ficheiro, ja sem espacos nas pontas.
-        * @param ficheiro Caminho do XML.
-        * @param linhas Destino das linhas.
-        * @return false se o ficheiro nao abrir.
-        */
-        bool lerLinhas(const string& ficheiro, list<string>& linhas) const;
-
-        /**
-        * @brief Remove espacos e tabulacoes no inicio e no fim.
-        * @param linha Linha original.
-        * @return Linha limpa.
-        */
-        string limparLinha(const string& linha) const;
-
-        /**
-        * @brief Le o XML no formato de fabrica.xml.
+        * @brief Le o XML da fabrica com TinyXML-2.
         *
         * PROB_AVARIA e PROB_1 com valor igual ou superior a 1 sao percentagens.
-        * @param linhas Linhas ja limpas do ficheiro.
+        * @param ficheiro Caminho do XML.
         * @param nome Nome da empresa, preenchido em caso de sucesso.
         * @param novoX Largura do campo.
         * @param novoY Altura do campo.
@@ -305,11 +296,87 @@ class Fabrica
         * @param novosSensores Sensores criados. Quem chamou liberta-os se a leitura falhar.
         * @return false se o XML nao cumprir o formato.
         */
-        bool lerDados(const list<string>& linhas, string& nome, int& novoX, int& novoY,
+        bool lerDados(const string& ficheiro, string& nome, int& novoX, int& novoY,
                       int& abertura, int& fecho, int& vizinhanca,
                       IntervaloTemperatura& novoVerde, IntervaloTemperatura& novoAmarelo,
                       IntervaloTemperatura& novoVermelho, list<Motor*>& novosMotores,
                       list<Sensor*>& novosSensores);
+
+        /**
+        * @brief Le DEFINICOES: empresa, horario, campo e tipos de motor.
+        * @param definicoes Elemento DEFINICOES.
+        * @param nome Nome da empresa.
+        * @param novoX Largura do campo.
+        * @param novoY Altura do campo.
+        * @param abertura Hora de inicio.
+        * @param fecho Hora de fecho.
+        * @param vizinhanca Raio de aviso da fabrica.
+        * @param novoVerde Intervalo verde do primeiro tipo.
+        * @param novoAmarelo Intervalo amarelo do primeiro tipo.
+        * @param novoVermelho Intervalo vermelho do primeiro tipo.
+        * @return false se faltar um campo ou um intervalo for invalido.
+        */
+        bool lerDefinicoesXml(tinyxml2::XMLElement* definicoes, string& nome, int& novoX, int& novoY,
+                              int& abertura, int& fecho, int& vizinhanca,
+                              IntervaloTemperatura& novoVerde, IntervaloTemperatura& novoAmarelo,
+                              IntervaloTemperatura& novoVermelho);
+
+        /**
+        * @brief Le a definicao de um tipo de motor.
+        * @param elemento Elemento MELETRICO, MCOMBUSTAO ou MINDUCAO.
+        * @param temIntervaloGlobal Fica true depois do primeiro tipo completo.
+        * @param novoVerde Intervalo verde do primeiro tipo.
+        * @param novoAmarelo Intervalo amarelo do primeiro tipo.
+        * @param novoVermelho Intervalo vermelho do primeiro tipo.
+        * @return false se o tipo estiver incompleto ou repetido.
+        */
+        bool lerTipoMotorXml(tinyxml2::XMLElement* elemento, bool& temIntervaloGlobal,
+                             IntervaloTemperatura& novoVerde, IntervaloTemperatura& novoAmarelo,
+                             IntervaloTemperatura& novoVermelho);
+
+        /**
+        * @brief Le os motores do XML e acrescenta-os a lista temporaria.
+        * @param motores Elemento MOTORES.
+        * @param limiteX Largura do campo.
+        * @param limiteY Altura do campo.
+        * @param novosMotores Motores aceites nesta leitura.
+        * @return false se algum motor for invalido.
+        */
+        bool lerMotoresXml(tinyxml2::XMLElement* motores, int limiteX, int limiteY, list<Motor*>& novosMotores);
+
+        /**
+        * @brief Le um motor e, se for valido, acrescenta-o a lista temporaria.
+        * @param elemento Elemento do tipo do motor.
+        * @param tipo Etiqueta do tipo.
+        * @param limiteX Largura do campo.
+        * @param limiteY Altura do campo.
+        * @param novosMotores Motores aceites nesta leitura.
+        * @return false se faltar um campo ou o identificador estiver repetido.
+        */
+        bool lerUmMotorXml(tinyxml2::XMLElement* elemento, const string& tipo, int limiteX, int limiteY,
+                           list<Motor*>& novosMotores);
+
+        /**
+        * @brief Le os sensores do XML e acrescenta-os a lista temporaria.
+        * @param sensores Elemento SENSORES.
+        * @param limiteX Largura do campo.
+        * @param limiteY Altura do campo.
+        * @param novosSensores Sensores aceites nesta leitura.
+        * @return false se algum sensor for invalido.
+        */
+        bool lerSensoresXml(tinyxml2::XMLElement* sensores, int limiteX, int limiteY, list<Sensor*>& novosSensores);
+
+        /**
+        * @brief Le um sensor e, se for valido, acrescenta-o a lista temporaria.
+        * @param elemento Elemento do tipo do sensor.
+        * @param tipo Etiqueta do tipo no XML.
+        * @param limiteX Largura do campo.
+        * @param limiteY Altura do campo.
+        * @param novosSensores Sensores aceites nesta leitura.
+        * @return false se faltar um campo ou o par tipo e identificador estiver repetido.
+        */
+        bool lerUmSensorXml(tinyxml2::XMLElement* elemento, const string& tipo, int limiteX, int limiteY,
+                            list<Sensor*>& novosSensores);
 
         /**
         * @brief Nome legivel de um estado de motor.
@@ -481,23 +548,28 @@ class Fabrica
         int Aviso_Humidade(list<Motor*>& lm);
 
         /**
-        * @brief Desliga todos os motores e grava o video das saidas.
+        * @brief Desliga todos os motores e reproduz o video de fumo em Assets.
+        *
+        * O leitor fecha-se quando o video acaba. O parametro fich_video
+        * permanece na assinatura pedida no enunciado.
         * @param lm Fica com os motores que foram desligados. Nao e dona deles.
-        * @param fich_video Caminho do ficheiro de video.
+        * @param fich_video Nao escolhe o ficheiro. O video e Assets/video 3 - alerta fumo.mp4.
         * @return Numero de motores desligados.
         */
         int Aviso_Fumo(list<Motor*>& lm, string fich_video);
 
         /**
-        * @brief Grava o video de regresso a casa.
-        * @param fich_video Caminho do ficheiro de video.
-        * @return 1 se o ficheiro foi gravado, 0 em caso contrario.
+        * @brief Reproduz o video de regresso a casa em Assets e espera que acabe.
+        * @param fich_video Nao escolhe o ficheiro. O video e Assets/video 1 - bom regresso.mp4.
+        * @return 1 se o video foi reproduzido, 0 se o leitor nao abriu.
         */
         int Aviso_Luz(string fich_video);
 
         /**
-        * @brief Grava o video dos abrigos, guarda o estado e desliga a fabrica.
-        * @param fvideo Caminho do video.
+        * @brief Reproduz o video do missil, guarda o estado e desliga a fabrica.
+        *
+        * O leitor fecha-se quando o video acaba.
+        * @param fvideo Nao escolhe o ficheiro. O video e Assets/video 2 - alerta missel.mp4.
         * @param festado Caminho do ficheiro de estado. Por omissao e Estado.txt.
         */
         void Aviso_Missel(string fvideo, string festado = "Estado.txt");

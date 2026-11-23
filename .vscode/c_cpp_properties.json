@@ -11,7 +11,8 @@
       "cppStandard": "${default}",
       "intelliSenseMode": "windows-gcc-x64",
       "compilerArgs": [
-        "-Iinclude"
+        "-Iinclude",
+        "-Ithird_party/tinyxml2"
       ]
     }
   ],
