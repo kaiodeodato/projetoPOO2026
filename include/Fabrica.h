@@ -606,12 +606,25 @@ class Fabrica
         /** @brief Devolve a altura do campo. */
         int GetCampoY() const;
 
+        /** @brief Devolve o nome de quem esta a operar. Vazio se nao houver. */
+        string GetNomeUtilizadorActual() const;
+
+        /** @brief Devolve ADMIN, NORMAL ou VISITANTE. Vazio se nao houver. */
+        string GetTipoUtilizadorActual() const;
+
         /**
         * @brief Altera o utilizador actualmente activo.
         * @param id Identificador do utilizador a seleccionar.
         * @return true se encontrou e seleccionou o utilizador.
         */
         bool MudarUtilizador(int id);
+
+        /**
+        * @brief Muda o perfil de quem esta a operar, mantendo o mesmo ID e nome.
+        * @param perfil 1 ADMIN, 2 NORMAL, 3 VISITANTE.
+        * @return false se o perfil for desconhecido ou nao houver utilizador.
+        */
+        bool MudarTipoUtilizador(int perfil);
 
         /**
         * @brief Lista o identificador, o nome e o tipo de cada utilizador.

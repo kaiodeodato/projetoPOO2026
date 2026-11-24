@@ -237,6 +237,8 @@ static bool menu(Fabrica& fabrica)
 {
     cout << endl << "=== Menu (simulacao em pausa) ===" << endl;
     mostrarHora(fabrica);
+    cout << "Utilizador: " << fabrica.GetNomeUtilizadorActual()
+         << " (" << fabrica.GetTipoUtilizadorActual() << ")" << endl;
     cout << "1  Listar" << endl;
     cout << "2  Ligar motor" << endl;
     cout << "3  Desligar motor" << endl;
@@ -251,6 +253,7 @@ static bool menu(Fabrica& fabrica)
     cout << "12 Gerar relatorio XML agora" << endl;
     cout << "13 Gravar listagem HTML" << endl;
     cout << "14 Mudar de utilizador" << endl;
+    cout << "15 Mudar tipo de utilizador" << endl;
     cout << "0  Continuar a simulacao" << endl;
     cout << "S  Sair" << endl;
 
@@ -417,6 +420,25 @@ static bool menu(Fabrica& fabrica)
         {
             cout << "Nao existe nenhum utilizador com esse ID." << endl;
         }
+    }
+    else if (opcao == "15")
+    {
+        cout << "Utilizador actual: " << fabrica.GetNomeUtilizadorActual()
+             << " (" << fabrica.GetTipoUtilizadorActual() << ")" << endl;
+
+        int perfil = 0;
+        if (!lerInteiro("Novo perfil: 1 ADMIN, 2 NORMAL, 3 VISITANTE: ", perfil))
+        {
+            return true;
+        }
+
+        if (!fabrica.MudarTipoUtilizador(perfil))
+        {
+            cout << "Perfil desconhecido." << endl;
+            return true;
+        }
+
+        cout << "Tipo alterado para " << fabrica.GetTipoUtilizadorActual() << "." << endl;
     }
     else
     {

@@ -130,8 +130,7 @@ bool Normal::PodeManutencao() const
     return true;
 }
 // Visitante
-Visitante::Visitante(int id, const string& nome)
-    : User(id, nome)
+Visitante::Visitante(int id, const string& nome): User(id, nome)
 {
 }
 

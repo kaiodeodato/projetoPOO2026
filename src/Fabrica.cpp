@@ -3060,6 +3060,26 @@ void Fabrica::inserirPorTrabalho(list<Motor*>& destino, Motor* motor) const
     destino.push_back(motor);
 }
 
+string Fabrica::GetNomeUtilizadorActual() const
+{
+    if (utilizadorAtual == NULL)
+    {
+        return "";
+    }
+
+    return utilizadorAtual->GetNome();
+}
+
+string Fabrica::GetTipoUtilizadorActual() const
+{
+    if (utilizadorAtual == NULL)
+    {
+        return "";
+    }
+
+    return utilizadorAtual->GetTipo();
+}
+
 bool Fabrica::MudarUtilizador(int id)
 {
     for (list<User*>::iterator it = utilizadores.begin(); it != utilizadores.end(); ++it)
@@ -3072,6 +3092,70 @@ bool Fabrica::MudarUtilizador(int id)
     }
 
     return false;
+}
+
+bool Fabrica::MudarTipoUtilizador(int perfil)
+{
+    if (utilizadorAtual == NULL)
+    {
+        return false;
+    }
+
+    string tipo;
+    if (perfil == 1)
+    {
+        tipo = "ADMIN";
+    }
+    else if (perfil == 2)
+    {
+        tipo = "NORMAL";
+    }
+    else if (perfil == 3)
+    {
+        tipo = "VISITANTE";
+    }
+    else
+    {
+        return false;
+    }
+
+    if (utilizadorAtual->GetTipo() == tipo)
+    {
+        return true;
+    }
+
+    int id = utilizadorAtual->GetId();
+    string nome = utilizadorAtual->GetNome();
+    User* novo = NULL;
+
+    if (perfil == 1)
+    {
+        novo = new Admin(id, nome);
+    }
+    else if (perfil == 2)
+    {
+        novo = new Normal(id, nome);
+    }
+    else
+    {
+        novo = new Visitante(id, nome);
+    }
+
+    for (list<User*>::iterator it = utilizadores.begin(); it != utilizadores.end(); ++it)
+    {
+        if (*it == utilizadorAtual)
+        {
+            delete *it;
+            *it = novo;
+            utilizadorAtual = novo;
+            return true;
+        }
+    }
+
+    delete utilizadorAtual;
+    utilizadorAtual = novo;
+    utilizadores.push_back(novo);
+    return true;
 }
 
 void Fabrica::ListarUtilizadores(ostream& f) const
